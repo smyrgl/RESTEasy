@@ -1,5 +1,6 @@
 # RESTEasy
 
+[![Build Status](https://travis-ci.org/smyrgl/RESTEasy.svg?branch=master)](https://travis-ci.org/smyrgl/RESTEasy)
 [![Version](http://cocoapod-badges.herokuapp.com/v/RESTEasy/badge.png)](http://cocoadocs.org/docsets/RESTEasy)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/RESTEasy/badge.png)](http://cocoadocs.org/docsets/RESTEasy)
 
