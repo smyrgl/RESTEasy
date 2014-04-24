@@ -1,6 +1,61 @@
-desc "Runs the specs [EMPTY]"
+namespace :test do 
+  task :prepare do 
+    mkdir_p "Tests/Tests.xcodeproj/xcshareddata/xcschemes"
+    cp Dir.glob('Tests/Schemes/*.xcscheme'), "Tests/Tests.xcodeproj/xcshareddata/xcschemes/"
+  end
+  
+  desc "Run the RESTEasy Tests for iOS"
+  task :ios => :prepare do
+    run_tests('iostests', 'iphonesimulator')
+    tests_failed('iOS') unless $?.success?
+  end
+
+  desc "Run the RESTEasy Tests for Mac OSX"
+  task :osx => :prepare do
+    run_tests('osxtests', 'macosx')
+    tests_failed('OSX') unless $?.success?
+  end
+end
+
+namespace :appledoc do 
+  task :check do 
+    unless File.exists?('/usr/local/bin/appledoc')
+      puts "appledoc not found at /usr/local/bin/appledoc: Install via homebrew and try again: `brew install --HEAD appledoc`"
+      exit 1
+    end
+  end
+end
+
+desc "Runs the RESTEasy specs"
 task :spec do
-  # Provide your own implementation
+  Rake::Task['test:ios'].invoke
+  Rake::Task['test:osx'].invoke if is_mavericks_or_above
+end
+
+namespace :docs do 
+  desc "Generates the RESTEasy documentation using Appledoc"
+  task :generate => 'appledoc:check' do
+    command = apple_doc_command << " --no-create-docset --keep-intermediate-files --create-html `find Classes/ -name '*.h'`"
+    run(command, 1)
+    puts "Generated documentationa at Docs/html"
+  end
+
+  desc "Check that documentation can be built from the source code via appledoc successfully."
+  task :check => 'appledoc:check' do
+    command = apple_doc_command << " --no-create-html --verbose 5 `find Classes/ -name '*.h'`"
+    exitstatus = run(command, 1)
+    if exitstatus == 0
+      puts "appledoc generation completed successfully!"
+    elsif exitstatus == 1
+      puts "appledoc generation produced warnings"
+    elsif exitstatus == 2
+      puts "! appledoc generation encountered an error"
+      exit(exitstatus)
+    else
+      puts "!! appledoc generation failed with a fatal error"
+    end    
+    exit(exitstatus)
+  end
 end
 
 task :version do
@@ -154,3 +209,40 @@ def replace_version_number(new_version_number)
               "\\1#{new_version_number}\\3")
   File.open(podspec_path, "w") { |file| file.puts text }
 end
+
+private
+
+def apple_doc_command
+  "/usr/local/bin/appledoc -o Docs/ -p RESTEasy -v #{spec_version} -c \"RESTEasy\" " +
+  "--company-id com.tinylittlegears --warn-undocumented-object --warn-undocumented-member  --warn-empty-description  --warn-unknown-directive " +
+  "--warn-invalid-crossref --warn-missing-arg --no-repeat-first-par "
+end
+
+def run_tests(scheme, sdk)
+  sh("xcodebuild -workspace RESTEasy.xcworkspace -scheme '#{scheme}' -sdk '#{sdk}' -configuration Release clean test | xcpretty -c ; exit ${PIPESTATUS[0]}") rescue nil
+end
+
+def is_mavericks_or_above
+  osx_version = `sw_vers -productVersion`.chomp
+  Gem::Version.new(osx_version) >= Gem::Version.new('10.9')
+end
+
+def tests_failed(platform)
+  puts red("#{platform} unit tests failed")
+  exit $?.exitstatus
+end
+
+def red(string)
+ "\033[0;31m! #{string}"
+end
+
+def run(command, min_exit_status = 0)
+  puts "Executing: `#{command}`"
+  system(command)
+  if $?.exitstatus > min_exit_status
+    puts "[!] Failed with exit code #{$?.exitstatus} while running: `#{command}`"
+    exit($?.exitstatus)
+  end
+  return $?.exitstatus
+end
+

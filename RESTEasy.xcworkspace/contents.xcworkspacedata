@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:Assets"
+      name = "Assets">
+   </Group>
+   <Group
+      location = "group:Classes"
+      name = "Classes">
+   </Group>
+   <FileRef
+      location = "group:Tests/Tests.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
+</Workspace>
