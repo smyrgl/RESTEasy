@@ -8,6 +8,31 @@
    <Group
       location = "group:Classes"
       name = "Classes">
+      <Group
+         location = "group:Private"
+         name = "Private">
+         <FileRef
+            location = "group:TGPrivateFunctions.h">
+         </FileRef>
+         <FileRef
+            location = "group:TGPrivateFunctions.m">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:RESTEasy.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTResource.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTResource.m">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTServer.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTServer.m">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Tests/Tests.xcodeproj">

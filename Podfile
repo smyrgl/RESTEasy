@@ -18,3 +18,11 @@ target :osxtests do
   pod 'FMDB'
 	xcodeproj 'Tests/Tests.xcodeproj'
 end
+
+target :sandbox do
+    platform :osx, '10.9'
+    pod 'GCDWebServer'
+    pod 'FMDB'
+    xcodeproj 'Tests/Tests.xcodeproj'
+end
+

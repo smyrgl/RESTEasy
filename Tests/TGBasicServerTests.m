@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "RESTEasy.h"
 
 @interface TGBasicServerTests : XCTestCase
 
@@ -17,18 +18,51 @@
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [[TGRESTServer sharedServer] stopServer];
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testStartServer
 {
-    XCTAssert(2 + 2 == 4, @"Two plus two must equal four");
+    XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
+    [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
+}
+
+- (void)testStopServer
+{
+    XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
+    [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
+    [[TGRESTServer sharedServer] stopServer];
+    XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
+}
+
+- (void)testAddResource
+{
+    [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    XCTAssert([[TGRESTServer sharedServer] currentResources].count == 0, @"There should be zero current resources");
+    TGRESTResource *resource = [TGRESTResource newResourceWithName:@"person" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]} routes:nil actions:TGResourceRESTActionsGET primaryKey:nil];
+    [[TGRESTServer sharedServer] addResource:resource];
+    NSSet *resources = [[TGRESTServer sharedServer] currentResources];
+    XCTAssert(resources.count == 1, @"There should be one resource");
+    TGRESTResource *newResource = [resources anyObject];
+    XCTAssert(newResource == resource, @"The new resource should be the same as the created resource");
+}
+
+- (void)testAddPersistentResource
+{
+    [[TGRESTServer sharedServer] startServerWithOptions:@{TGPersistenceNameOptionKey: @"mine"}];
+    TGRESTResource *resource = [TGRESTResource newResourceWithName:@"person" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]} routes:nil actions:TGResourceRESTActionsGET primaryKey:nil];
+    [[TGRESTServer sharedServer] addResource:resource];
+    NSSet *resources = [[TGRESTServer sharedServer] currentResources];
+    XCTAssert(resources.count == 1, @"There should be one resource");
+    TGRESTResource *newResource = [resources anyObject];
+    XCTAssert(newResource == resource, @"The new resource should be the same as the created resource");
 }
 
 @end
