@@ -8,14 +8,18 @@ target :iostests do
   pod 'GCDWebServer'
   pod 'Gizou'
   pod 'FMDB'
-	xcodeproj 'Tests/Tests.xcodeproj'
+  pod 'AFNetworking'
+  pod 'XCAsyncTestCase'
+  xcodeproj 'Tests/Tests.xcodeproj'
 end
 
 target :osxtests do
-	platform :osx, '10.9'
+    platform :osx, '10.9'
 	pod 'GCDWebServer'
-  pod 'Gizou'
-  pod 'FMDB'
+    pod 'Gizou'
+    pod 'FMDB'
+    pod 'AFNetworking'
+    pod 'XCAsyncTestCase'
 	xcodeproj 'Tests/Tests.xcodeproj'
 end
 

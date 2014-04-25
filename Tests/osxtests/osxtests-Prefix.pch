@@ -6,4 +6,7 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
+    #import <AFNetworking/AFNetworking.h>
+    #import <XCAsyncTestCase/XCTestCase+AsyncTesting.h>
+    #import "RESTEasy.h"
 #endif

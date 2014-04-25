@@ -7,7 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "RESTEasy.h"
+#import "TGTestFactory.h"
+#import "TGRESTClient.h"
 
 @interface TGBasicServerTests : XCTestCase
 
@@ -23,6 +24,7 @@
 - (void)tearDown
 {
     [[TGRESTServer sharedServer] stopServer];
+    [[TGRESTServer sharedServer] removeAllResourcesWithData:YES];
     [super tearDown];
 }
 
@@ -46,7 +48,7 @@
 {
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
     XCTAssert([[TGRESTServer sharedServer] currentResources].count == 0, @"There should be zero current resources");
-    TGRESTResource *resource = [TGRESTResource newResourceWithName:@"person" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]} routes:nil actions:TGResourceRESTActionsGET primaryKey:nil];
+    TGRESTResource *resource = [TGTestFactory testResource];
     [[TGRESTServer sharedServer] addResource:resource];
     NSSet *resources = [[TGRESTServer sharedServer] currentResources];
     XCTAssert(resources.count == 1, @"There should be one resource");
@@ -57,12 +59,38 @@
 - (void)testAddPersistentResource
 {
     [[TGRESTServer sharedServer] startServerWithOptions:@{TGPersistenceNameOptionKey: @"mine"}];
-    TGRESTResource *resource = [TGRESTResource newResourceWithName:@"person" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]} routes:nil actions:TGResourceRESTActionsGET primaryKey:nil];
+    TGRESTResource *resource = [TGTestFactory testResource];
     [[TGRESTServer sharedServer] addResource:resource];
     NSSet *resources = [[TGRESTServer sharedServer] currentResources];
     XCTAssert(resources.count == 1, @"There should be one resource");
     TGRESTResource *newResource = [resources anyObject];
     XCTAssert(newResource == resource, @"The new resource should be the same as the created resource");
+}
+
+- (void)testAddData
+{
+    [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    XCTAssert([[TGRESTServer sharedServer] currentResources].count == 0, @"There should be zero current resources");
+    TGRESTResource *resource = [TGTestFactory testResource];
+    [[TGRESTServer sharedServer] addResource:resource];
+    [TGTestFactory createTestDataForResource:resource count:100];
+    
+    __block NSArray *response;
+    __weak typeof(self) weakSelf = self;
+    
+    [[TGRESTClient sharedClient] GET:resource.name
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 response = responseObject;
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 XCTFail(@"The request must not have failed, %@", error);
+                             }];
+    
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    
+    XCTAssert(response.count == 100, @"There must be 100 objects in the response");
 }
 
 @end

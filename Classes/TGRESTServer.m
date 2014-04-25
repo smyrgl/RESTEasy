@@ -24,6 +24,12 @@ NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionK
 NSString * const TGServerDidStartNotification = @"TGServerDidStartNotification";
 NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotification";
 
+NSString * const TGRESTServerErrorDomain = @"TGRESTServerErrorDomain";
+NSUInteger const TGRESTServerObjectDeletedErrorCode = 100;
+NSUInteger const TGRESTServerObjectNotFoundErrorCode = 101;
+NSUInteger const TGRESTServerUnknownErrorCode = 102;
+NSUInteger const TGRESTServerBadRequestErrorCode = 103;
+
 @interface TGRESTServer ()
 
 @property (nonatomic, strong) GCDWebServer *webServer;
@@ -78,6 +84,9 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     if (options[TGPersistenceNameOptionKey]) {
         self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@.sqlite", TGApplicationDataDirectory(), options[TGPersistenceNameOptionKey]] flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
         self.persisting = YES;
+    } else {
+        self.dbQueue = nil;
+        self.persisting = NO;
     }
     
     if (options[TGWebServerPortNumberOptionKey]) {
@@ -168,13 +177,19 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
                                        __strong typeof(weakSelf) strongSelf = weakSelf;
                                        NSString *lastPathComponent = request.URL.lastPathComponent;
                                        if ([lastPathComponent isEqualToString:resource.name]) {
-                                           return [GCDWebServerDataResponse responseWithJSONObject:[strongSelf getAllDataForResource:resource]];
-                                       }
-                                       NSDictionary *resourceResponse = [strongSelf getDataForResource:resource withPrimaryKey:lastPathComponent];
-                                       if (resourceResponse) {
-                                           return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+                                           NSError *error;
+                                           NSArray *allData = [strongSelf getAllDataForResource:resource error:&error];
+                                           if (error) {
+                                               return [TGRESTServer errorResponseBuilderWithError:error];
+                                           }
+                                           return [GCDWebServerDataResponse responseWithJSONObject:allData];
                                        } else {
-                                           return [GCDWebServerResponse responseWithStatusCode:404];
+                                           NSError *error;
+                                           NSDictionary *resourceResponse = [strongSelf getDataForResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                           if (error) {
+                                               return [TGRESTServer errorResponseBuilderWithError:error];
+                                           }
+                                           return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
                                        }
                                    }];
         }
@@ -190,12 +205,12 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
                                    processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                        __strong typeof(weakSelf) strongSelf = weakSelf;
                                        NSDictionary *body = [(GCDWebServerDataRequest*)request jsonObject];
-                                       NSDictionary *newObject = [strongSelf createNewObjectForResource:resource withDictionary:body];
-                                       if (newObject) {
-                                           return [GCDWebServerDataResponse responseWithJSONObject:newObject];
-                                       } else {
-                                           return [GCDWebServerResponse responseWithStatusCode:500];
+                                       NSError *error;
+                                       NSDictionary *newObject = [strongSelf createNewObjectForResource:resource withDictionary:body error:&error];
+                                       if (error) {
+                                           return [TGRESTServer errorResponseBuilderWithError:error];
                                        }
+                                       return [GCDWebServerDataResponse responseWithJSONObject:newObject];
                                    }];
         }
     }
@@ -213,12 +228,13 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
                                        if ([lastPathComponent isEqualToString:resource.name]) {
                                            return [GCDWebServerResponse responseWithStatusCode:403];
                                        }
-                                       BOOL isDeleted = [strongSelf deleteResource:resource withPrimaryKey:lastPathComponent];
-                                       if (isDeleted) {
-                                           return [GCDWebServerResponse responseWithStatusCode:204];
-                                       } else {
-                                           return [GCDWebServerResponse responseWithStatusCode:404];
+                                       NSError *error;
+                                       [strongSelf deleteResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                       
+                                       if (error) {
+                                           return [TGRESTServer errorResponseBuilderWithError:error];
                                        }
+                                       return [GCDWebServerResponse responseWithStatusCode:204];
                                    }];
         }
     }
@@ -229,19 +245,21 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
         for (NSString *route in resource.routes) {
             [self.webServer addHandlerForMethod:@"PUT"
                                       pathRegex:[NSString stringWithFormat:@"^/(%@)", route]
-                                   requestClass:[GCDWebServerRequest class]
+                                   requestClass:[GCDWebServerDataRequest class]
                                    processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                        __strong typeof(weakSelf) strongSelf = weakSelf;
                                        NSString *lastPathComponent = request.URL.lastPathComponent;
                                        if ([lastPathComponent isEqualToString:resource.name]) {
                                            return [GCDWebServerResponse responseWithStatusCode:403];
                                        }
-                                       NSDictionary *resourceResponse = [strongSelf modifyResource:resource withPrimaryKey:lastPathComponent withDictionary:request.query];
-                                       if (resourceResponse) {
-                                           return [GCDWebServerDataResponse responseWithJSONObject:[strongSelf getDataForResource:resource withPrimaryKey:lastPathComponent]];
-                                       } else {
-                                           return [GCDWebServerResponse responseWithStatusCode:404];
+                                       NSDictionary *body = [(GCDWebServerDataRequest*)request jsonObject];
+                                       NSError *error;
+                                       NSDictionary *resourceResponse = [strongSelf modifyResource:resource withPrimaryKey:lastPathComponent withDictionary:body error:&error];
+                                       
+                                       if (error) {
+                                           return [TGRESTServer errorResponseBuilderWithError:error];
                                        }
+                                       return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
                                    }];
         }
     }
@@ -249,15 +267,81 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     [self.resources addObject:resource];
 }
 
-- (void)removeResource:(TGRESTResource *)resource
+- (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData
 {
     
 }
 
+- (void)removeAllResourcesWithData:(BOOL)removeData
+{
+    [self.webServer removeAllHandlers];
+    [self.resources removeAllObjects];
+    
+    if (removeData) {
+        if (self.isPersisting) {
+            NSError *error;
+            NSString *path = [self.dbQueue.path copy];
+            [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+            if (error) {
+                NSLog(@"Error deleting sqlite store! %@", error);
+            }
+            self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:path flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
+        } else {
+            self.inMemoryDatastore = [NSMutableDictionary new];
+        }
+    }
+}
+
+- (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource
+{
+    return [self allObjectsForResource:resource].count;
+}
+
+- (NSArray *)allObjectsForResource:(TGRESTResource *)resource
+{
+    NSParameterAssert(resource);
+    
+    if (![self.currentResources containsObject:resource]) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"Primary keys must be of text or integer type only"
+                                     userInfo:nil];
+    }
+    
+    return [self getAllDataForResource:resource error:nil];
+}
+
+- (void)addData:(NSArray *)data forResource:(TGRESTResource *)resource
+{
+    for (NSDictionary *objectDictionary in data) {
+        NSError *error;
+        [self createNewObjectForResource:resource withDictionary:objectDictionary error:&error];
+        if (error) {
+            NSLog(@"Error creating object %@", objectDictionary);
+        }
+    }
+}
+
 #pragma mark - Private
 
-- (NSDictionary *)getDataForResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk
++ (GCDWebServerResponse *)errorResponseBuilderWithError:(NSError *)error
 {
+    NSParameterAssert(error);
+    
+    if (error.code == TGRESTServerObjectDeletedErrorCode) {
+        return [GCDWebServerResponse responseWithStatusCode:410];
+    } else if (error.code == TGRESTServerObjectNotFoundErrorCode) {
+        return [GCDWebServerResponse responseWithStatusCode:404];
+    } else if (error.code == TGRESTServerBadRequestErrorCode) {
+        return [GCDWebServerResponse responseWithStatusCode:400];
+    } else {
+        return [GCDWebServerResponse responseWithStatusCode:500];
+    }
+}
+
+- (NSDictionary *)getDataForResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk error:(NSError * __autoreleasing *)error
+{
+    NSParameterAssert(resource);
+
     if (self.isPersisting) {
         __block NSMutableDictionary *returnDictionary = [NSMutableDictionary new];
         [self.dbQueue inDatabase:^(FMDatabase *db) {
@@ -274,18 +358,39 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
         }
     } else {
         NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
+        NSDictionary *object;
         if (resource.primaryKeyType == TGPropertyTypeInteger) {
-            return objects[[NSNumber numberWithInteger:[pk integerValue]]];
+            if (objects[[NSNumber numberWithInteger:[pk integerValue]]] == [NSNull null]) {
+                if (error) {
+                    *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
+                }
+                return nil;
+            }
+            object = objects[[NSNumber numberWithInteger:[pk integerValue]]];
         } else {
-            return objects[pk];
+            if (objects[pk] == [NSNull null]) {
+                if (error) {
+                    *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
+                }
+                return nil;
+            }
+            object = objects[pk];
         }
+        
+        if (!object && error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectNotFoundErrorCode userInfo:nil];
+        }
+        
+        return object;
     }
     
     return nil;
 }
 
-- (NSArray *)getAllDataForResource:(TGRESTResource *)resource
+- (NSArray *)getAllDataForResource:(TGRESTResource *)resource error:(NSError * __autoreleasing *)error
 {
+    NSParameterAssert(resource);
+
     if (self.isPersisting) {
         __block NSMutableArray *returnArray = [NSMutableArray new];
         [self.dbQueue inDatabase:^(FMDatabase *db) {
@@ -303,14 +408,33 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
         return [NSArray arrayWithArray:returnArray];
     } else {
         NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
-        return [[objects allValues] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:resource.primaryKey ascending:YES]]];
+        if (!objects) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerUnknownErrorCode userInfo:nil];
+            }
+            return nil;
+        } else if (objects.count == 0) {
+            return @[];
+        }
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self != %@", [NSNull null]];
+        NSSet *filteredKeys = [objects keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
+            return [predicate evaluateWithObject:obj];
+        }];
+        NSArray *filteredObjects = [objects objectsForKeys:[filteredKeys allObjects] notFoundMarker:@""];
+        return [filteredObjects sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:resource.primaryKey ascending:YES]]];
     }
 }
 
-- (NSDictionary *)createNewObjectForResource:(TGRESTResource *)resource withDictionary:(NSDictionary *)dictionary
+- (NSDictionary *)createNewObjectForResource:(TGRESTResource *)resource withDictionary:(NSDictionary *)dictionary error:(NSError * __autoreleasing *)error
 {
     NSParameterAssert(resource);
-    NSParameterAssert(dictionary);
+    
+    if (!dictionary || dictionary.allKeys.count == 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerBadRequestErrorCode userInfo:nil];
+        }
+        return nil;
+    }
     
     NSMutableDictionary *newObjectStub = [NSMutableDictionary new];
     
@@ -337,6 +461,12 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
         }
     } else {
         NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
+        if (!resourceDictionary) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerUnknownErrorCode userInfo:nil];
+            }
+            return nil;
+        }
         NSUInteger newPrimaryKey = [resourceDictionary allKeys].count + 1;
         id newPrimaryKeyObject;
         if (resource.primaryKeyType == TGPropertyTypeInteger) {
@@ -351,14 +481,85 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     }
 }
 
-- (NSDictionary *)modifyResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk withDictionary:(NSDictionary *)dictionary
+- (NSDictionary *)modifyResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk withDictionary:(NSDictionary *)dictionary error:(NSError * __autoreleasing *)error
 {
-    return @{};
+    NSParameterAssert(resource);
+    
+    if (!dictionary || dictionary.allKeys.count == 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerBadRequestErrorCode userInfo:nil];
+        }
+        return nil;
+    }
+    NSError *getError;
+    NSDictionary *object = [self getDataForResource:resource withPrimaryKey:pk error:&getError];
+    if (getError) {
+        if (error) {
+            *error = getError;
+        }
+        return nil;
+    }
+    
+    if (self.isPersisting) {
+        
+    } else {
+        NSMutableDictionary *newDict = [NSMutableDictionary new];
+        
+        for (NSString *key in resource.model.allKeys) {
+            if (![key isEqualToString:resource.primaryKey]) {
+                [newDict setObject:dictionary[key] forKey:key];
+            }
+        }
+        
+        NSMutableDictionary *mergeDict = [NSMutableDictionary dictionaryWithDictionary:object];
+        [mergeDict addEntriesFromDictionary:newDict];
+        NSDictionary *updatedObject = [NSDictionary dictionaryWithDictionary:mergeDict];
+        
+        NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
+        if (resource.primaryKeyType == TGPropertyTypeInteger) {
+            [resourceDictionary setObject:updatedObject forKey:[NSNumber numberWithInteger:[pk integerValue]]];
+        } else {
+            [resourceDictionary setObject:updatedObject forKey:pk];
+        }
+        
+        return updatedObject;
+    }
+    
+    return nil;
 }
 
-- (BOOL)deleteResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk
+- (void)deleteResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk error:(NSError * __autoreleasing *)error
 {
-    return YES;
+    NSParameterAssert(resource);
+    
+    if (self.isPersisting) {
+        
+    } else {
+        
+        NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
+        id objectKey;
+        if (resource.primaryKeyType == TGPropertyTypeInteger) {
+            objectKey = [NSNumber numberWithInteger:[pk integerValue]];
+        } else {
+            objectKey = pk;
+        }
+        
+        if (objects[objectKey] == [NSNull null]) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
+            }
+        } else {
+            NSDictionary *object = objects[objectKey];
+            
+            if (!object) {
+                if (error) {
+                    *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectNotFoundErrorCode userInfo:nil];
+                }
+            } else {
+                [objects setObject:[NSNull null] forKey:objectKey];
+            }
+        }
+    }
 }
 
 

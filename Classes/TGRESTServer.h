@@ -27,7 +27,12 @@ extern NSString * const TGWebServerPortNumberOptionKey;
 
 - (NSSet *)currentResources;
 - (void)addResource:(TGRESTResource *)resource;
-- (void)removeResource:(TGRESTResource *)resource;
+- (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData;
+- (void)removeAllResourcesWithData:(BOOL)removeData;
+
+- (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource;
+- (NSArray *)allObjectsForResource:(TGRESTResource *)resource;
+- (void)addData:(NSArray *)data forResource:(TGRESTResource *)resource;
 
 @end
 

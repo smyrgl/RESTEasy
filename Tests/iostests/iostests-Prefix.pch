@@ -7,4 +7,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import <AFNetworking/AFNetworking.h>
+    #import <XCAsyncTestCase/XCTestCase+AsyncTesting.h>
+    #import "RESTEasy.h"
 #endif
