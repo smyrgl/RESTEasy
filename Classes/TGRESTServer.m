@@ -210,7 +210,17 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
                                    requestClass:[GCDWebServerDataRequest class]
                                    processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                                       NSDictionary *body = [(GCDWebServerDataRequest*)request jsonObject];
+                                       GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
+                                       NSDictionary *body;
+                                       if ([dataRequest.contentType hasPrefix:@"application/json"]) {
+                                           NSError *jsonError;
+                                           body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
+                                           if (jsonError) {
+                                               return [GCDWebServerResponse responseWithStatusCode:400];
+                                           }
+                                       } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+                                           return [GCDWebServerResponse responseWithStatusCode:400];
+                                       }
                                        NSError *error;
                                        NSDictionary *newObject = [strongSelf createNewObjectForResource:resource withDictionary:body error:&error];
                                        if (error) {
@@ -258,7 +268,18 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
                                        if ([lastPathComponent isEqualToString:resource.name]) {
                                            return [GCDWebServerResponse responseWithStatusCode:403];
                                        }
-                                       NSDictionary *body = [(GCDWebServerDataRequest*)request jsonObject];
+                                       GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
+                                       NSDictionary *body;
+                                       if ([dataRequest.contentType hasPrefix:@"application/json"]) {
+                                           NSError *jsonError;
+                                           body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
+                                           if (jsonError) {
+                                               return [GCDWebServerResponse responseWithStatusCode:400];
+                                           }
+                                       } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+                                           return [GCDWebServerResponse responseWithStatusCode:400];
+                                       }
+                                       
                                        NSError *error;
                                        NSDictionary *resourceResponse = [strongSelf modifyResource:resource withPrimaryKey:lastPathComponent withDictionary:body error:&error];
                                        
@@ -450,6 +471,13 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
         }
     }
     
+    if (newObjectStub.allKeys.count == 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerBadRequestErrorCode userInfo:nil];
+        }
+        return nil;
+    }
+    
     if (self.isPersisting) {
         __block BOOL saveSuccess;
         NSMutableString *sqlString = [NSMutableString new];
@@ -513,7 +541,15 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
         
         for (NSString *key in resource.model.allKeys) {
             if (![key isEqualToString:resource.primaryKey]) {
-                [newDict setObject:dictionary[key] forKey:key];
+                if (dictionary[key]) {
+                    [newDict setObject:dictionary[key] forKey:key];
+                }
+            }
+        }
+        
+        if (newDict.allKeys.count == 0) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerBadRequestErrorCode userInfo:nil];
             }
         }
         

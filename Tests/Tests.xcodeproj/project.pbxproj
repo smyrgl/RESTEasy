@@ -41,6 +41,11 @@
 		52D0394F19097EF800D3900F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D0394D19097EF800D3900F /* InfoPlist.strings */; };
 		52D0395A1909810400D3900F /* TGBasicServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D039591909810400D3900F /* TGBasicServerTests.m */; };
 		52D0395B1909810400D3900F /* TGBasicServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D039591909810400D3900F /* TGBasicServerTests.m */; };
+		52FF8A95190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */; };
+		52FF8A97190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */; };
+		52FF8A98190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */; };
+		52FF8A9A190B4BAE0099503B /* TGPersistentRelationshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A99190B4BAE0099503B /* TGPersistentRelationshipTests.m */; };
+		52FF8A9B190B4BAE0099503B /* TGPersistentRelationshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A99190B4BAE0099503B /* TGPersistentRelationshipTests.m */; };
 		5757F294F10544E48878E3DB /* libPods-sandbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BED36771803B4A4B85E0161C /* libPods-sandbox.a */; };
 		5A5D458B2D2D46959E292CA9 /* libPods-iostests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDE70A48F2DD453898C6CD41 /* libPods-iostests.a */; };
 		F10DCEA9464D44C8907F82CA /* libPods-osxtests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 590D5013246B41D495F8A9B9 /* libPods-osxtests.a */; };
@@ -93,6 +98,9 @@
 		52D0394E19097EF800D3900F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52D0395219097EF800D3900F /* osxtests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "osxtests-Prefix.pch"; sourceTree = "<group>"; };
 		52D039591909810400D3900F /* TGBasicServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBasicServerTests.m; sourceTree = "<group>"; };
+		52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerAPIErrorHandlingTests.m; sourceTree = "<group>"; };
+		52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNonPersistentRelationshipTests.m; sourceTree = "<group>"; };
+		52FF8A99190B4BAE0099503B /* TGPersistentRelationshipTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPersistentRelationshipTests.m; sourceTree = "<group>"; };
 		590D5013246B41D495F8A9B9 /* libPods-osxtests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-osxtests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A759308651C44593AF34DCE5 /* Pods-sandbox.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sandbox.xcconfig"; path = "../Pods/Pods-sandbox.xcconfig"; sourceTree = "<group>"; };
 		AB673039D9EB4D40A3EA7A95 /* Pods-osxtests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-osxtests.xcconfig"; path = "../Pods/Pods-osxtests.xcconfig"; sourceTree = "<group>"; };
@@ -191,6 +199,9 @@
 				52541FA1190B1256000A44FA /* TGRoutingTests.m */,
 				52541F94190B0BCD000A44FA /* TGNonPersistentCRUDTests.m */,
 				52541FA7190B300F000A44FA /* TGPersistentCRUDTests.m */,
+				52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */,
+				52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */,
+				52FF8A99190B4BAE0099503B /* TGPersistentRelationshipTests.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -505,7 +516,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52FF8A97190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */,
+				52FF8A95190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m in Sources */,
 				52541F9F190B0DFA000A44FA /* TGTestFactory.m in Sources */,
+				52FF8A9A190B4BAE0099503B /* TGPersistentRelationshipTests.m in Sources */,
 				52541FA5190B2FC5000A44FA /* TGResourceModelTests.m in Sources */,
 				52541FA2190B1256000A44FA /* TGRoutingTests.m in Sources */,
 				52D0395A1909810400D3900F /* TGBasicServerTests.m in Sources */,
@@ -527,11 +541,13 @@
 				52541FA6190B2FC5000A44FA /* TGResourceModelTests.m in Sources */,
 				52541FA3190B1256000A44FA /* TGRoutingTests.m in Sources */,
 				52D0395B1909810400D3900F /* TGBasicServerTests.m in Sources */,
+				52FF8A9B190B4BAE0099503B /* TGPersistentRelationshipTests.m in Sources */,
 				52541F9C190B0CBD000A44FA /* TGRESTClient.m in Sources */,
 				52541F5419099368000A44FA /* TGRESTResource.m in Sources */,
 				52541F611909A91D000A44FA /* TGPrivateFunctions.m in Sources */,
 				52541F4C190986C0000A44FA /* TGRESTServer.m in Sources */,
 				52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
+				52FF8A98190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */,
 				52541F96190B0BCD000A44FA /* TGNonPersistentCRUDTests.m in Sources */,
 				52541FA9190B300F000A44FA /* TGPersistentCRUDTests.m in Sources */,
 			);
