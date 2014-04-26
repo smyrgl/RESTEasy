@@ -181,6 +181,8 @@
     XCTAssert(getDeletedStatusCode == 410, @"The status code for the response to get a deleted object must be 410 gone");
 }
 
+/*
+
 - (void)testCreateObject
 {
     TGRESTResource *resource = [TGTestFactory testResource];
@@ -216,6 +218,8 @@
     
     XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 1, @"There must be a new object created for the resource");
 }
+ 
+ */
 
 - (void)testCreateObjectWithNoParameters
 {
