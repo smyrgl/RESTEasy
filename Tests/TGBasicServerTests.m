@@ -57,9 +57,9 @@
 
 - (void)testAddPersistentResource
 {
-    [[TGRESTServer sharedServer] startServerWithOptions:@{TGPersistenceNameOptionKey: @"mine"}];
+    [[TGRESTPersistentServer sharedServer] startServerWithOptions:nil];
     TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
+    [[TGRESTPersistentServer sharedServer] addResource:resource];
     NSSet *resources = [[TGRESTServer sharedServer] currentResources];
     XCTAssert(resources.count == 1, @"There should be one resource");
     TGRESTResource *newResource = [resources anyObject];

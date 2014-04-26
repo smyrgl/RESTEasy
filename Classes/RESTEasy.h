@@ -9,7 +9,8 @@
 #ifndef _RESTEasy_h
 #define _RESTEasy_h
 
-#import "TGRESTServer.h"
 #import "TGRESTResource.h"
+#import "TGRESTServer.h"
+#import "TGRESTPersistentServer.h"
 
 #endif

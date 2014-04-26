@@ -11,14 +11,11 @@
 #import <GCDWebServer/GCDWebServer.h>
 #import <GCDWebServer/GCDWebServerDataResponse.h>
 #import <GCDWebServer/GCDWebServerDataRequest.h>
-#import <FMDB/FMDatabase.h>
-#import <FMDB/FMDatabaseQueue.h>
-#import <FMDB/FMDatabaseAdditions.h>
 #import "TGPrivateFunctions.h"
+#import "TGRESTServer_TGRESTServerPrivate.h"
 
 NSString * const TGLatencyRangeMinimumOptionKey = @"TGLatencyRangeMinimumOptionKey";
 NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionKey";
-NSString * const TGPersistenceNameOptionKey = @"TGPersistenceNameOptionKey";
 NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionKey";
 
 NSString * const TGServerDidStartNotification = @"TGServerDidStartNotification";
@@ -29,18 +26,6 @@ NSUInteger const TGRESTServerObjectDeletedErrorCode = 100;
 NSUInteger const TGRESTServerObjectNotFoundErrorCode = 101;
 NSUInteger const TGRESTServerUnknownErrorCode = 102;
 NSUInteger const TGRESTServerBadRequestErrorCode = 103;
-
-@interface TGRESTServer ()
-
-@property (nonatomic, strong) GCDWebServer *webServer;
-@property (nonatomic, strong) FMDatabaseQueue *dbQueue;
-@property (nonatomic, assign) CGFloat latencyMin;
-@property (nonatomic, assign) CGFloat latencyMax;
-@property (nonatomic, strong) NSMutableSet *resources;
-@property (atomic, strong) NSMutableDictionary *inMemoryDatastore;
-@property (nonatomic, assign, readwrite, getter = isPersisting) BOOL persisting;
-
-@end
 
 @implementation TGRESTServer
 
@@ -55,14 +40,13 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
     return sharedServer;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
         self.webServer = [[GCDWebServer alloc] init];
         self.resources = [NSMutableSet new];
         self.inMemoryDatastore = [NSMutableDictionary new];
-        self.persisting = NO;
     }
     
     return self;
@@ -81,14 +65,6 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
 {
     NSUInteger serverPort;
     
-    if (options[TGPersistenceNameOptionKey]) {
-        self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/%@.sqlite", TGApplicationDataDirectory(), options[TGPersistenceNameOptionKey]] flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
-        self.persisting = YES;
-    } else {
-        self.dbQueue = nil;
-        self.persisting = NO;
-    }
-    
     if (options[TGWebServerPortNumberOptionKey]) {
         serverPort = [options[TGWebServerPortNumberOptionKey] integerValue];
     } else {
@@ -105,12 +81,7 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
 
 - (void)stopServer
 {
-    if (!self.isPersisting) {
-        [self removeAllResourcesWithData:YES];
-    } else {
-        [self removeAllResourcesWithData:NO];
-    }
-    
+    [self removeAllResourcesWithData:YES];
     [self.webServer stop];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:TGServerDidShutdownNotification object:self];
@@ -127,50 +98,7 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
 {
     NSParameterAssert(resource);
     
-    if (self.isPersisting) {
-        NSDictionary *newModel = [resource valueForKey:@"sqliteModel"];
-        __block BOOL resetTable = NO;
-        [self.dbQueue inDatabase:^(FMDatabase *db) {
-            FMResultSet *tableInfo = [db executeQuery:[NSString stringWithFormat:@"PRAGMA table_info(%@)", resource.name]];
-            if ([tableInfo columnCount] > 0) {
-                NSMutableDictionary *existingModel = [NSMutableDictionary new];
-                while ([tableInfo next]) {
-                    [existingModel setObject:[tableInfo stringForColumn:@"type"] forKey:[tableInfo stringForColumn:@"name"]];
-                }
-                if (![newModel isEqualToDictionary:existingModel]) {
-                    resetTable = YES;
-                }
-            } else {
-                resetTable = YES;
-            }
-            [tableInfo close];
-        }];
-        
-        if (resetTable) {
-            NSMutableString *columnString = [NSMutableString new];
-            for (NSString *key in [newModel allKeys]) {
-                [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@, ", key, newModel[key]]];
-            }
-            
-            [columnString deleteCharactersInRange:NSMakeRange(columnString.length - 2, 2)];
-            
-            [self.dbQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                if (![db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", resource.name]]) {
-                    NSLog(@"Error: %@", [db lastError]);
-                    *rollback = YES;
-                    return;
-                }
-                
-                if (![db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE %@ (%@)", resource.name, columnString]]) {
-                    NSLog(@"Error: %@", [db lastError]);
-                    *rollback = YES;
-                    return;
-                }
-            }];
-        }
-    } else {
-        [self.inMemoryDatastore setObject:[NSMutableDictionary new] forKey:resource.name];
-    }
+    [self.inMemoryDatastore setObject:[NSMutableDictionary new] forKey:resource.name];
     
     if (resource.actions & TGResourceRESTActionsGET) {
         __weak typeof(self) weakSelf = self;
@@ -305,17 +233,7 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
     [self.resources removeAllObjects];
     
     if (removeData) {
-        if (self.isPersisting) {
-            NSError *error;
-            NSString *path = [self.dbQueue.path copy];
-            [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-            if (error) {
-                NSLog(@"Error deleting sqlite store! %@", error);
-            }
-            self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:path flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
-        } else {
-            self.inMemoryDatastore = [NSMutableDictionary new];
-        }
+        self.inMemoryDatastore = [NSMutableDictionary new];
     }
 }
 
@@ -369,87 +287,52 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
 {
     NSParameterAssert(resource);
 
-    if (self.isPersisting) {
-        __block NSMutableDictionary *returnDictionary = [NSMutableDictionary new];
-        [self.dbQueue inDatabase:^(FMDatabase *db) {
-            FMResultSet *results = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = %@", resource.name, resource.primaryKey, pk]];
-            for (NSString *key in resource.model) {
-                [returnDictionary setObject:[results objectForColumnName:key] forKey:key];
+    NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
+    NSDictionary *object;
+    if (resource.primaryKeyType == TGPropertyTypeInteger) {
+        if (objects[[NSNumber numberWithInteger:[pk integerValue]]] == [NSNull null]) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
             }
-            [results close];
-        }];
-        if (returnDictionary.allKeys.count == 0) {
             return nil;
-        } else {
-            return [NSDictionary dictionaryWithDictionary:returnDictionary];
         }
+        object = objects[[NSNumber numberWithInteger:[pk integerValue]]];
     } else {
-        NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
-        NSDictionary *object;
-        if (resource.primaryKeyType == TGPropertyTypeInteger) {
-            if (objects[[NSNumber numberWithInteger:[pk integerValue]]] == [NSNull null]) {
-                if (error) {
-                    *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
-                }
-                return nil;
+        if (objects[pk] == [NSNull null]) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
             }
-            object = objects[[NSNumber numberWithInteger:[pk integerValue]]];
-        } else {
-            if (objects[pk] == [NSNull null]) {
-                if (error) {
-                    *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
-                }
-                return nil;
-            }
-            object = objects[pk];
+            return nil;
         }
-        
-        if (!object && error) {
-            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectNotFoundErrorCode userInfo:nil];
-        }
-        
-        return object;
+        object = objects[pk];
     }
     
-    return nil;
+    if (!object && error) {
+        *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectNotFoundErrorCode userInfo:nil];
+    }
+    
+    return object;
 }
 
 - (NSArray *)getAllDataForResource:(TGRESTResource *)resource error:(NSError * __autoreleasing *)error
 {
     NSParameterAssert(resource);
 
-    if (self.isPersisting) {
-        __block NSMutableArray *returnArray = [NSMutableArray new];
-        [self.dbQueue inDatabase:^(FMDatabase *db) {
-            FMResultSet *results = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@", resource.name]];
-            while ([results next]) {
-                NSMutableDictionary *objectDict = [NSMutableDictionary new];
-                for (NSString *key in resource.model) {
-                    [objectDict setObject:[results objectForColumnName:key] forKey:key];
-                }
-                [returnArray addObject:objectDict];
-            }
-            [results close];
-        }];
-        
-        return [NSArray arrayWithArray:returnArray];
-    } else {
-        NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
-        if (!objects) {
-            if (error) {
-                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerUnknownErrorCode userInfo:nil];
-            }
-            return nil;
-        } else if (objects.count == 0) {
-            return @[];
+    NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
+    if (!objects) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerUnknownErrorCode userInfo:nil];
         }
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self != %@", [NSNull null]];
-        NSSet *filteredKeys = [objects keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
-            return [predicate evaluateWithObject:obj];
-        }];
-        NSArray *filteredObjects = [objects objectsForKeys:[filteredKeys allObjects] notFoundMarker:@""];
-        return [filteredObjects sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:resource.primaryKey ascending:YES]]];
+        return nil;
+    } else if (objects.count == 0) {
+        return @[];
     }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self != %@", [NSNull null]];
+    NSSet *filteredKeys = [objects keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
+        return [predicate evaluateWithObject:obj];
+    }];
+    NSArray *filteredObjects = [objects objectsForKeys:[filteredKeys allObjects] notFoundMarker:@""];
+    return [filteredObjects sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:resource.primaryKey ascending:YES]]];
 }
 
 - (NSDictionary *)createNewObjectForResource:(TGRESTResource *)resource withDictionary:(NSDictionary *)dictionary error:(NSError * __autoreleasing *)error
@@ -478,41 +361,24 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
         return nil;
     }
     
-    if (self.isPersisting) {
-        __block BOOL saveSuccess;
-        NSMutableString *sqlString = [NSMutableString new];
-        for (NSString *key in newObjectStub) {
-            [sqlString appendString:[NSString stringWithFormat:@"\"%@\" %@, ", key, newObjectStub[key]]];
+    NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
+    if (!resourceDictionary) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerUnknownErrorCode userInfo:nil];
         }
-        [sqlString deleteCharactersInRange:NSMakeRange(sqlString.length - 2, 2)];
-        [self.dbQueue inDatabase:^(FMDatabase *db) {
-            saveSuccess = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ VALUES(%@)", resource.name, sqlString]];
-        }];
-        if (saveSuccess) {
-            return newObjectStub;
-        } else {
-            return nil;
-        }
-    } else {
-        NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
-        if (!resourceDictionary) {
-            if (error) {
-                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerUnknownErrorCode userInfo:nil];
-            }
-            return nil;
-        }
-        NSUInteger newPrimaryKey = [resourceDictionary allKeys].count + 1;
-        id newPrimaryKeyObject;
-        if (resource.primaryKeyType == TGPropertyTypeInteger) {
-            newPrimaryKeyObject = [NSNumber numberWithInteger:newPrimaryKey];
-        } else {
-            newPrimaryKeyObject = [NSString stringWithFormat:@"%lu", (unsigned long)newPrimaryKey];
-        }
-        [newObjectStub setObject:newPrimaryKeyObject forKey:resource.primaryKey];
-        NSDictionary *newObjectDictionary = [NSDictionary dictionaryWithDictionary:newObjectStub];
-        [resourceDictionary setObject:newObjectDictionary forKey:newPrimaryKeyObject];
-        return newObjectDictionary;
+        return nil;
     }
+    NSUInteger newPrimaryKey = [resourceDictionary allKeys].count + 1;
+    id newPrimaryKeyObject;
+    if (resource.primaryKeyType == TGPropertyTypeInteger) {
+        newPrimaryKeyObject = [NSNumber numberWithInteger:newPrimaryKey];
+    } else {
+        newPrimaryKeyObject = [NSString stringWithFormat:@"%lu", (unsigned long)newPrimaryKey];
+    }
+    [newObjectStub setObject:newPrimaryKeyObject forKey:resource.primaryKey];
+    NSDictionary *newObjectDictionary = [NSDictionary dictionaryWithDictionary:newObjectStub];
+    [resourceDictionary setObject:newObjectDictionary forKey:newPrimaryKeyObject];
+    return newObjectDictionary;
 }
 
 - (NSDictionary *)modifyResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk withDictionary:(NSDictionary *)dictionary error:(NSError * __autoreleasing *)error
@@ -534,72 +400,61 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
         return nil;
     }
     
-    if (self.isPersisting) {
-        
-    } else {
-        NSMutableDictionary *newDict = [NSMutableDictionary new];
-        
-        for (NSString *key in resource.model.allKeys) {
-            if (![key isEqualToString:resource.primaryKey]) {
-                if (dictionary[key]) {
-                    [newDict setObject:dictionary[key] forKey:key];
-                }
+    NSMutableDictionary *newDict = [NSMutableDictionary new];
+    
+    for (NSString *key in resource.model.allKeys) {
+        if (![key isEqualToString:resource.primaryKey]) {
+            if (dictionary[key]) {
+                [newDict setObject:dictionary[key] forKey:key];
             }
         }
-        
-        if (newDict.allKeys.count == 0) {
-            if (error) {
-                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerBadRequestErrorCode userInfo:nil];
-            }
-        }
-        
-        NSMutableDictionary *mergeDict = [NSMutableDictionary dictionaryWithDictionary:object];
-        [mergeDict addEntriesFromDictionary:newDict];
-        NSDictionary *updatedObject = [NSDictionary dictionaryWithDictionary:mergeDict];
-        
-        NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
-        if (resource.primaryKeyType == TGPropertyTypeInteger) {
-            [resourceDictionary setObject:updatedObject forKey:[NSNumber numberWithInteger:[pk integerValue]]];
-        } else {
-            [resourceDictionary setObject:updatedObject forKey:pk];
-        }
-        
-        return updatedObject;
     }
     
-    return nil;
+    if (newDict.allKeys.count == 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerBadRequestErrorCode userInfo:nil];
+        }
+    }
+    
+    NSMutableDictionary *mergeDict = [NSMutableDictionary dictionaryWithDictionary:object];
+    [mergeDict addEntriesFromDictionary:newDict];
+    NSDictionary *updatedObject = [NSDictionary dictionaryWithDictionary:mergeDict];
+    
+    NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
+    if (resource.primaryKeyType == TGPropertyTypeInteger) {
+        [resourceDictionary setObject:updatedObject forKey:[NSNumber numberWithInteger:[pk integerValue]]];
+    } else {
+        [resourceDictionary setObject:updatedObject forKey:pk];
+    }
+    
+    return updatedObject;
 }
 
 - (void)deleteResource:(TGRESTResource *)resource withPrimaryKey:(NSString *)pk error:(NSError * __autoreleasing *)error
 {
     NSParameterAssert(resource);
     
-    if (self.isPersisting) {
-        
+    NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
+    id objectKey;
+    if (resource.primaryKeyType == TGPropertyTypeInteger) {
+        objectKey = [NSNumber numberWithInteger:[pk integerValue]];
     } else {
-        
-        NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
-        id objectKey;
-        if (resource.primaryKeyType == TGPropertyTypeInteger) {
-            objectKey = [NSNumber numberWithInteger:[pk integerValue]];
-        } else {
-            objectKey = pk;
+        objectKey = pk;
+    }
+    
+    if (objects[objectKey] == [NSNull null]) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
         }
+    } else {
+        NSDictionary *object = objects[objectKey];
         
-        if (objects[objectKey] == [NSNull null]) {
+        if (!object) {
             if (error) {
-                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectDeletedErrorCode userInfo:nil];
+                *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectNotFoundErrorCode userInfo:nil];
             }
         } else {
-            NSDictionary *object = objects[objectKey];
-            
-            if (!object) {
-                if (error) {
-                    *error = [NSError errorWithDomain:TGRESTServerErrorDomain code:TGRESTServerObjectNotFoundErrorCode userInfo:nil];
-                }
-            } else {
-                [objects setObject:[NSNull null] forKey:objectKey];
-            }
+            [objects setObject:[NSNull null] forKey:objectKey];
         }
     }
 }

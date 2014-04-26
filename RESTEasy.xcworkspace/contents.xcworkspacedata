@@ -17,6 +17,9 @@
          <FileRef
             location = "group:TGPrivateFunctions.m">
          </FileRef>
+         <FileRef
+            location = "group:TGRESTServer_TGRESTServerPrivate.h">
+         </FileRef>
       </Group>
       <FileRef
          location = "group:RESTEasy.h">
@@ -32,6 +35,12 @@
       </FileRef>
       <FileRef
          location = "group:TGRESTServer.m">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTPersistentServer.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTPersistentServer.m">
       </FileRef>
    </Group>
    <FileRef

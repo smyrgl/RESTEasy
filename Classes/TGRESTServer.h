@@ -12,13 +12,11 @@
 
 extern NSString * const TGLatencyRangeMinimumOptionKey;
 extern NSString * const TGLatencyRangeMaximumOptionKey;
-extern NSString * const TGPersistenceNameOptionKey;
 extern NSString * const TGWebServerPortNumberOptionKey;
 
 @interface TGRESTServer : NSObject
 
 @property (nonatomic, assign, readonly) BOOL isRunning;
-@property (nonatomic, assign, readonly, getter = isPersisting) BOOL persisting;
 
 + (instancetype)sharedServer;
 
