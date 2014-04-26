@@ -1,18 +1,18 @@
 //
-//  TGPersistentCRUDTests.m
+//  TGSqliteStoreTests.m
 //  Tests
 //
-//  Created by John Tumminaro on 4/25/14.
+//  Created by John Tumminaro on 4/26/14.
 //
 //
 
 #import <XCTest/XCTest.h>
 
-@interface TGPersistentCRUDTests : XCTestCase
+@interface TGSqliteStoreTests : XCTestCase
 
 @end
 
-@implementation TGPersistentCRUDTests
+@implementation TGSqliteStoreTests
 
 - (void)setUp
 {
@@ -25,5 +25,6 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
+
 
 @end

@@ -23,6 +23,7 @@
 
 - (void)tearDown
 {
+    [[TGRESTServer sharedServer] removeAllResourcesWithData:YES];
     [[TGRESTServer sharedServer] stopServer];
     [super tearDown];
 }
@@ -57,9 +58,9 @@
 
 - (void)testAddPersistentResource
 {
-    [[TGRESTPersistentServer sharedServer] startServerWithOptions:nil];
+    [[TGRESTServer sharedServer] startServerWithOptions:@{TGRESTServerDatastoreClassOptionKey: [TGRESTSqliteStore class]}];
     TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTPersistentServer sharedServer] addResource:resource];
+    [[TGRESTServer sharedServer] addResource:resource];
     NSSet *resources = [[TGRESTServer sharedServer] currentResources];
     XCTAssert(resources.count == 1, @"There should be one resource");
     TGRESTResource *newResource = [resources anyObject];

@@ -12,7 +12,8 @@ typedef NS_ENUM(NSUInteger, TGPropertyType) {
     TGPropertyTypeString = 1,
     TGPropertyTypeInteger = 2,
     TGPropertyTypeFloatingPoint = 3,
-    TGPropertyTypeBlob = 4
+    TGPropertyTypeBlob = 4,
+    TGPropertyTypeOther = 5
 };
 
 typedef NS_OPTIONS(NSUInteger, TGResourceRESTActions) {
@@ -29,6 +30,7 @@ typedef NS_OPTIONS(NSUInteger, TGResourceRESTActions) {
 @property (nonatomic, copy, readonly) NSDictionary *model;
 @property (nonatomic, copy, readonly) NSString *primaryKey;
 @property (nonatomic, copy, readonly) NSArray *parentResources;
+@property (nonatomic, copy, readonly) NSArray *childResources;
 @property (nonatomic, copy, readonly) NSDictionary *foreignKeys;
 @property (nonatomic, assign, readonly) TGPropertyType primaryKeyType;
 @property (nonatomic, assign, readonly) TGResourceRESTActions actions;

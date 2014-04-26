@@ -11,6 +11,8 @@
 
 #import "TGRESTResource.h"
 #import "TGRESTServer.h"
-#import "TGRESTPersistentServer.h"
+#import "TGRESTStore.h"
+#import "TGRESTInMemoryStore.h"
+#import "TGRESTSqliteStore.h"
 
 #endif

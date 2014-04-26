@@ -11,11 +11,11 @@
 #import "TGTestFactory.h"
 #import <Gizou/Gizou.h>
 
-@interface TGNonPersistentCRUDTests : XCTestCase
+@interface TGServerCRUDTests : XCTestCase
 
 @end
 
-@implementation TGNonPersistentCRUDTests
+@implementation TGServerCRUDTests
 
 - (void)setUp
 {
@@ -25,6 +25,7 @@
 
 - (void)tearDown
 {
+    [[TGRESTServer sharedServer] removeAllResourcesWithData:YES];
     [[TGRESTServer sharedServer] stopServer];
     [super tearDown];
 }

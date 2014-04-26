@@ -14,6 +14,7 @@
 @property (nonatomic, copy, readwrite) NSDictionary *model;
 @property (nonatomic, copy, readwrite) NSString *primaryKey;
 @property (nonatomic, copy, readwrite) NSArray *parentResources;
+@property (nonatomic, copy, readwrite) NSArray *childResources;
 @property (nonatomic, copy, readwrite) NSDictionary *foreignKeys;
 @property (nonatomic, assign, readwrite) TGPropertyType primaryKeyType;
 @property (nonatomic, assign, readwrite) TGResourceRESTActions actions;
@@ -32,6 +33,7 @@
         self.model = @{};
         self.primaryKey = @"id";
         self.parentResources = @[];
+        
         self.foreignKeys = @{};
         self.primaryKeyType = TGPropertyTypeInteger;
         self.actions = TGResourceRESTActionsGET;
@@ -166,6 +168,12 @@
     resource.model = [NSDictionary dictionaryWithDictionary:mergeModel];
     resource.primaryKeyType = [resource.model[resource.primaryKey] integerValue];
     resource.foreignKeys = [NSDictionary dictionaryWithDictionary:foreignKeyBuilder];
+    
+    for (TGRESTResource *parentResource in resource.parentResources) {
+        NSMutableArray *newChildren = [NSMutableArray arrayWithArray:parentResource.childResources];
+        [newChildren addObject:resource];
+        [parentResource setValue:[NSArray arrayWithArray:newChildren] forKey:@"childResources"];
+    }
     
     return resource;
 }

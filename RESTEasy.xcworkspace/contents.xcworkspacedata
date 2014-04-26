@@ -17,9 +17,6 @@
          <FileRef
             location = "group:TGPrivateFunctions.m">
          </FileRef>
-         <FileRef
-            location = "group:TGRESTServer_TGRESTServerPrivate.h">
-         </FileRef>
       </Group>
       <FileRef
          location = "group:RESTEasy.h">
@@ -37,10 +34,22 @@
          location = "group:TGRESTServer.m">
       </FileRef>
       <FileRef
-         location = "group:TGRESTPersistentServer.h">
+         location = "group:/Users/john/Code/RESTEasy/Classes/TGRESTStore.h">
       </FileRef>
       <FileRef
-         location = "group:TGRESTPersistentServer.m">
+         location = "group:/Users/john/Code/RESTEasy/Classes/TGRESTStore.m">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTInMemoryStore.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTInMemoryStore.m">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTSqliteStore.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTSqliteStore.m">
       </FileRef>
    </Group>
    <FileRef

@@ -8,15 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+@class TGRESTStore;
 @class TGRESTResource;
 
 extern NSString * const TGLatencyRangeMinimumOptionKey;
 extern NSString * const TGLatencyRangeMaximumOptionKey;
 extern NSString * const TGWebServerPortNumberOptionKey;
+extern NSString * const TGRESTServerDatastoreClassOptionKey;
 
 @interface TGRESTServer : NSObject
 
 @property (nonatomic, assign, readonly) BOOL isRunning;
+@property (nonatomic, strong, readonly) TGRESTStore *datastore;
 
 + (instancetype)sharedServer;
 
@@ -27,7 +30,6 @@ extern NSString * const TGWebServerPortNumberOptionKey;
 - (void)addResource:(TGRESTResource *)resource;
 - (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData;
 - (void)removeAllResourcesWithData:(BOOL)removeData;
-
 - (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource;
 - (NSArray *)allObjectsForResource:(TGRESTResource *)resource;
 - (void)addData:(NSArray *)data forResource:(TGRESTResource *)resource;
