@@ -14,6 +14,7 @@
 
 + (TGRESTResource *)testResource;
 + (TGRESTResource *)randomModelTestResource;
++ (NSArray *)randomModelTestResourcesWithCount:(NSUInteger)resourceCount;
 + (TGRESTResource *)testResourceWithParent:(TGRESTResource *)parent;
 + (TGRESTResource *)testResourceWithParents:(NSArray *)parents;
 + (TGRESTResource *)testResourceWithCountOfParents:(NSUInteger)parentCount;

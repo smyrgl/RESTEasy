@@ -28,6 +28,17 @@
                                                                       }];
 }
 
++ (NSArray *)randomModelTestResourcesWithCount:(NSUInteger)resourceCount
+{
+    NSMutableArray *resourcesArray = [NSMutableArray new];
+    
+    for (int x = 0; x < resourceCount; x++) {
+        [resourcesArray addObject:[self randomModelTestResource]];
+    }
+    
+    return [NSArray arrayWithArray:resourcesArray];
+}
+
 + (TGRESTResource *)testResourceWithParent:(TGRESTResource *)parent
 {
     return [self testResourceWithParents:@[parent]];

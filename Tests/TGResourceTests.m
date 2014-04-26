@@ -15,6 +15,8 @@
 
 @implementation TGResourceTests
 
+#pragma mark - Setup
+
 - (void)setUp
 {
     [super setUp];
@@ -26,6 +28,8 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
+
+#pragma mark - Standard tests
 
 - (void)testNameModelConstructor
 {
@@ -226,34 +230,47 @@
     XCTAssert(resource.primaryKeyType == TGPropertyTypeString, @"The primary key type must match the provided string type in the model, not the default integer value");
 }
 
-- (void)testNewResourceWithActions
+- (void)testMultipleParentResources
 {
+    NSArray *parents = [TGTestFactory randomModelTestResourcesWithCount:5];
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"id": [NSNumber numberWithInteger:TGPropertyTypeInteger],
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
-}
-
-- (void)testNewResourceWithCustomPrimaryKey
-{
+    XCTAssertNoThrow(resource = [TGRESTResource newResourceWithName:@"test" model:model actions:TGResourceRESTActionsGET primaryKey:nil parentResources:parents], @"The resource construction must not throw an exception.");
     
-}
-
-- (void)testNewResourceWithParentResource
-{
+    NSMutableDictionary *expectedModel = [NSMutableDictionary dictionaryWithDictionary:model];
+    NSMutableDictionary *expectedFKeys = [NSMutableDictionary new];
+    for (TGRESTResource *parent in parents) {
+        NSString *defaultFKey = [NSString stringWithFormat:@"%@_id", parent.name];
+        [expectedModel setObject:[NSNumber numberWithInteger:parent.primaryKeyType] forKey:defaultFKey];
+        [expectedFKeys setObject:defaultFKey forKey:parent.name];
+    }
     
-}
-
-- (void)testNewResourceWithExplictParentForeignKey
-{
-    
+    XCTAssert([resource.model isEqualToDictionary:expectedModel], @"The model must equal the passed model plus the default foreign keys for the parent objects");
+    XCTAssert([resource.foreignKeys isEqualToDictionary:expectedFKeys], @"The foreignKeys must have the primary keys and names of all of the parent resources");
 }
 
 - (void)testDefaultForeignKeyInModel
 {
+    TGRESTResource *parent = [TGTestFactory randomModelTestResource];
+    NSString *defaultFKey = [NSString stringWithFormat:@"%@_id", parent.name];
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"id": [NSNumber numberWithInteger:TGPropertyTypeInteger],
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            defaultFKey: [NSNumber numberWithInteger:parent.primaryKeyType]
+                            };
     
-}
-
-- (void)testExplictForeignKeyInModel
-{
+    XCTAssertNoThrow(resource = [TGRESTResource newResourceWithName:@"test" model:model actions:TGResourceRESTActionsGET primaryKey:nil parentResources:@[parent]], @"The resource construction must not throw an exception.");
     
+    NSDictionary *expectedFKeyDict = @{
+                                       parent.name: defaultFKey
+                                       };
+    XCTAssert([resource.model isEqualToDictionary:model], @"The model must equal the passed model exactly since we specified the default id and foreign key name");
+    XCTAssert([resource.foreignKeys isEqualToDictionary:expectedFKeyDict], @"The foreignKeys dict must match the expected dictionary");
 }
 
 #pragma mark - Negative tests
@@ -279,6 +296,11 @@
 }
 
 - (void)testForeignKeyParentNameMismatch
+{
+    
+}
+
+- (void)testExplictForeignKeyInModelTypeMismatch
 {
     
 }
@@ -312,17 +334,6 @@
 {
     
 }
-
-- (void)testDefaultForeignKeyNameInModel
-{
-    
-}
-
-- (void)testExplictForeignKeyNameInModel
-{
-    
-}
-
 
 
 
