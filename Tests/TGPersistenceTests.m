@@ -33,7 +33,7 @@
     TGRESTResource *resource = [TGTestFactory testResource];
     [[TGRESTPersistentServer sharedServer] addResource:resource];
     [TGTestFactory createTestDataForResource:resource count:10];
-   // [[TGRESTPersistentServer sharedServer] removeAllResourcesWithData:YES];
+    [[TGRESTPersistentServer sharedServer] removeAllResourcesWithData:YES];
     
    // XCTAssert([[TGRESTPersistentServer sharedServer] currentResources].count == 0, @"There should be zero resources");
    // XCTAssert([[TGRESTPersistentServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There should be zero objects for the resource");

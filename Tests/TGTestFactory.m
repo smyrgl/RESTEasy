@@ -18,6 +18,41 @@
                                          model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}];
 }
 
++ (TGRESTResource *)randomModelTestResource
+{
+    return [TGRESTResource newResourceWithName:[GZWords word] model:@{
+                                                                      [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeString],
+                                                                      [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeInteger],
+                                                                      [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
+                                                                      [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeBlob]
+                                                                      }];
+}
+
++ (TGRESTResource *)testResourceWithParent:(TGRESTResource *)parent
+{
+    return [self testResourceWithParents:@[parent]];
+}
+
++ (TGRESTResource *)testResourceWithParents:(NSArray *)parents
+{
+    return [TGRESTResource newResourceWithName:@"childResource"
+                                         model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}
+                                       actions:TGResourceRESTActionsPOST | TGResourceRESTActionsGET | TGResourceRESTActionsPUT | TGResourceRESTActionsDELETE
+                                    primaryKey:nil
+                               parentResources:parents];
+}
+
++ (TGRESTResource *)testResourceWithCountOfParents:(NSUInteger)parentCount
+{
+    NSMutableArray *parentsArray = [NSMutableArray new];
+    
+    for (int x = 0; x < parentCount; x++) {
+        [parentsArray addObject:[self randomModelTestResource]];
+    }
+    
+    return [self testResourceWithParents:[NSArray arrayWithArray:parentsArray]];
+}
+
 + (NSDictionary *)buildTestDataForResource:(TGRESTResource *)resource
 {
     NSParameterAssert(resource);

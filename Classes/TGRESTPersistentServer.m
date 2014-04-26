@@ -33,7 +33,7 @@
 {
     self = [super init];
     if (self) {
-        self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/RESTeasy.sqlite", TGApplicationDataDirectory()] flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
+        self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/RESTeasy.sqlite", TGApplicationDataDirectory()] flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_DBCONFIG_ENABLE_FKEY];
     }
     
     return self;
@@ -75,7 +75,10 @@
         NSMutableString *columnString = [NSMutableString new];
         for (NSString *key in [newModel allKeys]) {
             if ([key isEqualToString:resource.primaryKey]) {
-                [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@ PRIMARY KEY, ", key, newModel[key]]];
+                [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@ PRIMARY KEY UNIQUE, ", key, newModel[key]]];
+            } else if (resource.foreignKeys[key]) {
+                TGRESTResource *parent = resource.foreignKeys[key];
+                [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@, FOREIGN KEY(%@) REFERENCES %@(%@), ", key, newModel[key], key, parent.name, parent.primaryKey]];
             } else {
                 [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@, ", key, newModel[key]]];
             }
@@ -112,7 +115,7 @@
         if (error) {
             NSLog(@"Error deleting sqlite store! %@", error);
         }
-        self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:path flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
+        self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:path flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_DBCONFIG_ENABLE_FKEY];
     }
 }
 
