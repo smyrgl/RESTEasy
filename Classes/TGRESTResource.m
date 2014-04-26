@@ -123,6 +123,9 @@
     
     [mergeModel addEntriesFromDictionary:model];
     
+    NSMutableArray *validParents = [NSMutableArray new];
+    NSMutableDictionary *foreignKeyBuilder = [NSMutableDictionary new];
+    
     for (id object in parents) {
         if (![object isKindOfClass:[TGRESTResource class]]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -138,31 +141,29 @@
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                            reason:[NSString stringWithFormat:@"Your have not specified a foreign key for parent named %@ but the default foreign key name of %@_id is already specified in your model.  Either delete this from your model or specify a custom foreign key identifier for this parent.", parent.name, parent.name]
                                          userInfo:nil];
-        } else if (fkeys[parent.name]) {
-            if (parent.primaryKeyType == TGPropertyTypeString) {
-                [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeString] forKey:fkeys[parent.name]];
-            } else {
-                [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:fkeys[parent.name]];
-            }
         } else {
-            if (parent.primaryKeyType == TGPropertyTypeString) {
-                [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeString] forKey:[NSString stringWithFormat:@"%@_id", parent.name]];
+            [validParents addObject:object];
+            if (fkeys[parent.name]) {
+                [foreignKeyBuilder setObject:fkeys[parent.name] forKey:parent.name];
+                if (parent.primaryKeyType == TGPropertyTypeString) {
+                    [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeString] forKey:fkeys[parent.name]];
+                } else {
+                    [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:fkeys[parent.name]];
+                }
             } else {
-                [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:[NSString stringWithFormat:@"%@_id", parent.name]];
+                NSString *defaultForeignKey = [NSString stringWithFormat:@"%@_id", parent.name];
+                [foreignKeyBuilder setObject:defaultForeignKey forKey:parent.name];
+                if (parent.primaryKeyType == TGPropertyTypeString) {
+                    [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeString] forKey:defaultForeignKey];
+                } else {
+                    [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:defaultForeignKey];
+                }
             }
         }
     }
     
+    resource.parentResources = [NSArray arrayWithArray:validParents];
     resource.model = [NSDictionary dictionaryWithDictionary:mergeModel];
-    
-    NSMutableDictionary *foreignKeyBuilder = [NSMutableDictionary new];
-    
-    for (NSString *key in fkeys.allKeys) {
-        if (resource.model[key]) {
-            [foreignKeyBuilder setObject:fkeys[key] forKey:key];
-        }
-    }
-    
     resource.foreignKeys = [NSDictionary dictionaryWithDictionary:foreignKeyBuilder];
     
     return resource;
