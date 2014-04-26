@@ -74,10 +74,6 @@ curl http://localhost:8888/person
 
 An empty array?  Well that's not very exciting but it is a start.  
 
-## The Basics
-
-Here are a few basics to get your started.
-
 ## Usage
 
 To run the example project; clone the repo, and run `pod install` from the Example directory first.
@@ -90,6 +86,14 @@ RESTEasy is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
     pod "RESTEasy"
+
+## Acknowledgements 
+
+This library would not have been possible without a couple of fantastic subprojects that it makes use of. 
+
+- [GCDWebServer](https://github.com/swisspol/GCDWebServer) GCD based HTTP server which is used as the underpinning for both the persisting and non-persisting REST server components.
+- [sqlite](https://www.sqlite.org) Used as the embedded database for the persisting REST server option.
+- [FMDB](https://github.com/ccgus/fmdb) Objective-C wrapper that makes interacting with sqlite a lot more straightforward.
 
 ## Author
 
