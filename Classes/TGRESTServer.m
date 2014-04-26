@@ -105,6 +105,12 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
 
 - (void)stopServer
 {
+    if (!self.isPersisting) {
+        [self removeAllResourcesWithData:YES];
+    } else {
+        [self removeAllResourcesWithData:NO];
+    }
+    
     [self.webServer stop];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:TGServerDidShutdownNotification object:self];

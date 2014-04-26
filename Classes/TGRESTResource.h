@@ -33,9 +33,19 @@ typedef NS_OPTIONS(NSUInteger, TGResourceRESTActions) {
 @property (nonatomic, assign, readonly) TGResourceRESTActions actions;
 
 + (instancetype)newResourceWithName:(NSString *)name
+                              model:(NSDictionary *)model;
+
++ (instancetype)newResourceWithName:(NSString *)name
                               model:(NSDictionary *)model
                              routes:(NSArray *)routes
                             actions:(TGResourceRESTActions)actions
                          primaryKey:(NSString *)key;
+
++ (instancetype)newResourceWithName:(NSString *)name
+                              model:(NSDictionary *)model
+                             routes:(NSArray *)routes
+                            actions:(TGResourceRESTActions)actions
+                         primaryKey:(NSString *)key
+                        foreignKeys:(NSDictionary *)fkeys;
 
 @end

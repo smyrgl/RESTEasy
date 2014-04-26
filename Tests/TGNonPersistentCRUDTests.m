@@ -10,11 +10,11 @@
 #import "TGRESTClient.h"
 #import "TGTestFactory.h"
 
-@interface TGNonPersistentServerTests : XCTestCase
+@interface TGNonPersistentCRUDTests : XCTestCase
 
 @end
 
-@implementation TGNonPersistentServerTests
+@implementation TGNonPersistentCRUDTests
 
 - (void)setUp
 {
@@ -25,7 +25,6 @@
 - (void)tearDown
 {
     [[TGRESTServer sharedServer] stopServer];
-    [[TGRESTServer sharedServer] removeAllResourcesWithData:YES];
     [super tearDown];
 }
 
@@ -46,9 +45,10 @@
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
                                  XCTFail(@"The request must not have failed %@", error);
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     XCTAssert(response.count == 0, @"The array should be empty");
 }
 
@@ -71,9 +71,10 @@
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
                                  XCTFail(@"The request should not have failed %@", error);
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     
     XCTAssert(response.count == 100, @"The response must include 100 objects");
 }
@@ -97,9 +98,10 @@
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
                                  XCTFail(@"The request must not have failed %@", error);
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     
     XCTAssert(response, @"There must be an object dictionary");
     XCTAssert([response[resource.primaryKey] isEqualToNumber:@1], @"The primary key must equal 1");
@@ -120,13 +122,14 @@
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"The response must not have been successful");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     
     XCTAssert(statusCode == 404, @"The failing status code must be a 404 not found error");
 }
@@ -153,10 +156,11 @@
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
                                     XCTFail(@"The delete request must not have failed %@", error);
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
-    
+    [self waitForTimeout:1];
+
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
     XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
     
@@ -166,20 +170,51 @@
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"Getting the already deleted object should not be successful");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
                                  getDeletedStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
-    
+    [self waitForTimeout:1];
     XCTAssert(getDeletedStatusCode == 410, @"The status code for the response to get a deleted object must be 410 gone");
 }
 
 - (void)testCreateObject
 {
+    TGRESTResource *resource = [TGTestFactory testResource];
+    [[TGRESTServer sharedServer] addResource:resource];
+    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
     
+    __weak typeof(self) weakSelf = self;
+    __block NSDictionary *response;
+    
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:resource];
+    
+    [[TGRESTClient sharedClient] POST:resource.name
+                           parameters:newObject
+                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  response = responseObject;
+                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                              }
+                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  XCTFail(@"Request to create new object should not fail %@", error);
+                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                              }];
+    
+    [self waitForTimeout:1];
+    XCTAssert(response, @"There must be a response dictionary");
+    for (NSString *key in resource.model.allKeys) {
+        if ([key isEqualToString:resource.primaryKey]) {
+            XCTAssert([response[key] isEqualToNumber:@1], @"The primary key must be 1");
+        } else {
+            XCTAssert([response[key] isEqualTo:newObject[key]], @"The value for %@ in the response and creation dictionaries must be identical %@ %@", key, response[key], newObject[key]);
+        }
+    }
+    
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 1, @"There must be a new object created for the resource");
 }
 
 - (void)testCreateObjectWithNoParameters
@@ -239,9 +274,10 @@
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
                                     XCTFail(@"The delete request must not have failed %@", error);
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
     XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
@@ -269,9 +305,10 @@
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
                                     XCTFail(@"The delete request must not have failed %@", error);
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
     XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
@@ -282,13 +319,14 @@
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     XCTFail(@"The delete request must not be a success");
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
                                     secondDeleteStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                     [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     XCTAssert(secondDeleteStatusCode == 410, @"Status code for an already deleted resource should be 410 Gone");
     XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"The number of resources must not have changed as a result of the second delete operation");
 
@@ -310,13 +348,14 @@
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     XCTFail(@"The delete request must fail for a non-existant object");
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                     [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }];
     
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
+    [self waitForTimeout:1];
     
     XCTAssert(statusCode == 404, @"Status code for a delete for a non-existant object should be 404 not found");
     XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"The delete process should not have changed the resource count");

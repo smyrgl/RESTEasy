@@ -24,7 +24,6 @@
 - (void)tearDown
 {
     [[TGRESTServer sharedServer] stopServer];
-    [[TGRESTServer sharedServer] removeAllResourcesWithData:YES];
     [super tearDown];
 }
 

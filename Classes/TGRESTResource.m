@@ -40,9 +40,35 @@
 
 + (instancetype)newResourceWithName:(NSString *)name
                               model:(NSDictionary *)model
+{
+    return [self newResourceWithName:name
+                               model:model
+                              routes:nil
+                             actions:TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT | TGResourceRESTActionsDELETE
+                          primaryKey:nil
+                         foreignKeys:nil];
+}
+
++ (instancetype)newResourceWithName:(NSString *)name
+                              model:(NSDictionary *)model
                              routes:(NSArray *)routes
                             actions:(TGResourceRESTActions)actions
                          primaryKey:(NSString *)key
+{
+    return [self newResourceWithName:name
+                               model:model
+                              routes:routes
+                             actions:actions
+                          primaryKey:key
+                         foreignKeys:nil];
+}
+
++ (instancetype)newResourceWithName:(NSString *)name
+                              model:(NSDictionary *)model
+                             routes:(NSArray *)routes
+                            actions:(TGResourceRESTActions)actions
+                         primaryKey:(NSString *)key
+                        foreignKeys:(NSDictionary *)fkeys
 {
     NSParameterAssert(name);
     NSParameterAssert(model);
@@ -51,7 +77,7 @@
     
     resource.name = name;
     resource.actions = actions;
-
+    
     if (key) {
         if (!model[key]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -83,7 +109,6 @@
     
     return resource;
 }
-
 
 #pragma mark - Private
 

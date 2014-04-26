@@ -14,6 +14,7 @@
 
 + (TGRESTResource *)testResource;
 
++ (NSDictionary *)buildTestDataForResource:(TGRESTResource *)resource;
 + (void)createTestDataForResource:(TGRESTResource *)resource count:(NSUInteger)count;
 
 @end
