@@ -56,7 +56,7 @@
     NSDictionary *newModel = [resource valueForKey:@"sqliteModel"];
     __block BOOL resetTable = NO;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *tableInfo = [db executeQuery:[NSString stringWithFormat:@"PRAGMA table_info(%@)", resource.name]];
+        FMResultSet *tableInfo = [db getTableSchema:resource.name];
         if ([tableInfo columnCount] > 0) {
             NSMutableDictionary *existingModel = [NSMutableDictionary new];
             while ([tableInfo next]) {
@@ -74,7 +74,11 @@
     if (resetTable) {
         NSMutableString *columnString = [NSMutableString new];
         for (NSString *key in [newModel allKeys]) {
-            [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@, ", key, newModel[key]]];
+            if ([key isEqualToString:resource.primaryKey]) {
+                [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@ PRIMARY KEY, ", key, newModel[key]]];
+            } else {
+                [columnString appendString:[NSString stringWithFormat:@"\"%@\" %@, ", key, newModel[key]]];
+            }
         }
         
         [columnString deleteCharactersInRange:NSMakeRange(columnString.length - 2, 2)];
@@ -176,13 +180,16 @@
     }
 
     __block BOOL saveSuccess;
-    NSMutableString *sqlString = [NSMutableString new];
+    NSMutableString *keyString = [NSMutableString new];
+    NSMutableString *valueString = [NSMutableString new];
     for (NSString *key in newObjectStub) {
-        [sqlString appendString:[NSString stringWithFormat:@"\"%@\" %@, ", key, newObjectStub[key]]];
+        [keyString appendString:[NSString stringWithFormat:@"'%@', ", key]];
+        [valueString appendString:[NSString stringWithFormat:@"'%@', ", newObjectStub[key]]];
     }
-    [sqlString deleteCharactersInRange:NSMakeRange(sqlString.length - 2, 2)];
+    [keyString deleteCharactersInRange:NSMakeRange(keyString.length - 2, 2)];
+    [valueString deleteCharactersInRange:NSMakeRange(valueString.length - 2, 2)];
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        saveSuccess = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ VALUES(%@)", resource.name, sqlString]];
+        saveSuccess = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES(%@)", resource.name, keyString, valueString]];
     }];
     if (saveSuccess) {
         return newObjectStub;

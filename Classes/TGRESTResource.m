@@ -12,7 +12,6 @@
 
 @property (nonatomic, copy, readwrite) NSString *name;
 @property (nonatomic, copy, readwrite) NSDictionary *model;
-@property (nonatomic, copy, readwrite) NSArray *routes;
 @property (nonatomic, copy, readwrite) NSString *primaryKey;
 @property (nonatomic, assign, readwrite) TGPropertyType primaryKeyType;
 @property (nonatomic, assign, readwrite) TGResourceRESTActions actions;
@@ -29,7 +28,6 @@
     if (self) {
         self.name = @"";
         self.model = @{@"id": [NSNumber numberWithInteger:TGPropertyTypeInteger]};
-        self.routes = @[];
         self.primaryKey = @"id";
         self.primaryKeyType = TGPropertyTypeInteger;
         self.actions = TGResourceRESTActionsGET;
@@ -43,7 +41,6 @@
 {
     return [self newResourceWithName:name
                                model:model
-                              routes:nil
                              actions:TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT | TGResourceRESTActionsDELETE
                           primaryKey:nil
                          foreignKeys:nil];
@@ -51,13 +48,11 @@
 
 + (instancetype)newResourceWithName:(NSString *)name
                               model:(NSDictionary *)model
-                             routes:(NSArray *)routes
                             actions:(TGResourceRESTActions)actions
                          primaryKey:(NSString *)key
 {
     return [self newResourceWithName:name
                                model:model
-                              routes:routes
                              actions:actions
                           primaryKey:key
                          foreignKeys:nil];
@@ -65,7 +60,6 @@
 
 + (instancetype)newResourceWithName:(NSString *)name
                               model:(NSDictionary *)model
-                             routes:(NSArray *)routes
                             actions:(TGResourceRESTActions)actions
                          primaryKey:(NSString *)key
                         foreignKeys:(NSDictionary *)fkeys
@@ -100,13 +94,7 @@
         [mergeModel addEntriesFromDictionary:userModel];
         resource.model = [NSDictionary dictionaryWithDictionary:mergeModel];
     }
-    
-    if (!routes || routes.count == 0) {
-        resource.routes = @[name];
-    } else {
-        resource.routes = routes;
-    }
-    
+        
     return resource;
 }
 
@@ -117,25 +105,16 @@
     NSMutableDictionary *sqlite3Model = [NSMutableDictionary new];
     for (NSString *key in [self.model allKeys]) {
         NSNumber *value = self.model[key];
-        if ([key isEqualToString:self.primaryKey]) {
-            if ([value integerValue] == TGPropertyTypeString) {
-                [sqlite3Model setObject:@"TEXT PRIMARY KEY" forKey:key];
-            } else if ([value integerValue] == TGPropertyTypeInteger) {
-                [sqlite3Model setObject:@"INTEGER PRIMARY KEY" forKey:key];
-            }
-        } else {
-            if ([value integerValue] == TGPropertyTypeString) {
-                [sqlite3Model setObject:@"TEXT" forKey:key];
-            } else if ([value integerValue] == TGPropertyTypeInteger) {
-                [sqlite3Model setObject:@"INTEGER" forKey:key];
-            } else if ([value integerValue] == TGPropertyTypeFloatingPoint) {
-                [sqlite3Model setObject:@"REAL" forKey:key];
-            } else if ([value integerValue] == TGPropertyTypeBlob) {
-                [sqlite3Model setObject:@"BLOB" forKey:key];
-            }
+        if ([value integerValue] == TGPropertyTypeString) {
+            [sqlite3Model setObject:@"TEXT" forKey:key];
+        } else if ([value integerValue] == TGPropertyTypeInteger) {
+            [sqlite3Model setObject:@"INTEGER" forKey:key];
+        } else if ([value integerValue] == TGPropertyTypeFloatingPoint) {
+            [sqlite3Model setObject:@"REAL" forKey:key];
+        } else if ([value integerValue] == TGPropertyTypeBlob) {
+            [sqlite3Model setObject:@"BLOB" forKey:key];
         }
-    }
-    
+    }    
     return [NSDictionary dictionaryWithDictionary:sqlite3Model];
 }
 

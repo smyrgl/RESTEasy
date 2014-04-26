@@ -27,7 +27,6 @@ typedef NS_OPTIONS(NSUInteger, TGResourceRESTActions) {
 
 @property (nonatomic, copy, readonly) NSString *name;
 @property (nonatomic, copy, readonly) NSDictionary *model;
-@property (nonatomic, copy, readonly) NSArray *routes;
 @property (nonatomic, copy, readonly) NSString *primaryKey;
 @property (nonatomic, assign, readonly) TGPropertyType primaryKeyType;
 @property (nonatomic, assign, readonly) TGResourceRESTActions actions;
@@ -37,13 +36,11 @@ typedef NS_OPTIONS(NSUInteger, TGResourceRESTActions) {
 
 + (instancetype)newResourceWithName:(NSString *)name
                               model:(NSDictionary *)model
-                             routes:(NSArray *)routes
                             actions:(TGResourceRESTActions)actions
                          primaryKey:(NSString *)key;
 
 + (instancetype)newResourceWithName:(NSString *)name
                               model:(NSDictionary *)model
-                             routes:(NSArray *)routes
                             actions:(TGResourceRESTActions)actions
                          primaryKey:(NSString *)key
                         foreignKeys:(NSDictionary *)fkeys;

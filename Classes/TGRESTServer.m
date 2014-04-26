@@ -103,122 +103,114 @@ NSUInteger const TGRESTServerBadRequestErrorCode = 103;
     if (resource.actions & TGResourceRESTActionsGET) {
         __weak typeof(self) weakSelf = self;
         
-        for (NSString *route in resource.routes) {
-            [self.webServer addHandlerForMethod:@"GET"
-                                      pathRegex:[NSString stringWithFormat:@"^/(%@)", route]
-                                   requestClass:[GCDWebServerRequest class]
-                                   processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                       __strong typeof(weakSelf) strongSelf = weakSelf;
-                                       NSString *lastPathComponent = request.URL.lastPathComponent;
-                                       if ([lastPathComponent isEqualToString:resource.name]) {
-                                           NSError *error;
-                                           NSArray *allData = [strongSelf getAllDataForResource:resource error:&error];
-                                           if (error) {
-                                               return [TGRESTServer errorResponseBuilderWithError:error];
-                                           }
-                                           return [GCDWebServerDataResponse responseWithJSONObject:allData];
-                                       } else {
-                                           NSError *error;
-                                           NSDictionary *resourceResponse = [strongSelf getDataForResource:resource withPrimaryKey:lastPathComponent error:&error];
-                                           if (error) {
-                                               return [TGRESTServer errorResponseBuilderWithError:error];
-                                           }
-                                           return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+        [self.webServer addHandlerForMethod:@"GET"
+                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                               requestClass:[GCDWebServerRequest class]
+                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   NSString *lastPathComponent = request.URL.lastPathComponent;
+                                   if ([lastPathComponent isEqualToString:resource.name]) {
+                                       NSError *error;
+                                       NSArray *allData = [strongSelf getAllDataForResource:resource error:&error];
+                                       if (error) {
+                                           return [TGRESTServer errorResponseBuilderWithError:error];
                                        }
-                                   }];
-        }
+                                       return [GCDWebServerDataResponse responseWithJSONObject:allData];
+                                   } else {
+                                       NSError *error;
+                                       NSDictionary *resourceResponse = [strongSelf getDataForResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                       if (error) {
+                                           return [TGRESTServer errorResponseBuilderWithError:error];
+                                       }
+                                       return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+                                   }
+                               }];
     }
     
     if (resource.actions & TGResourceRESTActionsPOST) {
         __weak typeof(self) weakSelf = self;
         
-        for (NSString *route in resource.routes) {
-            [self.webServer addHandlerForMethod:@"POST"
-                                      pathRegex:[NSString stringWithFormat:@"^/(%@)", route]
-                                   requestClass:[GCDWebServerDataRequest class]
-                                   processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                       __strong typeof(weakSelf) strongSelf = weakSelf;
-                                       GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
-                                       NSDictionary *body;
-                                       if ([dataRequest.contentType hasPrefix:@"application/json"]) {
-                                           NSError *jsonError;
-                                           body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
-                                           if (jsonError) {
-                                               return [GCDWebServerResponse responseWithStatusCode:400];
-                                           }
-                                       } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+        [self.webServer addHandlerForMethod:@"POST"
+                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                               requestClass:[GCDWebServerDataRequest class]
+                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
+                                   NSDictionary *body;
+                                   if ([dataRequest.contentType hasPrefix:@"application/json"]) {
+                                       NSError *jsonError;
+                                       body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
+                                       if (jsonError) {
                                            return [GCDWebServerResponse responseWithStatusCode:400];
                                        }
-                                       NSError *error;
-                                       NSDictionary *newObject = [strongSelf createNewObjectForResource:resource withDictionary:body error:&error];
-                                       if (error) {
-                                           return [TGRESTServer errorResponseBuilderWithError:error];
-                                       }
-                                       return [GCDWebServerDataResponse responseWithJSONObject:newObject];
-                                   }];
-        }
+                                   } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+                                       return [GCDWebServerResponse responseWithStatusCode:400];
+                                   }
+                                   NSError *error;
+                                   NSDictionary *newObject = [strongSelf createNewObjectForResource:resource withDictionary:body error:&error];
+                                   if (error) {
+                                       return [TGRESTServer errorResponseBuilderWithError:error];
+                                   }
+                                   return [GCDWebServerDataResponse responseWithJSONObject:newObject];
+                               }];
     }
     
     if (resource.actions & TGResourceRESTActionsDELETE) {
         __weak typeof(self) weakSelf = self;
         
-        for (NSString *route in resource.routes) {
-            [self.webServer addHandlerForMethod:@"DELETE"
-                                      pathRegex:[NSString stringWithFormat:@"^/(%@)", route]
-                                   requestClass:[GCDWebServerRequest class]
-                                   processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                       __strong typeof(weakSelf) strongSelf = weakSelf;
-                                       NSString *lastPathComponent = request.URL.lastPathComponent;
-                                       if ([lastPathComponent isEqualToString:resource.name]) {
-                                           return [GCDWebServerResponse responseWithStatusCode:403];
-                                       }
-                                       NSError *error;
-                                       [strongSelf deleteResource:resource withPrimaryKey:lastPathComponent error:&error];
-                                       
-                                       if (error) {
-                                           return [TGRESTServer errorResponseBuilderWithError:error];
-                                       }
-                                       return [GCDWebServerResponse responseWithStatusCode:204];
-                                   }];
-        }
+        [self.webServer addHandlerForMethod:@"DELETE"
+                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                               requestClass:[GCDWebServerRequest class]
+                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   NSString *lastPathComponent = request.URL.lastPathComponent;
+                                   if ([lastPathComponent isEqualToString:resource.name]) {
+                                       return [GCDWebServerResponse responseWithStatusCode:403];
+                                   }
+                                   NSError *error;
+                                   [strongSelf deleteResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                   
+                                   if (error) {
+                                       return [TGRESTServer errorResponseBuilderWithError:error];
+                                   }
+                                   return [GCDWebServerResponse responseWithStatusCode:204];
+                               }];
     }
     
     if (resource.actions & TGResourceRESTActionsPUT) {
         __weak typeof(self) weakSelf = self;
         
-        for (NSString *route in resource.routes) {
-            [self.webServer addHandlerForMethod:@"PUT"
-                                      pathRegex:[NSString stringWithFormat:@"^/(%@)", route]
-                                   requestClass:[GCDWebServerDataRequest class]
-                                   processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                       __strong typeof(weakSelf) strongSelf = weakSelf;
-                                       NSString *lastPathComponent = request.URL.lastPathComponent;
-                                       if ([lastPathComponent isEqualToString:resource.name]) {
-                                           return [GCDWebServerResponse responseWithStatusCode:403];
-                                       }
-                                       GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
-                                       NSDictionary *body;
-                                       if ([dataRequest.contentType hasPrefix:@"application/json"]) {
-                                           NSError *jsonError;
-                                           body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
-                                           if (jsonError) {
-                                               return [GCDWebServerResponse responseWithStatusCode:400];
-                                           }
-                                       } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+        [self.webServer addHandlerForMethod:@"PUT"
+                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                               requestClass:[GCDWebServerDataRequest class]
+                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   NSString *lastPathComponent = request.URL.lastPathComponent;
+                                   if ([lastPathComponent isEqualToString:resource.name]) {
+                                       return [GCDWebServerResponse responseWithStatusCode:403];
+                                   }
+                                   GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
+                                   NSDictionary *body;
+                                   if ([dataRequest.contentType hasPrefix:@"application/json"]) {
+                                       NSError *jsonError;
+                                       body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
+                                       if (jsonError) {
                                            return [GCDWebServerResponse responseWithStatusCode:400];
                                        }
-                                       
-                                       NSError *error;
-                                       NSDictionary *resourceResponse = [strongSelf modifyResource:resource withPrimaryKey:lastPathComponent withDictionary:body error:&error];
-                                       
-                                       if (error) {
-                                           return [TGRESTServer errorResponseBuilderWithError:error];
-                                       }
-                                       return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
-                                   }];
-        }
+                                   } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+                                       return [GCDWebServerResponse responseWithStatusCode:400];
+                                   }
+                                   
+                                   NSError *error;
+                                   NSDictionary *resourceResponse = [strongSelf modifyResource:resource withPrimaryKey:lastPathComponent withDictionary:body error:&error];
+                                   
+                                   if (error) {
+                                       return [TGRESTServer errorResponseBuilderWithError:error];
+                                   }
+                                   return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+                               }];
     }
-        
+    
     [self.resources addObject:resource];
 }
 

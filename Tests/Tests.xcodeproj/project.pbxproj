@@ -41,6 +41,8 @@
 		52D0394F19097EF800D3900F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D0394D19097EF800D3900F /* InfoPlist.strings */; };
 		52D0395A1909810400D3900F /* TGBasicServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D039591909810400D3900F /* TGBasicServerTests.m */; };
 		52D0395B1909810400D3900F /* TGBasicServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D039591909810400D3900F /* TGBasicServerTests.m */; };
+		52E1F529190BFCDE00AF262F /* TGPersistenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E1F528190BFCDE00AF262F /* TGPersistenceTests.m */; };
+		52E1F52A190BFCDE00AF262F /* TGPersistenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E1F528190BFCDE00AF262F /* TGPersistenceTests.m */; };
 		52FF8A95190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */; };
 		52FF8A97190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */; };
 		52FF8A98190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */; };
@@ -101,6 +103,7 @@
 		52D0394E19097EF800D3900F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52D0395219097EF800D3900F /* osxtests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "osxtests-Prefix.pch"; sourceTree = "<group>"; };
 		52D039591909810400D3900F /* TGBasicServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBasicServerTests.m; sourceTree = "<group>"; };
+		52E1F528190BFCDE00AF262F /* TGPersistenceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPersistenceTests.m; sourceTree = "<group>"; };
 		52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerAPIErrorHandlingTests.m; sourceTree = "<group>"; };
 		52FF8A96190B4BA00099503B /* TGNonPersistentRelationshipTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNonPersistentRelationshipTests.m; sourceTree = "<group>"; };
 		52FF8A99190B4BAE0099503B /* TGPersistentRelationshipTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPersistentRelationshipTests.m; sourceTree = "<group>"; };
@@ -203,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				52D039591909810400D3900F /* TGBasicServerTests.m */,
+				52E1F528190BFCDE00AF262F /* TGPersistenceTests.m */,
 				52541FA4190B2FC5000A44FA /* TGResourceModelTests.m */,
 				52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */,
 				52541FA1190B1256000A44FA /* TGRoutingTests.m */,
@@ -528,6 +532,7 @@
 			files = (
 				52FF8A97190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */,
 				52FF8A95190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m in Sources */,
+				52E1F529190BFCDE00AF262F /* TGPersistenceTests.m in Sources */,
 				52541F9F190B0DFA000A44FA /* TGTestFactory.m in Sources */,
 				52FF8A9A190B4BAE0099503B /* TGPersistentRelationshipTests.m in Sources */,
 				52541FA5190B2FC5000A44FA /* TGResourceModelTests.m in Sources */,
@@ -560,6 +565,7 @@
 				52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
 				52FF8A98190B4BA00099503B /* TGNonPersistentRelationshipTests.m in Sources */,
 				52541F96190B0BCD000A44FA /* TGNonPersistentCRUDTests.m in Sources */,
+				52E1F52A190BFCDE00AF262F /* TGPersistenceTests.m in Sources */,
 				52FF8A9F190B5FCD0099503B /* TGRESTPersistentServer.m in Sources */,
 				52541FA9190B300F000A44FA /* TGPersistentCRUDTests.m in Sources */,
 			);
