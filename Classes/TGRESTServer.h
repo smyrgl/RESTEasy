@@ -37,6 +37,6 @@ extern NSString * const TGRESTServerDatastoreClassOptionKey;
 
 @end
 
-extern NSString * const TGServerDidStartNotification;
-extern NSString * const TGServerDidShutdownNotification;
+extern NSString * const TGRESTServerDidStartNotification;
+extern NSString * const TGRESTServerDidShutdownNotification;
 

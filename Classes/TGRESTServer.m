@@ -20,10 +20,10 @@ NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionK
 NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionKey";
 NSString * const TGRESTServerDatastoreClassOptionKey = @"TGRESTServerDatastoreClassOptionKey";
 
-NSString * const TGServerDidStartNotification = @"TGServerDidStartNotification";
-NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotification";
+NSString * const TGRESTServerDidStartNotification = @"TGRESTServerDidStartNotification";
+NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdownNotification";
 
-@interface TGRESTServer ()
+@interface TGRESTServer () <GCDWebServerDelegate>
 
 @property (nonatomic, strong) GCDWebServer *webServer;
 @property (nonatomic, assign) CGFloat latencyMin;
@@ -52,6 +52,7 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     self = [super init];
     if (self) {
         self.webServer = [[GCDWebServer alloc] init];
+        self.webServer.delegate = self;
         self.serverURL = self.webServer.serverURL;
         self.resources = [NSMutableSet new];
         self.datastore = [TGRESTInMemoryStore new];
@@ -95,8 +96,6 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] floatValue];
     [self.webServer startWithPort:serverPort bonjourName:nil];
     self.serverURL = self.webServer.serverURL;
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:TGServerDidStartNotification object:self];
 }
 
 - (void)stopServer
@@ -104,7 +103,7 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     [self.webServer stop];
     self.datastore = nil;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:TGServerDidShutdownNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidShutdownNotification object:self];
 }
 
 #pragma mark - Resources
@@ -315,6 +314,13 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
             NSLog(@"WARN: No matching keys for object %@", objectDictionary);
         }
     }
+}
+
+#pragma mark - GCDWebServer delegate
+
+- (void)webServerDidStart:(GCDWebServer *)server
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
 }
 
 #pragma mark - Private

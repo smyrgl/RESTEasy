@@ -32,6 +32,7 @@
 {
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    
     XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
 }
 
