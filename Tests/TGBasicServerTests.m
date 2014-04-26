@@ -39,7 +39,7 @@
                                                       [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                                   }];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
-    [self waitForTimeout:1];
+    [self waitForTimeout:2];
     XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
 }
 
@@ -54,7 +54,7 @@
                                                       [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                                   }];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
-    [self waitForTimeout:1];
+    [self waitForTimeout:2];
     XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
     [[TGRESTServer sharedServer] stopServer];
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");

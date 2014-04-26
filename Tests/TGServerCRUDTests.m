@@ -29,7 +29,7 @@
                                                       [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                                   }];
     
-    [self waitForTimeout:1];
+    [self waitForTimeout:2];
 }
 
 - (void)tearDown
