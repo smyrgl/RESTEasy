@@ -11,6 +11,7 @@
 #import <GCDWebServer/GCDWebServerDataResponse.h>
 #import <GCDWebServer/GCDWebServerDataRequest.h>
 #import "TGPrivateFunctions.h"
+#import "TGRESTResource.h"
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseQueue.h>
 #import <FMDB/FMDatabaseAdditions.h>
