@@ -21,7 +21,7 @@
 
 - (instancetype)init
 {
-    self = [super initWithBaseURL:[NSURL URLWithString:@"http://localhost:8888/"]];
+    self = [super initWithBaseURL:[[TGRESTServer sharedServer] serverURL]];
     if (self) {
         self.responseSerializer = [AFJSONResponseSerializer serializer];
         self.requestSerializer = [AFJSONRequestSerializer serializer];

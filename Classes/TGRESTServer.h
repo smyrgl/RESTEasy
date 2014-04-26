@@ -19,6 +19,7 @@ extern NSString * const TGRESTServerDatastoreClassOptionKey;
 @interface TGRESTServer : NSObject
 
 @property (nonatomic, assign, readonly) BOOL isRunning;
+@property (nonatomic, strong, readonly) NSURL *serverURL;
 @property (nonatomic, strong, readonly) TGRESTStore *datastore;
 
 + (instancetype)sharedServer;

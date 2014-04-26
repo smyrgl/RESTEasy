@@ -29,6 +29,7 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
 @property (nonatomic, assign) CGFloat latencyMin;
 @property (nonatomic, assign) CGFloat latencyMax;
 @property (nonatomic, strong) NSMutableSet *resources;
+@property (nonatomic, strong, readwrite) NSURL *serverURL;
 @property (nonatomic, strong, readwrite) TGRESTStore *datastore;
 
 @end
@@ -51,6 +52,7 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     self = [super init];
     if (self) {
         self.webServer = [[GCDWebServer alloc] init];
+        self.serverURL = self.webServer.serverURL;
         self.resources = [NSMutableSet new];
         self.datastore = [TGRESTInMemoryStore new];
         self.datastore.server = self;
@@ -81,14 +83,18 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
     if (options[TGRESTServerDatastoreClassOptionKey]) {
         Class aClass = options[TGRESTServerDatastoreClassOptionKey];
         self.datastore = [aClass new];
-        self.datastore.server = self;
-        NSLog(@"Starting with datastore %@", self.datastore.name);
+    } else {
+        self.datastore = [TGRESTInMemoryStore new];
     }
+    
+    self.datastore.server = self;
+    NSLog(@"Starting with datastore %@", self.datastore.name);
     
     [options[TGWebServerPortNumberOptionKey] integerValue];
     self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
     self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] floatValue];
     [self.webServer startWithPort:serverPort bonjourName:nil];
+    self.serverURL = self.webServer.serverURL;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:TGServerDidStartNotification object:self];
 }
@@ -96,6 +102,7 @@ NSString * const TGServerDidShutdownNotification = @"TGServerDidShutdownNotifica
 - (void)stopServer
 {
     [self.webServer stop];
+    self.datastore = nil;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:TGServerDidShutdownNotification object:self];
 }
