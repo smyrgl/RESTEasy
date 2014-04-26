@@ -194,9 +194,36 @@
     XCTAssert([resource.foreignKeys[parentResource.name] isEqualToString:customFkey], @"The foreign key dictionary value for the parent name should be the custom foreign key");
 }
 
-- (void)testNewResourceWithAdvancedModel
+- (void)testModelPropertyTypes
 {
+    NSDictionary *model = @{
+                            @"string": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"integer": [NSNumber numberWithInteger:TGPropertyTypeInteger],
+                            @"float": [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
+                            @"blob": [NSNumber numberWithInteger:TGPropertyTypeBlob]
+                            };
     
+    TGRESTResource *resource = [TGRESTResource newResourceWithName:@"test" model:model];
+    
+    NSMutableDictionary *expectedModel = [NSMutableDictionary dictionaryWithDictionary:model];
+    [expectedModel setObject:[NSNumber numberWithInteger:resource.primaryKeyType] forKey:resource.primaryKey];
+    
+    XCTAssert([resource.model isEqualToDictionary:expectedModel], @"The resource model must match the passed model plus the primary key");
+}
+
+- (void)testImplicitPrimaryKeyInModel
+{
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"id": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
+    
+    XCTAssertNoThrow(resource = [TGRESTResource newResourceWithName:@"test" model:model], @"The resource construction must not throw an exception.");
+    
+    XCTAssert([resource.model isEqualToDictionary:model], @"The resource model must match the model that was provided exactly");
+    XCTAssert([resource.primaryKey isEqualToString:@"id"], @"The primary key must match the default value");
+    XCTAssert(resource.primaryKeyType == TGPropertyTypeString, @"The primary key type must match the provided string type in the model, not the default integer value");
 }
 
 - (void)testNewResourceWithActions
@@ -237,6 +264,16 @@
 }
 
 - (void)testPrimaryKeyNotInModel
+{
+    
+}
+
+- (void)testPrimaryKeyImplictlySetToInvalidType
+{
+    
+}
+
+- (void)testPrimaryKeyExplictlySetToInvalidType
 {
     
 }

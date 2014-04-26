@@ -113,8 +113,8 @@
     } else {
         NSNumber *existingModelIDProperty = model[@"id"];
         if (!existingModelIDProperty) {
-            [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:@"id"];
-        } else if ([existingModelIDProperty integerValue] != TGPropertyTypeInteger || TGPropertyTypeString) {
+            [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:resource.primaryKey];
+        } else if ([existingModelIDProperty integerValue] != TGPropertyTypeInteger && [existingModelIDProperty integerValue] != TGPropertyTypeString) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                            reason:@"The default primary key of 'id' is set to a type that is not text or integer type.  If you want to use 'id' as your primary key give it a valid type in the model or if you want to use a different primary key then set the primary key name explicitly in the constructor."
                                          userInfo:nil];
@@ -164,6 +164,7 @@
     
     resource.parentResources = [NSArray arrayWithArray:validParents];
     resource.model = [NSDictionary dictionaryWithDictionary:mergeModel];
+    resource.primaryKeyType = [resource.model[resource.primaryKey] integerValue];
     resource.foreignKeys = [NSDictionary dictionaryWithDictionary:foreignKeyBuilder];
     
     return resource;
