@@ -31,15 +31,30 @@
 - (void)testStartServer
 {
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
+    __weak typeof(self) weakSelf = self;
+    [[NSNotificationCenter defaultCenter] addObserverForName:TGRESTServerDidStartNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                                  }];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
-    
+    [self waitForTimeout:1];
     XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
 }
 
 - (void)testStopServer
 {
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
+    __weak typeof(self) weakSelf = self;
+    [[NSNotificationCenter defaultCenter] addObserverForName:TGRESTServerDidStartNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                                  }];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    [self waitForTimeout:1];
     XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
     [[TGRESTServer sharedServer] stopServer];
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
