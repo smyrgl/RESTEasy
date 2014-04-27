@@ -63,12 +63,12 @@
     self.testChildObjectDict = [[TGRESTServer sharedServer] allObjectsForResource:self.childResource][0];
     NSParameterAssert(self.testChildObjectDict);
     
-    parentData = @{@"name": [GZNames name]};
-    [[TGRESTServer sharedServer] addData:@[parentData] forResource:self.parentResource];
+    NSDictionary *secondParentData = @{@"name": [GZNames name]};
+    [[TGRESTServer sharedServer] addData:@[secondParentData] forResource:self.parentResource];
     NSArray *allParents = [[TGRESTServer sharedServer] allObjectsForResource:self.parentResource];
     
     for (NSDictionary *dict in allParents) {
-        if ([dict[@"name"] isEqualToString:parentData[@"name"]]) {
+        if ([dict[@"name"] isEqualToString:secondParentData[@"name"]]) {
             self.testSecondaryParentObjectDict = dict;
         }
     }
@@ -191,7 +191,7 @@
     XCTAssert([response isEqualToArray:self.testSecondaryChildrenObjectDicts], @"The response should be the same as the array of secondary test children");
 }
 
-- (void)testBaseCreateRoute
+- (void)testBaseParentCreateRoute
 {
     __block NSDictionary *response;
     __weak typeof(self) weakSelf = self;
@@ -215,11 +215,53 @@
     XCTAssert([response[self.parentResource.primaryKey] isEqualTo:[NSNumber numberWithInteger:3]], @"Must include a primary key which should be set at 3 since there are 2 existing parent resources");
 }
 
-/*
+- (void)testBaseChildCreateRoute
+{
+    __block NSDictionary *response;
+    __weak typeof(self) weakSelf = self;
+    
+    NSDictionary *params = @{@"address": [GZInternet email]};
+    
+    [[TGRESTClient sharedClient] POST:[NSString stringWithFormat:@"/%@", self.childResource.name]
+                           parameters:params
+                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  response = responseObject;
+                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                              }
+                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  XCTFail(@"The request to the child base create route must not fail %@", error);
+                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                              }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert([response[@"address"] isEqualToString:params[@"address"]], @"The returned object must include an address with the value in the passed param");
+    XCTAssert([response[self.parentResource.primaryKey] isEqualTo:[NSNumber numberWithInteger:7]], @"Must include a primary key which should be set at 7 since there are 6 existing child resources");
+    XCTAssert([response[self.childResource.foreignKeys[self.parentResource.name]] isEqualTo:[NSNull null]], @"Since there was no parent resource specified and this is a base route, the response should include the foreign key but the value should be of NSNull");
+}
+
 
 - (void)testNestedCreateRoute
 {
+    __block NSDictionary *response;
+    __weak typeof(self) weakSelf = self;
     
+    NSDictionary *params = @{@"address": [GZInternet email]};
+    
+    [[TGRESTClient sharedClient] POST:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name]
+                           parameters:params
+                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  response = responseObject;
+                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                              }
+                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  XCTFail(@"The request to create a child object using a nested route must not fail %@", error);
+                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                              }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert([response[@"address"] isEqualToString:params[@"address"]], @"The returned object must include an address with the value in the passed param");
 }
 
 - (void)testBaseShowRoute
@@ -275,7 +317,5 @@
 {
     
 }
- 
- */
 
 @end

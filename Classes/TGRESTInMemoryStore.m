@@ -155,6 +155,11 @@
     
     NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithDictionary:properties];
     [propertyDictionary setObject:newPrimaryKeyObject forKey:resource.primaryKey];
+    for (NSString *key in resource.model.allKeys) {
+        if (!propertyDictionary[key]) {
+            [propertyDictionary setObject:[NSNull null] forKey:key];
+        }
+    }
     NSDictionary *newObjectDictionary = [NSDictionary dictionaryWithDictionary:propertyDictionary];
     [resourceDictionary setObject:newObjectDictionary forKey:newPrimaryKeyObject];
     return newObjectDictionary;

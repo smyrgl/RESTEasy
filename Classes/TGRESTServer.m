@@ -103,8 +103,11 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     if (options[TGRESTServerDatastoreClassOptionKey]) {
         Class aClass = options[TGRESTServerDatastoreClassOptionKey];
         self.datastore = [aClass new];
-    } else if (self.datastore.class != [TGRESTInMemoryStore class]) {
+    } else {
         self.datastore = [TGRESTInMemoryStore new];
+        for (TGRESTResource *resource in [self.resources allObjects]) {
+            [self.datastore addResource:resource];
+        }
     }
     
     self.datastore.server = self;
@@ -135,7 +138,9 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 {
     NSParameterAssert(resource);
     
-    [self.datastore addResource:resource];
+    if (self.datastore) {
+        [self.datastore addResource:resource];
+    }
     [self.resources addObject:resource];
     
     if (resource.actions & TGResourceRESTActionsGET) {
