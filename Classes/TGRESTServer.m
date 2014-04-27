@@ -128,9 +128,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     }
     
     self.datastore.server = self;
-    for (TGRESTResource *resource in [self.resources allObjects]) {
-        [self.datastore addResource:resource];
-    }
+    [self addResourcesWithArray:[self.resources allObjects]];
     
     [options[TGWebServerPortNumberOptionKey] integerValue];
     self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
@@ -147,9 +145,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 - (void)stopServer
 {
     [self.webServer stop];
+    [self.webServer removeAllHandlers];
     self.datastore = nil;
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidShutdownNotification object:self];
 }
 
 #pragma mark - Resources
@@ -430,6 +427,11 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     TGLogInfo(@"%@", status);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
+}
+
+- (void)webServerDidStop:(GCDWebServer *)server
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidShutdownNotification object:self];
 }
 
 - (void)webServerDidCompleteBonjourRegistration:(GCDWebServer *)server
