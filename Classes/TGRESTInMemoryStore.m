@@ -66,6 +66,45 @@
     return object;
 }
 
+- (NSArray *)getDataForObjectsOfResource:(TGRESTResource *)resource
+                                  withParent:(TGRESTResource *)parent
+                            parentPrimaryKey:(NSString *)key
+                                       error:(NSError * __autoreleasing *)error
+{
+    NSParameterAssert(resource);
+    NSParameterAssert(parent);
+    NSParameterAssert(key);
+    
+    NSError *lookup;
+    [self getDataForObjectOfResource:resource withPrimaryKey:key error:&lookup];
+    
+    if (lookup) {
+        if (error) {
+            *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:nil];
+        }
+        
+        return nil;
+    }
+    
+    NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
+    id normalizedKey;
+    if (parent.primaryKeyType == TGPropertyTypeInteger) {
+        normalizedKey = [NSNumber numberWithInteger:[key integerValue]];
+    } else {
+        normalizedKey = key;
+    }
+    NSPredicate *matchPredicate = [NSPredicate predicateWithFormat:@"self.%@ == %@", resource.foreignKeys[parent.name], normalizedKey];
+    NSMutableArray *returnArray = [NSMutableArray new];
+    
+    for (NSDictionary *object in objects.allValues) {
+        if ([matchPredicate evaluateWithObject:object]) {
+            [returnArray addObject:object];
+        }
+    }
+    
+    return [NSArray arrayWithArray:returnArray];
+}
+
 - (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
                                 error:(NSError * __autoreleasing *)error
 {

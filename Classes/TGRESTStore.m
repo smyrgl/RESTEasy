@@ -48,6 +48,16 @@ NSUInteger const TGRESTStoreBadRequestErrorCode = 1003;
                                  userInfo:nil];
 }
 
+- (NSArray *)getDataForObjectsOfResource:(TGRESTResource *)resource
+                                  withParent:(TGRESTResource *)parent
+                            parentPrimaryKey:(NSString *)key
+                                       error:(NSError * __autoreleasing *)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must implement %@ in your custom TGRESTStore", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+}
+
 - (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
                                 error:(NSError * __autoreleasing *)error
 {

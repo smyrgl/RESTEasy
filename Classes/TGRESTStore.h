@@ -28,6 +28,11 @@ extern NSUInteger const TGRESTStoreBadRequestErrorCode;
                               withPrimaryKey:(NSString *)primaryKey
                                        error:(NSError * __autoreleasing *)error;
 
+- (NSArray *)getDataForObjectsOfResource:(TGRESTResource *)resource
+                                  withParent:(TGRESTResource *)parent
+                            parentPrimaryKey:(NSString *)key
+                                       error:(NSError * __autoreleasing *)error;
+
 - (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
                                 error:(NSError * __autoreleasing *)error;
 
