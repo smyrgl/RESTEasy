@@ -26,4 +26,90 @@
     [super tearDown];
 }
 
+#pragma mark - Normal routing tests
+
+- (void)testBaseIndexRoute
+{
+    
+}
+
+- (void)testNestedIndexRoute
+{
+    
+}
+
+- (void)testManyToManyIndexRoute
+{
+    
+}
+
+- (void)testBaseCreateRoute
+{
+    
+}
+
+- (void)testNestedCreateRoute
+{
+    
+}
+
+- (void)testManyToMainCreateRoute
+{
+    
+}
+
+- (void)testBaseShowRoute
+{
+    
+}
+
+- (void)testBaseUpdateRoute
+{
+    
+}
+
+
+- (void)testBaseDeleteRoute
+{
+    
+}
+
+
+#pragma mark - Negative tests
+
+- (void)testNestedShowRoute
+{
+    
+}
+
+- (void)testNestedUpdateRoute
+{
+    
+}
+
+- (void)testNestedDeleteRoute
+{
+    
+}
+
+- (void)testNestedIndexRouteParentKeyNonexistant
+{
+    
+}
+
+- (void)testNestedIndexRouteDeletedParent
+{
+    
+}
+
+- (void)testNestedIndexRouteNotParentResource
+{
+    
+}
+
+- (void)testDeepNesting
+{
+    
+}
+
 @end

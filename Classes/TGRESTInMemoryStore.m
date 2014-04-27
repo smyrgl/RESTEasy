@@ -23,6 +23,7 @@
     self = [super init];
     if (self) {
         self.inMemoryDatastore = [NSMutableDictionary new];
+        [self setValue:@"InMemoryStore" forKey:@"name"];
     }
     
     return self;

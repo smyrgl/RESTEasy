@@ -146,7 +146,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                   if (request.URL.pathComponents.count > 1) {
+                                   if (request.URL.pathComponents.count > 2) {
                                        NSString *parentName = request.URL.pathComponents[1];
                                        NSString *parentID = request.URL.pathComponents[2];
                                        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name == %@", parentName];
