@@ -8,6 +8,7 @@
 
 #import "TGRESTInMemoryStore.h"
 #import "TGRESTResource.h"
+#import "TGRESTEasyLogging.h"
 
 @interface TGRESTInMemoryStore ()
 

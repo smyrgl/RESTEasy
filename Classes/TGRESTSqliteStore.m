@@ -12,6 +12,7 @@
 #import <FMDB/FMDatabaseAdditions.h>
 #import "TGPrivateFunctions.h"
 #import "TGRESTResource.h"
+#import "TGRESTEasyLogging.h"
 
 @interface TGRESTSqliteStore ()
 
@@ -45,6 +46,7 @@
                               withPrimaryKey:(NSString *)primaryKey
                                        error:(NSError * __autoreleasing *)error
 {
+    TGLogInfo(@"Getting data for resource %@ with primary key %@ using sqlite store", resource.name, resource.primaryKey);
     __block NSMutableDictionary *returnDictionary = [NSMutableDictionary new];
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *results = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = %@", resource.name, resource.primaryKey, primaryKey]];

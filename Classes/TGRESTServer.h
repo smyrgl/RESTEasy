@@ -16,6 +16,15 @@ extern NSString * const TGLatencyRangeMaximumOptionKey;
 extern NSString * const TGWebServerPortNumberOptionKey;
 extern NSString * const TGRESTServerDatastoreClassOptionKey;
 
+typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
+    TGRESTServerLogLevelOff       = 0,
+    TGRESTServerLogLevelFatal     = 1 << 0,
+    TGRESTServerLogLevelError     = 1 << 1,
+    TGRESTServerLogLevelWarn      = 1 << 2,
+    TGRESTServerLogLevelInfo      = 1 << 3,
+    TGRESTServerLogLevelVerbose   = 1 << 4
+};
+
 @interface TGRESTServer : NSObject
 
 @property (nonatomic, assign, readonly) BOOL isRunning;
@@ -23,6 +32,9 @@ extern NSString * const TGRESTServerDatastoreClassOptionKey;
 @property (nonatomic, strong, readonly) TGRESTStore *datastore;
 
 + (instancetype)sharedServer;
+
++ (TGRESTServerLogLevel)logLevel;
++ (void)setLogLevel:(TGRESTServerLogLevel)level;
 
 - (void)startServerWithOptions:(NSDictionary *)options;
 - (void)stopServer;

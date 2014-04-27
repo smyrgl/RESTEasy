@@ -15,6 +15,7 @@
 #import "TGPrivateFunctions.h"
 #import "TGRESTStore.h"
 #import "TGRESTInMemoryStore.h"
+#import "TGRESTEasyLogging.h"
 
 NSString * const TGLatencyRangeMinimumOptionKey = @"TGLatencyRangeMinimumOptionKey";
 NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionKey";
@@ -24,13 +25,14 @@ NSString * const TGRESTServerDatastoreClassOptionKey = @"TGRESTServerDatastoreCl
 NSString * const TGRESTServerDidStartNotification = @"TGRESTServerDidStartNotification";
 NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdownNotification";
 
+static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
+
 @interface TGRESTServer () <GCDWebServerDelegate>
 
 @property (nonatomic, strong) GCDWebServer *webServer;
 @property (nonatomic, assign) CGFloat latencyMin;
 @property (nonatomic, assign) CGFloat latencyMax;
 @property (nonatomic, strong) NSMutableSet *resources;
-@property (nonatomic, strong, readwrite) NSURL *serverURL;
 @property (nonatomic, strong, readwrite) TGRESTStore *datastore;
 
 @end
@@ -54,7 +56,6 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
     if (self) {
         self.webServer = [[GCDWebServer alloc] init];
         self.webServer.delegate = self;
-        self.serverURL = self.webServer.serverURL;
         self.resources = [NSMutableSet new];
         self.datastore = [TGRESTInMemoryStore new];
         self.datastore.server = self;
@@ -63,11 +64,28 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
     return self;
 }
 
+#pragma mark - Class logging methods
+
++ (TGRESTServerLogLevel)logLevel
+{
+    return kRESTServerLogLevel;
+}
+
++ (void)setLogLevel:(TGRESTServerLogLevel)level
+{
+    kRESTServerLogLevel = level;
+}
+
 #pragma mark - Override getters
 
 - (BOOL)isRunning
 {
     return self.webServer.isRunning;
+}
+
+- (NSURL *)serverURL
+{
+    return self.webServer.serverURL;
 }
 
 #pragma mark - Server control
@@ -90,13 +108,12 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
     }
     
     self.datastore.server = self;
-    NSLog(@"Starting with datastore %@", self.datastore.name);
+    TGLogInfo(@"Starting server with datastore %@", self.datastore.name);
     
     [options[TGWebServerPortNumberOptionKey] integerValue];
     self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
     self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] floatValue];
     [self.webServer startWithPort:serverPort bonjourName:nil];
-    self.serverURL = self.webServer.serverURL;
 }
 
 - (void)stopServer
@@ -244,6 +261,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                        NSError *jsonError;
                                        body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
                                        if (jsonError) {
+                                           TGLogError(@"Failed to deserialize JSON payload %@", jsonError);
                                            return [GCDWebServerResponse responseWithStatusCode:400];
                                        }
                                    } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
@@ -254,6 +272,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                    
                                    NSDictionary *sanitizedBody = [TGRESTServer sanitizedPropertiesForResource:resource withProperties:body];
                                    if (sanitizedBody.allKeys.count == 0) {
+                                       TGLogWarn(@"Request contains no keys matching valid parameters for resource %@ %@", resource.name, body);
                                        return [GCDWebServerResponse responseWithStatusCode:400];
                                    }
                                    
@@ -261,6 +280,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                    NSDictionary *resourceResponse = [strongSelf.datastore modifyObjectOfResource:resource withPrimaryKey:lastPathComponent withProperties:sanitizedBody error:&error];
                                    
                                    if (error) {
+                                       TGLogError(@"Error modifying object of resource %@ with primary key %@", resource.name, lastPathComponent);
                                        return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
                                    return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
@@ -293,7 +313,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
     NSParameterAssert(resource);
     
     if (![self.resources containsObject:resource]) {
-        NSLog(@"WARN: The resource %@ has not been added to the server.", resource.name);
+        TGLogWarn(@"The resource %@ has not been added to the server", resource.name);
         return 0;
     } else {
         return [self.datastore countOfObjectsForResource:resource];
@@ -305,14 +325,14 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
     NSParameterAssert(resource);
     
     if (![self.currentResources containsObject:resource]) {
-        NSLog(@"WARN: The resource %@ has not been added to the server.", resource.name);
+        TGLogWarn(@"The resource %@ has not been added to the server", resource.name);
         return @[];
     }
     
     NSError *error;
     NSArray *allObjects = [self.datastore getAllObjectsForResource:resource error:&error];
     if (error) {
-        NSLog(@"ERROR: Error getting objects %@", error);
+        TGLogError(@"Error getting objects %@", error);
         return @[];
     }
     
@@ -336,10 +356,10 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                         withProperties:[NSDictionary dictionaryWithDictionary:newObjectStub]
                                                  error:&error];
             if (error) {
-                NSLog(@"ERROR: Can't create object with properties %@ %@", newObjectStub, error);
+                TGLogError(@"Can't create object with properties %@ %@", newObjectStub, error);
             }
         } else {
-            NSLog(@"WARN: No matching keys for object %@", objectDictionary);
+            TGLogWarn(@"No matching keys for object %@", objectDictionary);
         }
     }
 }

@@ -17,6 +17,9 @@
          <FileRef
             location = "group:TGPrivateFunctions.m">
          </FileRef>
+         <FileRef
+            location = "group:TGRESTEasyLogging.h">
+         </FileRef>
       </Group>
       <FileRef
          location = "group:RESTEasy.h">

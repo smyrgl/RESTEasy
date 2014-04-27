@@ -93,6 +93,7 @@
 		52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerAdvancedConfigurationTests.m; sourceTree = "<group>"; };
 		527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInMemoryStoreTests.m; sourceTree = "<group>"; };
 		527CCB90190C72AD004DFD92 /* TGRoutingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRoutingTests.m; sourceTree = "<group>"; };
+		527CCB98190CC7B1004DFD92 /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
 		52C61D21190C48510056CDFD /* TGRESTStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTStore.h; path = ../Classes/TGRESTStore.h; sourceTree = "<group>"; };
 		52C61D22190C48510056CDFD /* TGRESTStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTStore.m; path = ../Classes/TGRESTStore.m; sourceTree = "<group>"; };
 		52C61D23190C48510056CDFD /* TGRESTInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTInMemoryStore.h; path = ../Classes/TGRESTInMemoryStore.h; sourceTree = "<group>"; };
@@ -113,7 +114,6 @@
 		52D0395219097EF800D3900F /* osxtests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "osxtests-Prefix.pch"; sourceTree = "<group>"; };
 		52D039591909810400D3900F /* TGBasicServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBasicServerTests.m; sourceTree = "<group>"; };
 		52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerAPIErrorHandlingTests.m; sourceTree = "<group>"; };
-		52FF8AA1190B62480099503B /* TGRESTServer_TGRESTServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTServer_TGRESTServerPrivate.h; sourceTree = "<group>"; };
 		590D5013246B41D495F8A9B9 /* libPods-osxtests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-osxtests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A759308651C44593AF34DCE5 /* Pods-sandbox.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sandbox.xcconfig"; path = "../Pods/Pods-sandbox.xcconfig"; sourceTree = "<group>"; };
 		AB673039D9EB4D40A3EA7A95 /* Pods-osxtests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-osxtests.xcconfig"; path = "../Pods/Pods-osxtests.xcconfig"; sourceTree = "<group>"; };
@@ -186,7 +186,7 @@
 			children = (
 				52541F5E1909A91D000A44FA /* TGPrivateFunctions.h */,
 				52541F5F1909A91D000A44FA /* TGPrivateFunctions.m */,
-				52FF8AA1190B62480099503B /* TGRESTServer_TGRESTServerPrivate.h */,
+				527CCB98190CC7B1004DFD92 /* TGRESTEasyLogging.h */,
 			);
 			name = Private;
 			path = ../Classes/Private;
