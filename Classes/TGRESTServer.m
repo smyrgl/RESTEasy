@@ -112,14 +112,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [self stopServer];
     }
     
-    NSUInteger serverPort;
-    
-    if (options[TGWebServerPortNumberOptionKey]) {
-        serverPort = [options[TGWebServerPortNumberOptionKey] integerValue];
-    } else {
-        serverPort = 8888;
-    }
-    
     if (options[TGRESTServerDatastoreClassOptionKey]) {
         Class aClass = options[TGRESTServerDatastoreClassOptionKey];
         self.datastore = [aClass new];
@@ -134,12 +126,36 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
     self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] floatValue];
     
-    NSDictionary *serverOptionsDict = @{
-                                        GCDWebServerOption_ServerName: @"RESTEasy",
-                                        GCDWebServerOption_Port: [NSNumber numberWithInteger:serverPort],
-                                        GCDWebServerOption_BonjourName: [NSString stringWithFormat:@"RESTEasy_%@", self.serverName]
-                                        };
-    [self.webServer startWithOptions:serverOptionsDict];
+    NSMutableDictionary *serverOptionsDict = [NSMutableDictionary new];
+    
+    if (options[TGWebServerPortNumberOptionKey]) {
+        [serverOptionsDict setObject:options[TGWebServerPortNumberOptionKey] forKey:GCDWebServerOption_Port];;
+    } else {
+        [serverOptionsDict setObject:@2403 forKey:GCDWebServerOption_Port];
+    }
+    
+    [serverOptionsDict setObject:@"RESTEasy" forKey:GCDWebServerOption_ServerName];
+    [serverOptionsDict setObject:[NSString stringWithFormat:@"RESTEasy_%@", self.serverName] forKey:GCDWebServerOption_BonjourName];
+    
+    BOOL started = [self.webServer startWithOptions:[NSDictionary dictionaryWithDictionary:serverOptionsDict]];
+    
+    if (started) {
+        NSMutableString *status = [NSMutableString stringWithString:@"\n"];
+        
+        [status appendFormat:@"Server started with Status: -------- \n"];
+        [status appendFormat:@"Resources:           %@\n", self.resources];
+        [status appendFormat:@"Server URL:          %@\n", self.serverURL];
+        [status appendFormat:@"Server Port:         %lu\n", (unsigned long)self.webServer.port];
+        [status appendFormat:@"Server Latency Min:  %.2f sec\n", self.latencyMin];
+        [status appendFormat:@"Server Latency Max:  %.2f sec\n", self.latencyMax];
+        [status appendFormat:@"Store:               %@\n", self.datastore];
+        [status appendFormat:@"------------------------------------ \n"];
+        
+        TGLogInfo(@"%@", status);
+        [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
+    } else {
+        TGLogError(@"Failed to start HTTP server");
+    }
 }
 
 - (void)stopServer
@@ -147,6 +163,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     [self.webServer stop];
     [self.webServer removeAllHandlers];
     self.datastore = nil;
+    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidShutdownNotification object:self];
 }
 
 #pragma mark - Resources
@@ -179,9 +196,9 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                        TGRESTResource *parent = [[resource.parentResources filteredArrayUsingPredicate:predicate] firstObject];
                                        NSError *error;
                                        NSArray *dataWithParent = [weakSelf.datastore getDataForObjectsOfResource:resource
-                                                                                                        withParent:parent
-                                                                                                  parentPrimaryKey:parentID
-                                                                                                             error:&error];
+                                                                                                      withParent:parent
+                                                                                                parentPrimaryKey:parentID
+                                                                                                           error:&error];
                                        
                                        if (error) {
                                            return [TGRESTServer errorResponseBuilderWithError:error];
@@ -237,6 +254,11 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                    }
                                    
                                    NSDictionary *newObject = [weakSelf.datastore createNewObjectForResource:resource withProperties:sanitizedBody error:&error];
+                                   
+                                   body = nil;
+                                   dataRequest = nil;
+                                   sanitizedBody = nil;
+
                                    if (error) {
                                        return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
@@ -287,8 +309,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                            return [GCDWebServerResponse responseWithStatusCode:400];
                                        }
                                    } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
-                                       NSString* charset = TGExtractHeaderValueParameter(request.contentType, @"charset");
-                                       NSString* formURLString = [[NSString alloc] initWithData:dataRequest.data encoding:TGStringEncodingFromCharset(charset)];
+                                       NSString *charset = TGExtractHeaderValueParameter(request.contentType, @"charset");
+                                       NSString *formURLString = [[NSString alloc] initWithData:dataRequest.data encoding:TGStringEncodingFromCharset(charset)];
                                        body = TGParseURLEncodedForm(formURLString);
                                    }
                                    
@@ -300,6 +322,10 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                    
                                    NSError *error;
                                    NSDictionary *resourceResponse = [weakSelf.datastore modifyObjectOfResource:resource withPrimaryKey:lastPathComponent withProperties:sanitizedBody error:&error];
+                                   
+                                   body = nil;
+                                   dataRequest = nil;
+                                   sanitizedBody = nil;
                                    
                                    if (error) {
                                        TGLogError(@"Error modifying object of resource %@ with primary key %@", resource.name, lastPathComponent);
@@ -402,36 +428,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
             TGLogWarn(@"No matching keys for object %@", objectDictionary);
         }
     }
-}
-
-#pragma mark - GCDWebServer delegate
-
-- (void)webServerDidStart:(GCDWebServer *)server
-{
-    NSMutableString *status = [NSMutableString stringWithString:@"\n"];
-    
-    [status appendFormat:@"Server started with Status: -------- \n"];
-    [status appendFormat:@"Resources:           %@\n", self.resources];
-    [status appendFormat:@"Server URL:          %@\n", self.serverURL];
-    [status appendFormat:@"Server Port:         %lu\n", (unsigned long)self.webServer.port];
-    [status appendFormat:@"Server Latency Min:  %.2f sec\n", self.latencyMin];
-    [status appendFormat:@"Server Latency Max:  %.2f sec\n", self.latencyMax];
-    [status appendFormat:@"Store:               %@\n", self.datastore];
-    [status appendFormat:@"------------------------------------ \n"];
-    
-    TGLogInfo(@"%@", status);
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
-}
-
-- (void)webServerDidStop:(GCDWebServer *)server
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidShutdownNotification object:self];
-}
-
-- (void)webServerDidCompleteBonjourRegistration:(GCDWebServer *)server
-{
-    TGLogInfo(@"Bonjour registration complete");
 }
 
 #pragma mark - Private

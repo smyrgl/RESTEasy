@@ -39,15 +39,7 @@
     self.childResource = [TGRESTResource newResourceWithName:@"email" model:childModel actions:TGResourceRESTActionsPOST | TGResourceRESTActionsPUT | TGResourceRESTActionsGET | TGResourceRESTActionsDELETE primaryKey:nil parentResources:@[self.parentResource]];
     
     [[TGRESTServer sharedServer] addResourcesWithArray:@[self.parentResource, self.childResource]];
-    __weak typeof(self) weakSelf = self;
-    [[NSNotificationCenter defaultCenter] addObserverForName:TGRESTServerDidStartNotification
-                                                      object:nil
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
-                                                  }];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
-    [self waitForTimeout:2];
     
     NSDictionary *parentData = @{@"name": [GZNames name]};
     

@@ -21,20 +21,10 @@
 {
     [super setUp];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
-    __weak typeof(self) weakSelf = self;
-    [[NSNotificationCenter defaultCenter] addObserverForName:TGRESTServerDidStartNotification
-                                                      object:nil
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
-                                                  }];
-    
-    [self waitForTimeout:2];
 }
 
 - (void)tearDown
 {
-    [[TGRESTServer sharedServer] removeAllResourcesWithData:YES];
     [[TGRESTServer sharedServer] stopServer];
     [super tearDown];
 }

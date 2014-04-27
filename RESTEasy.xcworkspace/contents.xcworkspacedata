@@ -20,6 +20,12 @@
          <FileRef
             location = "group:TGRESTEasyLogging.h">
          </FileRef>
+         <FileRef
+            location = "group:TGRESTController.h">
+         </FileRef>
+         <FileRef
+            location = "group:TGRESTController.m">
+         </FileRef>
       </Group>
       <FileRef
          location = "group:RESTEasy.h">
