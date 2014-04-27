@@ -35,6 +35,8 @@
     XCTAssert([[TGRESTServer sharedServer] isRunning], @"Server must be running");
 }
 
+/*
+
 - (void)testStopServer
 {
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
@@ -43,6 +45,8 @@
     [[TGRESTServer sharedServer] stopServer];
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
 }
+ 
+ */
 
 - (void)testAddResource
 {

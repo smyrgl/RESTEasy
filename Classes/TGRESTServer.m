@@ -146,7 +146,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     __weak typeof(self) weakSelf = self;
     NSDictionary *startOptions = [NSDictionary dictionaryWithDictionary:serverOptionsDict];
     
-    while (!started && retryCount < 5) {
+    while (!started && retryCount < 10) {
         if (retryCount == 0) {
             started = [self.webServer startWithOptions:startOptions];
             if (!started) {
