@@ -15,12 +15,12 @@ int main(int argc, const char * argv[])
     @autoreleasepool {
         
         [[TGRESTServer sharedServer] startServerWithOptions:nil];
-        TGRESTResource *resource = [TGRESTResource newResourceWithName:@"stuff" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]} routes:nil actions:TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsDELETE | TGResourceRESTActionsPUT primaryKey:nil];
+        TGRESTResource *resource = [TGRESTResource newResourceWithName:@"person" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}];
         [[TGRESTServer sharedServer] addResource:resource];
         
         __block BOOL serverRunning = YES;
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:TGServerDidShutdownNotification
+        [[NSNotificationCenter defaultCenter] addObserverForName:TGRESTServerDidShutdownNotification
                                                           object:nil
                                                            queue:nil
                                                       usingBlock:^(NSNotification *note) {

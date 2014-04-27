@@ -11,6 +11,7 @@
 #import <GCDWebServer/GCDWebServer.h>
 #import <GCDWebServer/GCDWebServerDataResponse.h>
 #import <GCDWebServer/GCDWebServerDataRequest.h>
+#import <GCDWebServer/GCDWebServerURLEncodedFormRequest.h>
 #import "TGPrivateFunctions.h"
 #import "TGRESTStore.h"
 #import "TGRESTInMemoryStore.h"
@@ -157,14 +158,16 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                    GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
                                    NSDictionary *body;
-                                   if ([dataRequest.contentType hasPrefix:@"application/json"]) {
+                                   if ([request.contentType hasPrefix:@"application/json"]) {
                                        NSError *jsonError;
                                        body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
                                        if (jsonError) {
                                            return [GCDWebServerResponse responseWithStatusCode:400];
                                        }
-                                   } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
-                                       return [GCDWebServerResponse responseWithStatusCode:400];
+                                   } else if ([request.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
+                                       NSString* charset = TGExtractHeaderValueParameter(request.contentType, @"charset");
+                                       NSString* formURLString = [[NSString alloc] initWithData:dataRequest.data encoding:TGStringEncodingFromCharset(charset)];
+                                       body = TGParseURLEncodedForm(formURLString);
                                    }
                                    NSError *error;
                                    NSDictionary *sanitizedBody = [TGRESTServer sanitizedPropertiesForResource:resource withProperties:body];
@@ -178,6 +181,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                    }
                                    return [GCDWebServerDataResponse responseWithJSONObject:newObject];
                                }];
+        
     }
     
     if (resource.actions & TGResourceRESTActionsDELETE) {
@@ -223,7 +227,9 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                            return [GCDWebServerResponse responseWithStatusCode:400];
                                        }
                                    } else if ([dataRequest.contentType hasPrefix:@"application/x-www-form-urlencoded"]) {
-                                       return [GCDWebServerResponse responseWithStatusCode:400];
+                                       NSString* charset = TGExtractHeaderValueParameter(request.contentType, @"charset");
+                                       NSString* formURLString = [[NSString alloc] initWithData:dataRequest.data encoding:TGStringEncodingFromCharset(charset)];
+                                       body = TGParseURLEncodedForm(formURLString);
                                    }
                                    
                                    NSDictionary *sanitizedBody = [TGRESTServer sanitizedPropertiesForResource:resource withProperties:body];

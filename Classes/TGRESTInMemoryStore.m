@@ -7,6 +7,7 @@
 //
 
 #import "TGRESTInMemoryStore.h"
+#import "TGRESTResource.h"
 
 @interface TGRESTInMemoryStore ()
 

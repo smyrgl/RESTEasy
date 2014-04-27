@@ -43,3 +43,59 @@ NSString * TGExecutableName(void)
     
     return executableName;
 }
+
+NSString * TGExtractHeaderValueParameter(NSString *value, NSString *name) {
+    NSString* parameter = nil;
+    NSScanner* scanner = [[NSScanner alloc] initWithString:value];
+    [scanner setCaseSensitive:NO];  // Assume parameter names are case-insensitive
+    NSString* string = [NSString stringWithFormat:@"%@=", name];
+    if ([scanner scanUpToString:string intoString:NULL]) {
+        [scanner scanString:string intoString:NULL];
+        if ([scanner scanString:@"\"" intoString:NULL]) {
+            [scanner scanUpToString:@"\"" intoString:&parameter];
+        } else {
+            [scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&parameter];
+        }
+    }
+    return parameter;
+}
+
+NSStringEncoding TGStringEncodingFromCharset(NSString *charset) {
+    NSStringEncoding encoding = kCFStringEncodingInvalidId;
+    if (charset) {
+        encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)charset));
+    }
+    return (encoding != kCFStringEncodingInvalidId ? encoding : NSUTF8StringEncoding);
+}
+
+NSDictionary *TGParseURLEncodedForm(NSString *form) {
+    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
+    NSScanner* scanner = [[NSScanner alloc] initWithString:form];
+    [scanner setCharactersToBeSkipped:nil];
+    while (1) {
+        NSString* key = nil;
+        if (![scanner scanUpToString:@"=" intoString:&key] || [scanner isAtEnd]) {
+            break;
+        }
+        [scanner setScanLocation:([scanner scanLocation] + 1)];
+        
+        NSString* value = nil;
+        if (![scanner scanUpToString:@"&" intoString:&value]) {
+            break;
+        }
+        
+        key = [key stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+        value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+        if (key && value) {
+            [parameters setObject:[value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:[key stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        }
+        
+        if ([scanner isAtEnd]) {
+            break;
+        }
+        [scanner setScanLocation:([scanner scanLocation] + 1)];
+    }
+    return parameters;
+}
+
+

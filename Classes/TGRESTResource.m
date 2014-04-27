@@ -89,6 +89,7 @@
 {
     NSParameterAssert(name);
     NSParameterAssert(model);
+    NSParameterAssert(actions);
     
     TGRESTResource *resource = [TGRESTResource new];
     

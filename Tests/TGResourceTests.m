@@ -275,24 +275,39 @@
 
 #pragma mark - Negative tests
 
-- (void)testNilActions
-{
-    
-}
-
 - (void)testPrimaryKeyNotInModel
 {
+    TGRESTResource *resource;
+    NSString *primaryKey = @"person_id";
+    NSDictionary *model = @{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]};
     
+    XCTAssertThrows(resource = [TGRESTResource newResourceWithName:@"person" model:model actions:TGResourceRESTActionsPOST primaryKey:primaryKey], @"Including a custom primary key name that is not in the model must throw an exception");
+    XCTAssertNil(resource, @"The resource must be nil");
 }
 
 - (void)testPrimaryKeyImplictlySetToInvalidType
 {
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"id": [NSNumber numberWithInteger:TGPropertyTypeBlob],
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
+    XCTAssertThrows(resource = [TGRESTResource newResourceWithName:@"person" model:model], @"Setting the default primary key id in the model to a data type other than string or integer must generate an exception");
+    XCTAssertNil(resource, @"The resource must be nil");
 }
 
 - (void)testPrimaryKeyExplictlySetToInvalidType
 {
+    TGRESTResource *resource;
+    NSString *primaryKey = @"person_id";
+    NSDictionary *model = @{
+                            @"person_id": [NSNumber numberWithInteger:TGPropertyTypeBlob],
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
+    XCTAssertThrows(resource = [TGRESTResource newResourceWithName:@"person" model:model actions:TGResourceRESTActionsPOST primaryKey:primaryKey], @"Setting the primary key in the model explicitly with an unsupported type must generate an exception");
+    XCTAssertNil(resource, @"The resource must be nil");
 }
 
 - (void)testForeignKeyParentNameMismatch

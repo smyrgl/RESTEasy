@@ -10,3 +10,6 @@
 
 extern NSString * TGApplicationDataDirectory(void);
 extern NSString * TGExecutableName(void);
+extern NSString * TGExtractHeaderValueParameter(NSString *value, NSString *name);
+extern NSStringEncoding TGStringEncodingFromCharset(NSString *charset);
+extern NSDictionary *TGParseURLEncodedForm(NSString *form);

@@ -11,6 +11,7 @@
 #import <FMDB/FMDatabaseQueue.h>
 #import <FMDB/FMDatabaseAdditions.h>
 #import "TGPrivateFunctions.h"
+#import "TGRESTResource.h"
 
 @interface TGRESTSqliteStore ()
 

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class TGRESTServer;
+@class TGRESTResource;
 
 extern NSString * const TGRESTStoreErrorDomain;
 extern NSUInteger const TGRESTStoreUnknownErrorCode;
