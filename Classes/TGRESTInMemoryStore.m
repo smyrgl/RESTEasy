@@ -197,7 +197,7 @@
     return updatedObject;
 }
 
-- (void)deleteObjectOfResource:(TGRESTResource *)resource
+- (BOOL)deleteObjectOfResource:(TGRESTResource *)resource
                 withPrimaryKey:(NSString *)primaryKey
                          error:(NSError * __autoreleasing *)error
 {
@@ -216,6 +216,7 @@
         if (error) {
             *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectAlreadyDeletedErrorCode userInfo:nil];
         }
+        return NO;
     } else {
         NSDictionary *object = objects[objectKey];
         
@@ -223,8 +224,10 @@
             if (error) {
                 *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:nil];
             }
+            return NO;
         } else {
             [objects setObject:[NSNull null] forKey:objectKey];
+            return YES;
         }
     }
 }

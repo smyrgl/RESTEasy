@@ -85,7 +85,7 @@ NSUInteger const TGRESTStoreBadRequestErrorCode = 1003;
                                  userInfo:nil];
 }
 
-- (void)deleteObjectOfResource:(TGRESTResource *)resource
+- (BOOL)deleteObjectOfResource:(TGRESTResource *)resource
                 withPrimaryKey:(NSString *)primaryKey
                          error:(NSError * __autoreleasing *)error
 {

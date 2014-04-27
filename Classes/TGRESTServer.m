@@ -172,14 +172,13 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGIndexRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                    if (request.URL.pathComponents.count > 2) {
                                        NSString *parentName = request.URL.pathComponents[1];
                                        NSString *parentID = request.URL.pathComponents[2];
                                        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name == %@", parentName];
                                        TGRESTResource *parent = [[resource.parentResources filteredArrayUsingPredicate:predicate] firstObject];
                                        NSError *error;
-                                       NSArray *dataWithParent = [strongSelf.datastore getDataForObjectsOfResource:resource
+                                       NSArray *dataWithParent = [weakSelf.datastore getDataForObjectsOfResource:resource
                                                                                                         withParent:parent
                                                                                                   parentPrimaryKey:parentID
                                                                                                              error:&error];
@@ -190,7 +189,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                        return [GCDWebServerDataResponse responseWithJSONObject:dataWithParent];
                                    }
                                    NSError *error;
-                                   NSArray *allData = [strongSelf.datastore getAllObjectsForResource:resource error:&error];
+                                   NSArray *allData = [weakSelf.datastore getAllObjectsForResource:resource error:&error];
                                    if (error) {
                                        return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
@@ -201,10 +200,9 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGShowRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                    NSString *lastPathComponent = request.URL.lastPathComponent;
                                    NSError *error;
-                                   NSDictionary *resourceResponse = [strongSelf.datastore getDataForObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                   NSDictionary *resourceResponse = [weakSelf.datastore getDataForObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
                                    if (error) {
                                        return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
@@ -219,7 +217,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGCreateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                    GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
                                    NSDictionary *body;
                                    if ([request.contentType hasPrefix:@"application/json"]) {
@@ -239,7 +236,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                        return [GCDWebServerResponse responseWithStatusCode:400];
                                    }
                                    
-                                   NSDictionary *newObject = [strongSelf.datastore createNewObjectForResource:resource withProperties:sanitizedBody error:&error];
+                                   NSDictionary *newObject = [weakSelf.datastore createNewObjectForResource:resource withProperties:sanitizedBody error:&error];
                                    if (error) {
                                        return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
@@ -255,15 +252,14 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGDestroyRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                    NSString *lastPathComponent = request.URL.lastPathComponent;
                                    if ([lastPathComponent isEqualToString:resource.name]) {
                                        return [GCDWebServerResponse responseWithStatusCode:403];
                                    }
                                    NSError *error;
-                                   [strongSelf.datastore deleteObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                   BOOL success = [weakSelf.datastore deleteObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
                                    
-                                   if (error) {
+                                   if (!success) {
                                        return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
                                    return [GCDWebServerResponse responseWithStatusCode:204];
@@ -277,7 +273,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGUpdateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                    NSString *lastPathComponent = request.URL.lastPathComponent;
                                    if ([lastPathComponent isEqualToString:resource.name]) {
                                        return [GCDWebServerResponse responseWithStatusCode:403];
@@ -304,7 +299,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                    }
                                    
                                    NSError *error;
-                                   NSDictionary *resourceResponse = [strongSelf.datastore modifyObjectOfResource:resource withPrimaryKey:lastPathComponent withProperties:sanitizedBody error:&error];
+                                   NSDictionary *resourceResponse = [weakSelf.datastore modifyObjectOfResource:resource withPrimaryKey:lastPathComponent withProperties:sanitizedBody error:&error];
                                    
                                    if (error) {
                                        TGLogError(@"Error modifying object of resource %@ with primary key %@", resource.name, lastPathComponent);

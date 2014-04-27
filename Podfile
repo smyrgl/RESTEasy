@@ -15,12 +15,12 @@ end
 
 target :osxtests do
   platform :osx, '10.9'
-	pod 'GCDWebServer'
+  pod 'GCDWebServer'
   pod 'Gizou'
   pod 'FMDB'
   pod 'AFNetworking'
   pod 'XCAsyncTestCase'
-	xcodeproj 'Tests/Tests.xcodeproj'
+  xcodeproj 'Tests/Tests.xcodeproj'
 end
 
 target :sandbox do

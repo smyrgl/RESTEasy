@@ -287,12 +287,28 @@
 
 - (void)testBaseChildShowRoute
 {
+    __block NSDictionary *response;
+    __weak typeof(self) weakSelf = self;
     
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@", self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 response = responseObject;
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 XCTFail(@"The request to show a child object using a base route must not fail %@", error);
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert([response isEqualToDictionary:self.testChildObjectDict], @"The returned response must be the same as the test child object dictionary");
 }
 
 - (void)testBaseParentUpdateRoute
 {
-    
+
 }
 
 - (void)testBaseChildUpdateRoute

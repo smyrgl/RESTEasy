@@ -45,7 +45,7 @@ extern NSUInteger const TGRESTStoreBadRequestErrorCode;
                           withProperties:(NSDictionary *)properties
                                    error:(NSError * __autoreleasing *)error;
 
-- (void)deleteObjectOfResource:(TGRESTResource *)resource
+- (BOOL)deleteObjectOfResource:(TGRESTResource *)resource
                 withPrimaryKey:(NSString *)primaryKey
                          error:(NSError * __autoreleasing *)error;
 
