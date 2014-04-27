@@ -60,7 +60,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     self = [super init];
     if (self) {
         self.webServer = [[GCDWebServer alloc] init];
-        self.webServer.delegate = self;
         self.resources = [NSMutableSet new];
         self.datastore = [TGRESTInMemoryStore new];
         self.datastore.server = self;
@@ -110,7 +109,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 {
     if (self.isRunning) {
         TGLogWarn(@"Server is already running, performing server restart");
-        [self stopServer];
+        [self.webServer stop];
     }
     
     self.lastOptions = options;
@@ -134,13 +133,41 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     if (options[TGWebServerPortNumberOptionKey]) {
         [serverOptionsDict setObject:options[TGWebServerPortNumberOptionKey] forKey:GCDWebServerOption_Port];;
     } else {
-        [serverOptionsDict setObject:@2403 forKey:GCDWebServerOption_Port];
+        [serverOptionsDict setObject:@8888 forKey:GCDWebServerOption_Port];
     }
     
     [serverOptionsDict setObject:@"RESTEasy" forKey:GCDWebServerOption_ServerName];
     [serverOptionsDict setObject:[NSString stringWithFormat:@"RESTEasy_%@", self.serverName] forKey:GCDWebServerOption_BonjourName];
     
-    BOOL started = [self.webServer startWithOptions:[NSDictionary dictionaryWithDictionary:serverOptionsDict]];
+    __block BOOL started = NO;
+    __block BOOL retrying = NO;
+    int retryCount = 0;
+    
+    __weak typeof(self) weakSelf = self;
+    NSDictionary *startOptions = [NSDictionary dictionaryWithDictionary:serverOptionsDict];
+    
+    while (!started && retryCount < 5) {
+        if (retryCount == 0) {
+            started = [self.webServer startWithOptions:startOptions];
+            if (!started) {
+                retryCount++;
+            }
+        } else if (!retrying) {
+            TGLogWarn(@"Failed to start server, retrying...");
+            retrying = YES;
+            retryCount++;
+            dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 200ull * NSEC_PER_MSEC);
+                dispatch_after(time, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    TGLogInfo(@"Retrying server start...");
+                    started = [weakSelf.webServer startWithOptions:startOptions];
+                    retrying = NO;
+                });
+            });
+            [NSThread sleepForTimeInterval:0.2f];
+        }
+    }
+    
     
     if (started) {
         NSMutableString *status = [NSMutableString stringWithString:@"\n"];
@@ -158,7 +185,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
     } else {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"Server failed to start"
+                                       reason:[NSString stringWithFormat:@"Server failed to start with retry count %d", retryCount]
                                      userInfo:nil];
     }
 }
