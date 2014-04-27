@@ -86,7 +86,7 @@
     NSArray *allChildren = [[TGRESTServer sharedServer] allObjectsForResource:self.childResource];
     
     for (NSDictionary *childDict in allChildren) {
-        if ([childDict[self.childResource.foreignKeys[self.parentResource.name]] isEqualTo:self.testSecondaryParentObjectDict[self.parentResource.primaryKey]]) {
+        if ([childDict[self.childResource.foreignKeys[self.parentResource.name]] isEqual:self.testSecondaryParentObjectDict[self.parentResource.primaryKey]]) {
             [secondaryChildren addObject:childDict];
         }
     }
@@ -212,7 +212,7 @@
     [self waitForTimeout:1];
     
     XCTAssert([response[@"name"] isEqualToString:params[@"name"]], @"The returned object must include a name with the value in the passed param");
-    XCTAssert([response[self.parentResource.primaryKey] isEqualTo:[NSNumber numberWithInteger:3]], @"Must include a primary key which should be set at 3 since there are 2 existing parent resources");
+    XCTAssert([response[self.parentResource.primaryKey] isEqual:[NSNumber numberWithInteger:3]], @"Must include a primary key which should be set at 3 since there are 2 existing parent resources");
 }
 
 - (void)testBaseChildCreateRoute
@@ -236,8 +236,8 @@
     [self waitForTimeout:1];
     
     XCTAssert([response[@"address"] isEqualToString:params[@"address"]], @"The returned object must include an address with the value in the passed param");
-    XCTAssert([response[self.parentResource.primaryKey] isEqualTo:[NSNumber numberWithInteger:7]], @"Must include a primary key which should be set at 7 since there are 6 existing child resources");
-    XCTAssert([response[self.childResource.foreignKeys[self.parentResource.name]] isEqualTo:[NSNull null]], @"Since there was no parent resource specified and this is a base route, the response should include the foreign key but the value should be of NSNull");
+    XCTAssert([response[self.parentResource.primaryKey] isEqual:[NSNumber numberWithInteger:7]], @"Must include a primary key which should be set at 7 since there are 6 existing child resources");
+    XCTAssert([response[self.childResource.foreignKeys[self.parentResource.name]] isEqual:[NSNull null]], @"Since there was no parent resource specified and this is a base route, the response should include the foreign key but the value should be of NSNull");
 }
 
 
@@ -264,18 +264,44 @@
     XCTAssert([response[@"address"] isEqualToString:params[@"address"]], @"The returned object must include an address with the value in the passed param");
 }
 
-- (void)testBaseShowRoute
+- (void)testBaseParentShowRoute
+{
+    __block NSDictionary *response;
+    __weak typeof(self) weakSelf = self;
+    
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 XCTFail(@"");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }];
+}
+
+- (void)testBaseChildShowRoute
 {
     
 }
 
-- (void)testBaseUpdateRoute
+- (void)testBaseParentUpdateRoute
+{
+    
+}
+
+- (void)testBaseChildUpdateRoute
 {
     
 }
 
 
-- (void)testBaseDeleteRoute
+- (void)testBaseParentDeleteRoute
+{
+    
+}
+
+- (void)testBaseChildDeleteRoute
 {
     
 }
