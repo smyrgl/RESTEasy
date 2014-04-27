@@ -7,6 +7,7 @@
 //
 
 #import "TGPrivateFunctions.h"
+#import "TGRESTResource.h"
 
 NSString *TGApplicationDataDirectory(void)
 {
@@ -98,4 +99,87 @@ NSDictionary *TGParseURLEncodedForm(NSString *form) {
     return parameters;
 }
 
+NSString *TGIndexRegex(TGRESTResource *resource)
+{
+    NSMutableString *regex = [NSMutableString new];
+    
+    // First append the default match
+    
+    [regex appendString:[NSString stringWithFormat:@"^(/%@/?$)", resource.name]];
+    
+    // Now add any paths from the parents
+    
+    for (TGRESTResource *parent in resource.parentResources) {
+        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/?$)", parent.name, resource.name]];
+    }
+    
+    return [NSString stringWithString:regex];
+}
 
+NSString *TGShowRegex(TGRESTResource *resource)
+{
+    NSMutableString *regex = [NSMutableString new];
+    
+    // First append the default match
+    
+    [regex appendString:[NSString stringWithFormat:@"^(/%@/\\w+/?$)", resource.name]];
+    
+    // Now add any paths from the parents
+    
+    for (TGRESTResource *parent in resource.parentResources) {
+        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/\\w+/?$)", parent.name, resource.name]];
+    }
+    
+    return [NSString stringWithString:regex];
+}
+
+NSString *TGCreateRegex(TGRESTResource *resource)
+{
+    NSMutableString *regex = [NSMutableString new];
+    
+    // First append the default match
+    
+    [regex appendString:[NSString stringWithFormat:@"^(/%@/?$)", resource.name]];
+    
+    // Now add any paths from the parents
+    
+    for (TGRESTResource *parent in resource.parentResources) {
+        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/?$)", parent.name, resource.name]];
+    }
+    
+    return [NSString stringWithString:regex];
+}
+
+NSString *TGUpdateRegex(TGRESTResource *resource)
+{
+    NSMutableString *regex = [NSMutableString new];
+    
+    // First append the default match
+    
+    [regex appendString:[NSString stringWithFormat:@"^(/%@/\\w+/?$)", resource.name]];
+    
+    // Now add any paths from the parents
+    
+    for (TGRESTResource *parent in resource.parentResources) {
+        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/\\w+/?$)", parent.name, resource.name]];
+    }
+    
+    return [NSString stringWithString:regex];
+}
+
+NSString *TGDestroyRegex(TGRESTResource *resource)
+{
+    NSMutableString *regex = [NSMutableString new];
+    
+    // First append the default match
+    
+    [regex appendString:[NSString stringWithFormat:@"^(/%@/\\w+/?$)", resource.name]];
+    
+    // Now add any paths from the parents
+    
+    for (TGRESTResource *parent in resource.parentResources) {
+        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/\\w+/?$)", parent.name, resource.name]];
+    }
+    
+    return [NSString stringWithString:regex];
+}

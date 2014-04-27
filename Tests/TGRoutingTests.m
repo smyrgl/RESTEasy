@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 
-@interface TGRelationalRoutingTests : XCTestCase
+@interface TGRoutingTests : XCTestCase
 
 @end
 
-@implementation TGRelationalRoutingTests
+@implementation TGRoutingTests
 
 - (void)setUp
 {

@@ -85,7 +85,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
     if (options[TGRESTServerDatastoreClassOptionKey]) {
         Class aClass = options[TGRESTServerDatastoreClassOptionKey];
         self.datastore = [aClass new];
-    } else {
+    } else if (self.datastore.class != [TGRESTInMemoryStore class]) {
         self.datastore = [TGRESTInMemoryStore new];
     }
     
@@ -125,26 +125,30 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
         __weak typeof(self) weakSelf = self;
         
         [self.webServer addHandlerForMethod:@"GET"
-                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                                  pathRegex:TGIndexRegex(resource)
+                               requestClass:[GCDWebServerRequest class]
+                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   NSError *error;
+                                   NSArray *allData = [strongSelf.datastore getAllObjectsForResource:resource error:&error];
+                                   if (error) {
+                                       return [TGRESTServer errorResponseBuilderWithError:error];
+                                   }
+                                   return [GCDWebServerDataResponse responseWithJSONObject:allData];
+                               }];
+        
+        [self.webServer addHandlerForMethod:@"GET"
+                                  pathRegex:TGShowRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                    NSString *lastPathComponent = request.URL.lastPathComponent;
-                                   if ([lastPathComponent isEqualToString:resource.name]) {
-                                       NSError *error;
-                                       NSArray *allData = [strongSelf.datastore getAllObjectsForResource:resource error:&error];
-                                       if (error) {
-                                           return [TGRESTServer errorResponseBuilderWithError:error];
-                                       }
-                                       return [GCDWebServerDataResponse responseWithJSONObject:allData];
-                                   } else {
-                                       NSError *error;
-                                       NSDictionary *resourceResponse = [strongSelf.datastore getDataForObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
-                                       if (error) {
-                                           return [TGRESTServer errorResponseBuilderWithError:error];
-                                       }
-                                       return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+                                   NSError *error;
+                                   NSDictionary *resourceResponse = [strongSelf.datastore getDataForObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
+                                   if (error) {
+                                       return [TGRESTServer errorResponseBuilderWithError:error];
                                    }
+                                   return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
                                }];
     }
     
@@ -152,7 +156,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
         __weak typeof(self) weakSelf = self;
         
         [self.webServer addHandlerForMethod:@"POST"
-                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                                  pathRegex:TGCreateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                    __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -188,7 +192,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
         __weak typeof(self) weakSelf = self;
         
         [self.webServer addHandlerForMethod:@"DELETE"
-                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                                  pathRegex:TGDestroyRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                    __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -210,7 +214,7 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
         __weak typeof(self) weakSelf = self;
         
         [self.webServer addHandlerForMethod:@"PUT"
-                                  pathRegex:[NSString stringWithFormat:@"^/(%@)", resource.name]
+                                  pathRegex:TGUpdateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                    __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -246,6 +250,8 @@ NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdown
                                    return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
                                }];
     }
+
+    
 }
 
 - (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData

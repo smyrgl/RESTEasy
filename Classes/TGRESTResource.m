@@ -33,7 +33,6 @@
         self.model = @{};
         self.primaryKey = @"id";
         self.parentResources = @[];
-        
         self.foreignKeys = @{};
         self.primaryKeyType = TGPropertyTypeInteger;
         self.actions = TGResourceRESTActionsGET;

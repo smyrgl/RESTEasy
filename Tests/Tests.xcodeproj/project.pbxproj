@@ -31,8 +31,8 @@
 		52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */; };
 		527CCB8E190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */; };
 		527CCB8F190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */; };
-		527CCB91190C72AD004DFD92 /* TGRelationalRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRelationalRoutingTests.m */; };
-		527CCB92190C72AD004DFD92 /* TGRelationalRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRelationalRoutingTests.m */; };
+		527CCB91190C72AD004DFD92 /* TGRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRoutingTests.m */; };
+		527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRoutingTests.m */; };
 		52C61D27190C48510056CDFD /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D22190C48510056CDFD /* TGRESTStore.m */; };
 		52C61D28190C48510056CDFD /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D22190C48510056CDFD /* TGRESTStore.m */; };
 		52C61D29190C48510056CDFD /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D22190C48510056CDFD /* TGRESTStore.m */; };
@@ -92,7 +92,7 @@
 		52541FA4190B2FC5000A44FA /* TGResourceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGResourceTests.m; sourceTree = "<group>"; };
 		52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerAdvancedConfigurationTests.m; sourceTree = "<group>"; };
 		527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInMemoryStoreTests.m; sourceTree = "<group>"; };
-		527CCB90190C72AD004DFD92 /* TGRelationalRoutingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRelationalRoutingTests.m; sourceTree = "<group>"; };
+		527CCB90190C72AD004DFD92 /* TGRoutingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRoutingTests.m; sourceTree = "<group>"; };
 		52C61D21190C48510056CDFD /* TGRESTStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTStore.h; path = ../Classes/TGRESTStore.h; sourceTree = "<group>"; };
 		52C61D22190C48510056CDFD /* TGRESTStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTStore.m; path = ../Classes/TGRESTStore.m; sourceTree = "<group>"; };
 		52C61D23190C48510056CDFD /* TGRESTInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTInMemoryStore.h; path = ../Classes/TGRESTInMemoryStore.h; sourceTree = "<group>"; };
@@ -214,13 +214,13 @@
 			isa = PBXGroup;
 			children = (
 				52D039591909810400D3900F /* TGBasicServerTests.m */,
+				527CCB90190C72AD004DFD92 /* TGRoutingTests.m */,
 				52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */,
 				52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */,
 				52541FA4190B2FC5000A44FA /* TGResourceTests.m */,
 				52541F94190B0BCD000A44FA /* TGServerCRUDTests.m */,
 				52C61D34190C619E0056CDFD /* TGSqliteStoreTests.m */,
 				527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */,
-				527CCB90190C72AD004DFD92 /* TGRelationalRoutingTests.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -544,7 +544,7 @@
 				52C61D2A190C48510056CDFD /* TGRESTInMemoryStore.m in Sources */,
 				52541FA5190B2FC5000A44FA /* TGResourceTests.m in Sources */,
 				52D0395A1909810400D3900F /* TGBasicServerTests.m in Sources */,
-				527CCB91190C72AD004DFD92 /* TGRelationalRoutingTests.m in Sources */,
+				527CCB91190C72AD004DFD92 /* TGRoutingTests.m in Sources */,
 				52541F9B190B0CBD000A44FA /* TGRESTClient.m in Sources */,
 				52541F5319099368000A44FA /* TGRESTResource.m in Sources */,
 				52C61D2D190C48510056CDFD /* TGRESTSqliteStore.m in Sources */,
@@ -572,7 +572,7 @@
 				52541F611909A91D000A44FA /* TGPrivateFunctions.m in Sources */,
 				52541F4C190986C0000A44FA /* TGRESTServer.m in Sources */,
 				52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
-				527CCB92190C72AD004DFD92 /* TGRelationalRoutingTests.m in Sources */,
+				527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */,
 				52C61D36190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */,
 				527CCB8F190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */,
 				52541F96190B0BCD000A44FA /* TGServerCRUDTests.m in Sources */,

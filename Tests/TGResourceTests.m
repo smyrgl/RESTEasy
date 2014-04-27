@@ -273,6 +273,22 @@
     XCTAssert([resource.foreignKeys isEqualToDictionary:expectedFKeyDict], @"The foreignKeys dict must match the expected dictionary");
 }
 
+- (void)testRelationProperties
+{
+    TGRESTResource *parentResource = [TGTestFactory testResource];
+    XCTAssert(parentResource.childResources.count == 0, @"The parent must not have any child resources");
+
+    TGRESTResource *childResource;
+    NSDictionary *model = @{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]};
+    
+    XCTAssertNoThrow(childResource = [TGRESTResource newResourceWithName:@"child" model:model actions:TGResourceRESTActionsGET primaryKey:nil parentResources:@[parentResource]], @"There must not be an exception creating the child resource.");
+    
+    XCTAssert([childResource.parentResources containsObject:parentResource], @"Child resource must have parent resource in its parent array");
+    XCTAssert([parentResource.childResources containsObject:childResource], @"Parent resource must have child resource in its child array");
+    XCTAssert(childResource.parentResources.count == 1, @"The child must have one parent");
+    XCTAssert(parentResource.childResources.count == 1, @"The parent must have one child");
+}
+
 #pragma mark - Negative tests
 
 - (void)testPrimaryKeyNotInModel

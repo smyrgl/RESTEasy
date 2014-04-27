@@ -14,9 +14,18 @@ int main(int argc, const char * argv[])
 
     @autoreleasepool {
         
+        TGRESTResource *person = [TGRESTResource newResourceWithName:@"people"
+                                                                 model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}];
+        TGRESTResource *email = [TGRESTResource newResourceWithName:@"emails"
+                                                              model:@{@"address": [NSNumber numberWithInteger:TGPropertyTypeString]}
+                                                            actions:TGResourceRESTActionsDELETE | TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT
+                                                         primaryKey:nil
+                                                    parentResources:@[person]];
+        
+        [[TGRESTServer sharedServer] addResource:person];
+        [[TGRESTServer sharedServer] addResource:email];
+
         [[TGRESTServer sharedServer] startServerWithOptions:nil];
-        TGRESTResource *resource = [TGRESTResource newResourceWithName:@"person" model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}];
-        [[TGRESTServer sharedServer] addResource:resource];
         
         __block BOOL serverRunning = YES;
         
