@@ -76,9 +76,19 @@ An empty array?  Well that's not very exciting but it is a start.
 
 ## Usage
 
-To run the example project; clone the repo, and run `pod install` from the Example directory first.
+If you want to play with the example app, run the test suite yourself or submit a pull request then clone the repo and run `pod install` from the root directory first then open `RESTEasy.xcworkspace`.
+
+### Documentation
+
+Available as a [Cocoadocs](http://cocoadocs.org/docsets/RESTEasy) docset or you can download the repo and run 'rake docs:generate'.  All of the classes are fully documented.
+
+### Example App
+
+Have a look at the /Example folder.
 
 ## Requirements
+
+Designed for OSX 10.8 and iOS 6.0 and above.
 
 ## Installation
 

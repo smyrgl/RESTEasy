@@ -41,6 +41,7 @@ typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
 
 - (NSSet *)currentResources;
 - (void)addResource:(TGRESTResource *)resource;
+- (void)addResourcesWithArray:(NSArray *)resources;
 - (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData;
 - (void)removeAllResourcesWithData:(BOOL)removeData;
 - (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource;

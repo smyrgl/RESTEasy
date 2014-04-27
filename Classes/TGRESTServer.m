@@ -290,6 +290,13 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     
 }
 
+- (void)addResourcesWithArray:(NSArray *)resources
+{
+    for (TGRESTResource *newResource in resources) {
+        [self addResource:newResource];
+    }
+}
+
 - (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData
 {
     if (removeData) {
@@ -302,9 +309,20 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 - (void)removeAllResourcesWithData:(BOOL)removeData
 {
     [self.webServer removeAllHandlers];
+    
+    NSMutableArray *operations = [NSMutableArray new];
+    
+    __weak typeof(self) weakSelf = self;
 
     for (TGRESTResource *resource in self.resources) {
-        [self removeResource:resource withData:removeData];
+        NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+            [weakSelf removeResource:resource withData:removeData];
+        }];
+        [operations addObject:operation];
+    }
+    
+    for (NSBlockOperation *op in operations) {
+        [op start];
     }
 }
 

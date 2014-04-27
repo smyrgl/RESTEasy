@@ -104,7 +104,9 @@
         }
     }
     
-    return [NSArray arrayWithArray:returnArray];
+    NSSortDescriptor *sortByID = [NSSortDescriptor sortDescriptorWithKey:resource.primaryKey ascending:YES];
+    
+    return [returnArray sortedArrayUsingDescriptors:@[sortByID]];
 }
 
 - (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
