@@ -157,7 +157,9 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         TGLogInfo(@"%@", status);
         [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
     } else {
-        TGLogError(@"Failed to start HTTP server");
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"Server failed to start"
+                                     userInfo:nil];
     }
 }
 
