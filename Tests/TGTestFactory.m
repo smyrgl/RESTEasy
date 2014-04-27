@@ -23,9 +23,9 @@
     return [TGRESTResource newResourceWithName:[GZWords word] model:@{
                                                                       [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeString],
                                                                       [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeInteger],
-                                                                      [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
-                                                                      [GZWords word]: [NSNumber numberWithInteger:TGPropertyTypeBlob]
-                                                                      }];
+                                                                      [GZWords characters:5]: [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
+                                                                      [GZWords characters:5]: [NSNumber numberWithInteger:TGPropertyTypeBlob]
+                                                                      }];    
 }
 
 + (NSArray *)randomModelTestResourcesWithCount:(NSUInteger)resourceCount

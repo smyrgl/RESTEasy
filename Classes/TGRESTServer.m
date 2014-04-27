@@ -34,6 +34,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 @property (nonatomic, assign) CGFloat latencyMax;
 @property (nonatomic, strong) NSMutableSet *resources;
 @property (nonatomic, strong, readwrite) TGRESTStore *datastore;
+@property (nonatomic, copy, readwrite) NSString *serverName;
 
 @end
 
@@ -46,7 +47,10 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     static dispatch_once_t onceQueue;
     static TGRESTServer *sharedServer = nil;
     
-    dispatch_once(&onceQueue, ^{ sharedServer = [[self alloc] init]; });
+    dispatch_once(&onceQueue, ^{
+        sharedServer = [[self alloc] init];
+        sharedServer.serverName = @"shared";
+    });
     return sharedServer;
 }
 
@@ -59,6 +63,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         self.resources = [NSMutableSet new];
         self.datastore = [TGRESTInMemoryStore new];
         self.datastore.server = self;
+        self.serverName = @"";
     }
     
     return self;
@@ -88,10 +93,25 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     return self.webServer.serverURL;
 }
 
+- (NSString *)serverBonjourName
+{
+    return self.webServer.bonjourName;
+}
+
+- (NSURL *)serverBonjourURL
+{
+    return self.webServer.bonjourServerURL;
+}
+
 #pragma mark - Server control
 
 - (void)startServerWithOptions:(NSDictionary *)options
 {
+    if (self.isRunning) {
+        TGLogWarn(@"Server is already running, performing server restart");
+        [self stopServer];
+    }
+    
     NSUInteger serverPort;
     
     if (options[TGWebServerPortNumberOptionKey]) {
@@ -105,18 +125,23 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         self.datastore = [aClass new];
     } else {
         self.datastore = [TGRESTInMemoryStore new];
-        for (TGRESTResource *resource in [self.resources allObjects]) {
-            [self.datastore addResource:resource];
-        }
     }
     
     self.datastore.server = self;
-    TGLogInfo(@"Starting server with datastore %@", self.datastore.name);
+    for (TGRESTResource *resource in [self.resources allObjects]) {
+        [self.datastore addResource:resource];
+    }
     
     [options[TGWebServerPortNumberOptionKey] integerValue];
     self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
     self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] floatValue];
-    [self.webServer startWithPort:serverPort bonjourName:nil];
+    
+    NSDictionary *serverOptionsDict = @{
+                                        GCDWebServerOption_ServerName: @"RESTEasy",
+                                        GCDWebServerOption_Port: [NSNumber numberWithInteger:serverPort],
+                                        GCDWebServerOption_BonjourName: [NSString stringWithFormat:@"RESTEasy_%@", self.serverName]
+                                        };
+    [self.webServer startWithOptions:serverOptionsDict];
 }
 
 - (void)stopServer
@@ -391,7 +416,25 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 
 - (void)webServerDidStart:(GCDWebServer *)server
 {
+    NSMutableString *status = [NSMutableString stringWithString:@"\n"];
+    
+    [status appendFormat:@"Server started with Status: -------- \n"];
+    [status appendFormat:@"Resources:           %@\n", self.resources];
+    [status appendFormat:@"Server URL:          %@\n", self.serverURL];
+    [status appendFormat:@"Server Port:         %lu\n", (unsigned long)self.webServer.port];
+    [status appendFormat:@"Server Latency Min:  %.2f sec\n", self.latencyMin];
+    [status appendFormat:@"Server Latency Max:  %.2f sec\n", self.latencyMax];
+    [status appendFormat:@"Store:               %@\n", self.datastore];
+    [status appendFormat:@"------------------------------------ \n"];
+    
+    TGLogInfo(@"%@", status);
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
+}
+
+- (void)webServerDidCompleteBonjourRegistration:(GCDWebServer *)server
+{
+    TGLogInfo(@"Bonjour registration complete");
 }
 
 #pragma mark - Private

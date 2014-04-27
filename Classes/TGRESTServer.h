@@ -28,7 +28,10 @@ typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
 @interface TGRESTServer : NSObject
 
 @property (nonatomic, assign, readonly) BOOL isRunning;
+@property (nonatomic, copy, readonly) NSString *serverName;
 @property (nonatomic, strong, readonly) NSURL *serverURL;
+@property (nonatomic, copy, readonly) NSString *serverBonjourName;
+@property (nonatomic, copy, readonly) NSURL *serverBonjourURL;
 @property (nonatomic, strong, readonly) TGRESTStore *datastore;
 
 + (instancetype)sharedServer;

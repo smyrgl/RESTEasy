@@ -272,12 +272,17 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
-                                 
+                                 response = responseObject;
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
-                                 XCTFail(@"");
+                                 XCTFail(@"The request to show a parent object using a base route must not fail %@", error);
                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert([response isEqualToDictionary:self.testParentObjectDict], @"The returned response must be the same as the test parent object dictionary");
 }
 
 - (void)testBaseChildShowRoute

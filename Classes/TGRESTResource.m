@@ -7,6 +7,7 @@
 //
 
 #import "TGRESTResource.h"
+#import "TGRESTEasyLogging.h"
 
 @interface TGRESTResource ()
 
@@ -97,6 +98,12 @@
     
     NSMutableDictionary *mergeModel = [NSMutableDictionary new];
     
+    if (model.allKeys.count == 0) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"Your model is empty, you need to add at least a single property type"
+                                     userInfo:nil];
+    }
+    
     if (key) {
         if (!model[key]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -118,7 +125,7 @@
             [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:resource.primaryKey];
         } else if ([existingModelIDProperty integerValue] != TGPropertyTypeInteger && [existingModelIDProperty integerValue] != TGPropertyTypeString) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                           reason:@"The default primary key of 'id' is set to a type that is not text or integer type.  If you want to use 'id' as your primary key give it a valid type in the model or if you want to use a different primary key then set the primary key name explicitly in the constructor."
+                                           reason:[NSString stringWithFormat:@"The default primary key of 'id' is set to a type that is not text or integer type.  If you want to use 'id' as your primary key give it a valid type in the model or if you want to use a different primary key then set the primary key name explicitly in the constructor. %@", model]
                                          userInfo:nil];
         }
     }
