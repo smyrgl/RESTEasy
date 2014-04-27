@@ -205,4 +205,9 @@
     return [NSDictionary dictionaryWithDictionary:sqlite3Model];
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@\n  %@", self.name, self.model];
+}
+
 @end

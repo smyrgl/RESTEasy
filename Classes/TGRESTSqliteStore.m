@@ -27,7 +27,6 @@
     self = [super init];
     if (self) {
         self.dbQueue = [FMDatabaseQueue databaseQueueWithPath:[NSString stringWithFormat:@"%@/RESTeasy.sqlite", TGApplicationDataDirectory()] flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_DBCONFIG_ENABLE_FKEY];
-        [self setValue:@"SqliteStore" forKey:@"name"];
     }
     
     return self;
@@ -199,5 +198,11 @@
         }
     }];
 }
+
++ (NSString *)description
+{
+    return @"InMemoryStore";
+}
+
 
 @end

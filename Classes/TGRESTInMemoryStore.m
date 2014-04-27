@@ -23,7 +23,6 @@
     self = [super init];
     if (self) {
         self.inMemoryDatastore = [NSMutableDictionary new];
-        [self setValue:@"InMemoryStore" forKey:@"name"];
     }
     
     return self;
@@ -244,6 +243,22 @@
     NSParameterAssert(resource);
     
     [self.inMemoryDatastore removeObjectForKey:resource.name];
+}
+
++ (NSString *)description
+{
+    return @"InMemoryStore";
+}
+
+- (NSString *)description
+{
+    NSUInteger objectCount = 0;
+    
+    for (NSMutableArray *resourceArray in self.inMemoryDatastore.allValues) {
+        objectCount = objectCount + resourceArray.count;
+    }
+    
+    return [NSString stringWithFormat:@"%@ with %lu resources and %lu objects", [[self class] description], self.inMemoryDatastore.allKeys.count, objectCount];
 }
 
 @end

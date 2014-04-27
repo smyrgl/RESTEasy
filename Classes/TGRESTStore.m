@@ -14,23 +14,8 @@ NSUInteger const TGRESTStoreObjectAlreadyDeletedErrorCode = 1001;
 NSUInteger const TGRESTStoreObjectNotFoundErrorCode = 1002;
 NSUInteger const TGRESTStoreBadRequestErrorCode = 1003;
 
-@interface TGRESTStore ()
-
-@property (nonatomic, copy, readwrite) NSString *name;
-
-@end
 
 @implementation TGRESTStore
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.name = NSStringFromClass([self class]);
-    }
-    
-    return self;
-}
 
 - (NSUInteger)countOfObjectsForResource:(TGRESTResource *)resource
 {

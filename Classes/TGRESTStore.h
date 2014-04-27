@@ -20,7 +20,6 @@ extern NSUInteger const TGRESTStoreBadRequestErrorCode;
 @interface TGRESTStore : NSObject
 
 @property (nonatomic, weak) TGRESTServer *server;
-@property (nonatomic, copy, readonly) NSString *name;
 
 - (NSUInteger)countOfObjectsForResource:(TGRESTResource *)resource;
 
