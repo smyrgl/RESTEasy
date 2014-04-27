@@ -13,6 +13,8 @@
 
 @interface TGServerCRUDTests : XCTestCase
 
+@property (nonatomic, strong) TGRESTResource *testResource;
+
 @end
 
 @implementation TGServerCRUDTests
@@ -20,7 +22,10 @@
 - (void)setUp
 {
     [super setUp];
+    self.testResource = [TGTestFactory testResource];
+    [[TGRESTServer sharedServer] addResource:self.testResource];
     [[TGRESTServer sharedServer] startServerWithOptions:nil];
+    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:self.testResource], @"The resource must have been successfully added to the server");
 }
 
 - (void)tearDown
@@ -31,14 +36,10 @@
 
 - (void)testGetAllObjectsWithNothing
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
     __weak typeof(self) weakSelf = self;
     __block NSArray *response;
     
-    [[TGRESTClient sharedClient] GET:resource.name
+    [[TGRESTClient sharedClient] GET:self.testResource.name
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  response = responseObject;
@@ -55,16 +56,12 @@
 
 - (void)testGetAllObjects
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:100];
+    [TGTestFactory createTestDataForResource:self.testResource count:100];
     
     __weak typeof(self) weakSelf = self;
     __block NSArray *response;
     
-    [[TGRESTClient sharedClient] GET:resource.name
+    [[TGRESTClient sharedClient] GET:self.testResource.name
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  response = responseObject;
@@ -82,16 +79,12 @@
 
 - (void)testGetSpecificObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
     
     __weak typeof(self) weakSelf = self;
     __block NSDictionary *response;
     
-    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", resource.name, @1]
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @1]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  response = responseObject;
@@ -105,21 +98,17 @@
     [self waitForTimeout:1];
     
     XCTAssert(response, @"There must be an object dictionary");
-    XCTAssert([response[resource.primaryKey] isEqualToNumber:@1], @"The primary key must equal 1");
+    XCTAssert([response[self.testResource.primaryKey] isEqualToNumber:@1], @"The primary key must equal 1");
 }
 
 - (void)testGetNonexistantObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     
-    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", resource.name, @15]
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @15]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"The response must not have been successful");
@@ -137,18 +126,14 @@
 
 - (void)testGetDeletedObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"There must be 10 resources");
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"There must be 10 resources");
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     __block id response;
     
-    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
@@ -163,11 +148,11 @@
     [self waitForTimeout:1];
 
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 9, @"There must be 9 resources after the delete process");
     
     __block NSUInteger getDeletedStatusCode;
     
-    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"Getting the already deleted object should not be successful");
@@ -184,17 +169,12 @@
 
 - (void)testCreateObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
-    
     __weak typeof(self) weakSelf = self;
     __block NSDictionary *response;
     
-    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:resource];
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:self.testResource];
     
-    [[TGRESTClient sharedClient] POST:resource.name
+    [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
                                   response = responseObject;
@@ -207,28 +187,23 @@
     
     [self waitForTimeout:1];
     XCTAssert(response, @"There must be a response dictionary");
-    for (NSString *key in resource.model.allKeys) {
-        if ([key isEqualToString:resource.primaryKey]) {
+    for (NSString *key in self.testResource.model.allKeys) {
+        if ([key isEqualToString:self.testResource.primaryKey]) {
             XCTAssert([response[key] isEqualToNumber:@1], @"The primary key must be 1");
         } else {
             XCTAssert([response[key] isEqual:newObject[key]], @"The value for %@ in the response and creation dictionaries must be identical %@ %@", key, response[key], newObject[key]);
         }
     }
     
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 1, @"There must be a new object created for the resource");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 1, @"There must be a new object created for the resource");
 }
 
 - (void)testCreateObjectWithNoParameters
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
-    
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     
-    [[TGRESTClient sharedClient] POST:resource.name
+    [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:nil
                               success:^(NSURLSessionDataTask *task, id responseObject) {
                                   XCTFail(@"Request to create new object with no parameters should not succeed");
@@ -241,20 +216,15 @@
     
     [self waitForTimeout:1];
     XCTAssert(statusCode == 400, @"Status code should indicate a bad request");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 0, @"There must be no resources");
 }
 
 - (void)testCreateObjectWithNoMatchingParameters
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
-    
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     
-    [[TGRESTClient sharedClient] POST:resource.name
+    [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:@{@"foo": @"bar"}
                               success:^(NSURLSessionDataTask *task, id responseObject) {
                                   XCTFail(@"Request to create new object with no valid parameters should not succeed");
@@ -267,24 +237,19 @@
     
     [self waitForTimeout:1];
     XCTAssert(statusCode == 400, @"Status code should indicate a bad request");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 0, @"There must be no resources");
 }
 
 - (void)testUpdateObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
-    
     __weak typeof(self) weakSelf = self;
     __block NSDictionary *response;
     
-    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:resource];
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:self.testResource];
     NSString *newObjectKey = newObject.allKeys[0];
     NSString *newObjectValue = newObject[newObjectKey];
     
-    [[TGRESTClient sharedClient] POST:resource.name
+    [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
                                   response = responseObject;
@@ -297,13 +262,13 @@
     
     [self waitForTimeout:1];
     XCTAssert(response, @"There must be a response dictionary");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 1, @"There must be a new object created for the resource");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 1, @"There must be a new object created for the resource");
     
     NSString *changedValue = [GZNames name];
     
     __block NSDictionary *changedResponse;
     
-    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", resource.name, response[resource.primaryKey]]
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, response[self.testResource.primaryKey]]
                           parameters:@{newObjectKey: changedValue}
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  changedResponse = responseObject;
@@ -322,18 +287,14 @@
 
 - (void)testUpdateDeletedObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"There must be 10 resources");
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"There must be 10 resources");
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     __block id response;
     
-    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
@@ -348,11 +309,11 @@
     [self waitForTimeout:1];
     
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 9, @"There must be 9 resources after the delete process");
     
     __block NSUInteger updateDeletedStatusCode;
     
-    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                           parameters:@{@"name": [GZNames name]}
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"Updating the already deleted object should not be successful");
@@ -369,17 +330,12 @@
 
 - (void)testUpdateObjectWithNoParameters
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
-    
     __weak typeof(self) weakSelf = self;
     __block NSDictionary *response;
     
-    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:resource];
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:self.testResource];
     
-    [[TGRESTClient sharedClient] POST:resource.name
+    [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
                                   response = responseObject;
@@ -392,11 +348,11 @@
     
     [self waitForTimeout:1];
     XCTAssert(response, @"There must be a response dictionary");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 1, @"There must be a new object created for the resource");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 1, @"There must be a new object created for the resource");
 
     __block NSUInteger changeStatusCode;
     
-    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", resource.name, response[resource.primaryKey]]
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, response[self.testResource.primaryKey]]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"Should not receive a successful response when updating an object with a key that does not exist");
@@ -414,17 +370,12 @@
 
 - (void)testUpdateObjectWithNoMatchingParameters
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 0, @"There must be no resources");
-    
     __weak typeof(self) weakSelf = self;
     __block NSDictionary *response;
     
-    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:resource];
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:self.testResource];
     
-    [[TGRESTClient sharedClient] POST:resource.name
+    [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
                                   response = responseObject;
@@ -437,11 +388,11 @@
     
     [self waitForTimeout:1];
     XCTAssert(response, @"There must be a response dictionary");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 1, @"There must be a new object created for the resource");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 1, @"There must be a new object created for the resource");
     
     __block NSUInteger changeStatusCode;
     
-    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", resource.name, response[resource.primaryKey]]
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, response[self.testResource.primaryKey]]
                           parameters:@{@"foo": @"bar"}
                              success:^(NSURLSessionDataTask *task, id responseObject) {
                                  XCTFail(@"Should not receive a successful response when updating an object with a key that does not exist");
@@ -459,17 +410,13 @@
 
 - (void)testUpdateNonexistantObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"There must be 10 resources");
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"There must be 10 resources");
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     
-    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", resource.name, @15]
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @15]
                           parameters:@{@"name": [GZNames name]}
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     XCTFail(@"The update request must fail for a non-existant object");
@@ -487,18 +434,14 @@
 
 - (void)testDeleteObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"There must be 10 resources");
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"There must be 10 resources");
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     __block id response;
     
-    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
@@ -513,23 +456,19 @@
     [self waitForTimeout:1];
     
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 9, @"There must be 9 resources after the delete process");
 }
 
 - (void)testDeleteAlreadyDeletedObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"There must be 10 resources");
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"There must be 10 resources");
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     __block id response;
     
-    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
@@ -544,11 +483,11 @@
     [self waitForTimeout:1];
     
     XCTAssert(statusCode == 204, @"Status code for a delete should be no content");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"There must be 9 resources after the delete process");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 9, @"There must be 9 resources after the delete process");
     
     __block NSUInteger secondDeleteStatusCode;
     
-    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", resource.name, @5]
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     XCTFail(@"The delete request must not be a success");
@@ -561,23 +500,19 @@
     
     [self waitForTimeout:1];
     XCTAssert(secondDeleteStatusCode == 410, @"Status code for an already deleted resource should be 410 Gone");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 9, @"The number of resources must not have changed as a result of the second delete operation");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 9, @"The number of resources must not have changed as a result of the second delete operation");
 
 }
 
 - (void)testDeleteNonexistantObject
 {
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    XCTAssert([[[TGRESTServer sharedServer] currentResources] containsObject:resource], @"The resource must have been successfully added to the server");
-    
-    [TGTestFactory createTestDataForResource:resource count:10];
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"There must be 10 resources");
+    [TGTestFactory createTestDataForResource:self.testResource count:10];
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"There must be 10 resources");
     
     __weak typeof(self) weakSelf = self;
     __block NSUInteger statusCode;
     
-    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", resource.name, @15]
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @15]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
                                     XCTFail(@"The delete request must fail for a non-existant object");
@@ -591,7 +526,7 @@
     [self waitForTimeout:1];
     
     XCTAssert(statusCode == 404, @"Status code for a delete for a non-existant object should be 404 not found");
-    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:resource] == 10, @"The delete process should not have changed the resource count");
+    XCTAssert([[TGRESTServer sharedServer] numberOfObjectsForResource:self.testResource] == 10, @"The delete process should not have changed the resource count");
 }
 
 @end

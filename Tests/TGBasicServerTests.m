@@ -46,19 +46,7 @@
 
 - (void)testAddResource
 {
-    [[TGRESTServer sharedServer] startServerWithOptions:nil];
     XCTAssert([[TGRESTServer sharedServer] currentResources].count == 0, @"There should be zero current resources");
-    TGRESTResource *resource = [TGTestFactory testResource];
-    [[TGRESTServer sharedServer] addResource:resource];
-    NSSet *resources = [[TGRESTServer sharedServer] currentResources];
-    XCTAssert(resources.count == 1, @"There should be one resource");
-    TGRESTResource *newResource = [resources anyObject];
-    XCTAssert(newResource == resource, @"The new resource should be the same as the created resource");
-}
-
-- (void)testAddPersistentResource
-{
-    [[TGRESTServer sharedServer] startServerWithOptions:@{TGRESTServerDatastoreClassOptionKey: [TGRESTSqliteStore class]}];
     TGRESTResource *resource = [TGTestFactory testResource];
     [[TGRESTServer sharedServer] addResource:resource];
     NSSet *resources = [[TGRESTServer sharedServer] currentResources];
@@ -69,10 +57,10 @@
 
 - (void)testAddData
 {
-    [[TGRESTServer sharedServer] startServerWithOptions:nil];
     XCTAssert([[TGRESTServer sharedServer] currentResources].count == 0, @"There should be zero current resources");
     TGRESTResource *resource = [TGTestFactory testResource];
     [[TGRESTServer sharedServer] addResource:resource];
+    [[TGRESTServer sharedServer] startServerWithOptions:nil];
     [TGTestFactory createTestDataForResource:resource count:100];
     
     __block NSArray *response;

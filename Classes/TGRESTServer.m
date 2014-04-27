@@ -35,6 +35,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 @property (nonatomic, strong) NSMutableSet *resources;
 @property (nonatomic, strong, readwrite) TGRESTStore *datastore;
 @property (nonatomic, copy, readwrite) NSString *serverName;
+@property (nonatomic, copy) NSDictionary *lastOptions;
 
 @end
 
@@ -112,6 +113,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [self stopServer];
     }
     
+    self.lastOptions = options;
+    
     if (options[TGRESTServerDatastoreClassOptionKey]) {
         Class aClass = options[TGRESTServerDatastoreClassOptionKey];
         self.datastore = [aClass new];
@@ -176,6 +179,12 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 - (void)addResource:(TGRESTResource *)resource
 {
     NSParameterAssert(resource);
+    
+    if (self.isRunning) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"You cannot add resources when the server is running"
+                                     userInfo:nil];
+    }
     
     if (self.datastore) {
         [self.datastore addResource:resource];
@@ -334,8 +343,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                    return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
                                }];
     }
-
-    
 }
 
 - (void)addResourcesWithArray:(NSArray *)resources
