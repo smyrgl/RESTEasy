@@ -194,7 +194,7 @@
     
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         if (![db executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", resource.name]]) {
-            NSLog(@"ERROR: Can't drop table for resource %@ %@", resource.name, [db lastError]);
+            TGLogError(@"ERROR: Can't drop table for resource %@ %@", resource.name, [db lastError]);
         }
     }];
 }

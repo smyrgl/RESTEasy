@@ -300,12 +300,56 @@
 
 - (void)testBaseParentUpdateRoute
 {
-
+    __block NSDictionary *response;
+    __weak typeof(self) weakSelf = self;
+    
+    NSString *oldName = self.testParentObjectDict[@"name"];
+    NSString *newName = [GZNames name];
+    
+    NSDictionary *params = @{@"name": newName};
+    
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
+                          parameters:params
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 response = responseObject;
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 XCTFail(@"The update request for the base parent route should not fail %@", error);
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert([response[@"name"] isEqualToString:newName], @"The response dictionary should use the new name");
+    XCTAssertFalse([response[@"name"] isEqualToString:oldName], @"The response dictionary should not have the old name");
 }
 
 - (void)testBaseChildUpdateRoute
 {
+    __block NSDictionary *response;
+    __weak typeof(self) weakSelf = self;
     
+    NSString *oldAddress = self.testChildObjectDict[@"address"];
+    NSString *newAddress = [GZInternet email];
+    
+    NSDictionary *params = @{@"address": newAddress};
+    
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"/%@/%@", self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
+                          parameters:params
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 response = responseObject;
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 XCTFail(@"The update request for the base child route should not fail %@", error);
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert([response[@"address"] isEqualToString:newAddress], @"The response dictionary should use the new address");
+    XCTAssertFalse([response[@"address"] isEqualToString:oldAddress], @"The response dictionary should not have the old address");
 }
 
 

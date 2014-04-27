@@ -8,6 +8,8 @@
 
 #import "TGRESTResource.h"
 #import "TGRESTEasyLogging.h"
+#import <InflectorKit/TTTStringInflector.h>
+#import <InflectorKit/NSString+InflectorKit.h>
 
 @interface TGRESTResource ()
 
@@ -160,7 +162,7 @@
                     [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:fkeys[parent.name]];
                 }
             } else {
-                NSString *defaultForeignKey = [NSString stringWithFormat:@"%@_id", parent.name];
+                NSString *defaultForeignKey = [NSString stringWithFormat:@"%@_id", [parent.name singularizedString]];
                 [foreignKeyBuilder setObject:defaultForeignKey forKey:parent.name];
                 if (parent.primaryKeyType == TGPropertyTypeString) {
                     [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeString] forKey:defaultForeignKey];

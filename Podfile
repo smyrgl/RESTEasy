@@ -8,6 +8,7 @@ target :iostests do
   pod 'GCDWebServer'
   pod 'Gizou'
   pod 'FMDB'
+  pod 'InflectorKit'
   pod 'AFNetworking'
   pod 'XCAsyncTestCase'
   xcodeproj 'Tests/Tests.xcodeproj'
@@ -18,6 +19,7 @@ target :osxtests do
   pod 'GCDWebServer'
   pod 'Gizou'
   pod 'FMDB'
+  pod 'InflectorKit'
   pod 'AFNetworking'
   pod 'XCAsyncTestCase'
   xcodeproj 'Tests/Tests.xcodeproj'
@@ -27,6 +29,7 @@ target :sandbox do
   platform :osx, '10.9'
   pod 'GCDWebServer'
   pod 'FMDB'
+  pod 'InflectorKit'
   xcodeproj 'Tests/Tests.xcodeproj'
 end
 

@@ -16,6 +16,7 @@ int main(int argc, const char * argv[])
         
         TGRESTResource *person = [TGRESTResource newResourceWithName:@"people"
                                                                  model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}];
+        
         TGRESTResource *email = [TGRESTResource newResourceWithName:@"emails"
                                                               model:@{@"address": [NSNumber numberWithInteger:TGPropertyTypeString]}
                                                             actions:TGResourceRESTActionsDELETE | TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT
