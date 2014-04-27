@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "TGTestFactory.h"
+#import <InflectorKit/NSString+InflectorKit.h>
 
 @interface TGResourceTests : XCTestCase
 
@@ -244,7 +245,7 @@
     NSMutableDictionary *expectedModel = [NSMutableDictionary dictionaryWithDictionary:model];
     NSMutableDictionary *expectedFKeys = [NSMutableDictionary new];
     for (TGRESTResource *parent in parents) {
-        NSString *defaultFKey = [NSString stringWithFormat:@"%@_id", parent.name];
+        NSString *defaultFKey = [NSString stringWithFormat:@"%@_id", [parent.name singularizedString]];
         [expectedModel setObject:[NSNumber numberWithInteger:parent.primaryKeyType] forKey:defaultFKey];
         [expectedFKeys setObject:defaultFKey forKey:parent.name];
     }
@@ -256,7 +257,7 @@
 - (void)testDefaultForeignKeyInModel
 {
     TGRESTResource *parent = [TGTestFactory randomModelTestResource];
-    NSString *defaultFKey = [NSString stringWithFormat:@"%@_id", parent.name];
+    NSString *defaultFKey = [NSString stringWithFormat:@"%@_id", [parent.name singularizedString]];
     TGRESTResource *resource;
     NSDictionary *model = @{
                             @"id": [NSNumber numberWithInteger:TGPropertyTypeInteger],
