@@ -199,10 +199,14 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     }
     
     if (self.resources[resource.name] && ![[(TGRESTResource *)self.resources[resource.name] model] isEqual:resource.model]) {
-        TGLogWarn(@"Added a resource that matches an existing resource name but has a different model.  Removing the old resource first and purging all of its data");
+        TGLogWarn(@"Added a resource that matches an existing resource name but has a different model.  Removing the old resource first and purging all of its data.");
         [self removeResource:self.resources[resource.name] withData:YES];
-    } else if (self.resources[resource.name]) {
-        TGLogInfo(@"Added a resource that matches an existing resource with the same model.  Resource will be updated non-destructively.");
+    } else if (self.resources[resource.name] && ![self.resources[resource.name] isEqual:resource]) {
+        if (self.datastore.class == [TGRESTInMemoryStore class]) {
+            TGLogInfo(@"Added a resource that matches an existing resource name.  Removing the old resource first and purging all of its data.");
+        } else {
+            TGLogInfo(@"Added a resource that matches an existing resource with the same model.  Resource will be updated non-destructively.");
+        }
         [self removeResource:self.resources[resource.name] withData:NO];
     }
     
