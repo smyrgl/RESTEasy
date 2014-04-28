@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.public_header_files = 'Classes/*.h'
   s.frameworks = 'Foundation'
-  s.dependency 'GCDWebServer', '~> 2.3.2'
+  s.dependency 'GCDWebServer', '~> 2.4'
   s.dependency 'Gizou', '~> 0.1.3'
   s.dependency 'FMDB', '~> v2.1'
   s.dependency 'InflectorKit', '~> 0.0.1'

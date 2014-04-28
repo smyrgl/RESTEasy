@@ -6,7 +6,7 @@ inhibit_all_warnings!
 
 target :iostests do
   platform :ios, '7.0'
-  pod 'GCDWebServer', :git => 'https://github.com/swisspol/GCDWebServer.git'
+  pod 'GCDWebServer', '~> 2.4'
   pod 'Gizou'
   pod 'FMDB'
   pod 'InflectorKit'
@@ -17,7 +17,7 @@ end
 
 target :osxtests do
   platform :osx, '10.9'
-  pod 'GCDWebServer', :git => 'https://github.com/swisspol/GCDWebServer.git'
+  pod 'GCDWebServer', '~> 2.4'
   pod 'Gizou'
   pod 'FMDB'
   pod 'InflectorKit'
@@ -28,7 +28,7 @@ end
 
 target :RESTEasyApp do 
   platform :ios, '7.0'
-  pod 'GCDWebServer', :git => 'https://github.com/swisspol/GCDWebServer.git'
+  pod 'GCDWebServer', '~> 2.4'
   pod 'Gizou'
   pod 'FMDB'
   pod 'InflectorKit'
@@ -38,7 +38,7 @@ end
 
 target :sandbox do
   platform :osx, '10.9'
-  pod 'GCDWebServer', :git => 'https://github.com/swisspol/GCDWebServer.git'
+  pod 'GCDWebServer', '~> 2.4'
   pod 'FMDB'
   pod 'InflectorKit'
   xcodeproj 'Tests/Tests.xcodeproj'
