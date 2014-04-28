@@ -208,12 +208,13 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
             TGLogInfo(@"Added a resource that matches an existing resource with the same model.  Resource will be updated non-destructively.");
         }
         [self removeResource:self.resources[resource.name] withData:NO];
-    }
+    } 
     
     if (self.datastore) {
         [self.datastore addResource:resource];
     }
     [self.resources setObject:resource forKey:resource.name];
+    
     [self.resourceSerializers setObject:[TGRESTDefaultSerializer class] forKey:resource.name];
     
     if (resource.actions & TGResourceRESTActionsGET) {

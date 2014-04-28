@@ -10,14 +10,19 @@
 
 @implementation TGRESTDefaultSerializer
 
-+ (NSDictionary *)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource
++ (id)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource
 {
     return object;
 }
 
-+ (NSArray *)dataWithCollection:(NSArray *)collection resource:(TGRESTResource *)resource
++ (id)dataWithCollection:(NSArray *)collection resource:(TGRESTResource *)resource
 {
     return collection;
+}
+
++ (NSDictionary *)requestParametersWithBody:(NSDictionary *)body resource:(TGRESTResource *)resource
+{
+    return body;
 }
 
 @end

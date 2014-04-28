@@ -21,3 +21,4 @@ DerivedData
 *.xcuserstate
 
 Pods/
+Docs/

@@ -98,6 +98,9 @@
             NSString* formURLString = [[NSString alloc] initWithData:dataRequest.data encoding:TGStringEncodingFromCharset(charset)];
             body = TGParseURLEncodedForm(formURLString);
         }
+        
+        Class<TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        body = [serializer requestParametersWithBody:body resource:resource];
         NSError *error;
         NSDictionary *sanitizedBody = [self sanitizedPropertiesForResource:resource withProperties:body];
         if (sanitizedBody.allKeys.count == 0) {
@@ -113,7 +116,6 @@
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
-        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:newObject resource:resource]];
     }
 }
@@ -146,6 +148,9 @@
             body = TGParseURLEncodedForm(formURLString);
         }
         
+        Class<TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        body = [serializer requestParametersWithBody:body resource:resource];
+        
         NSDictionary *sanitizedBody = [self sanitizedPropertiesForResource:resource withProperties:body];
         if (sanitizedBody.allKeys.count == 0) {
             TGLogWarn(@"Request contains no keys matching valid parameters for resource %@ %@", resource.name, body);
@@ -164,7 +169,6 @@
             return [self errorResponseBuilderWithError:error];
         }
         
-        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:resourceResponse resource:resource]];
     }
 }
