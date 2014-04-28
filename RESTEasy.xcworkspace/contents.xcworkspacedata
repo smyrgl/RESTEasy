@@ -10,16 +10,6 @@
       name = "Classes">
       <Group
          location = "container:"
-         name = "Protocols">
-         <FileRef
-            location = "group:Classes/Private/TGRESTSerializer.h">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/Private/TGRESTController.h">
-         </FileRef>
-      </Group>
-      <Group
-         location = "container:"
          name = "Controller">
          <FileRef
             location = "group:Classes/TGRESTDefaultSerializer.h">
@@ -32,6 +22,29 @@
          </FileRef>
          <FileRef
             location = "group:/Users/john/Code/RESTEasy/Classes/Private/TGRESTDefaultController.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Private"
+         name = "Private">
+         <FileRef
+            location = "group:TGPrivateFunctions.h">
+         </FileRef>
+         <FileRef
+            location = "group:TGPrivateFunctions.m">
+         </FileRef>
+         <FileRef
+            location = "group:TGRESTEasyLogging.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "container:"
+         name = "Protocols">
+         <FileRef
+            location = "group:Classes/Private/TGRESTSerializer.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/Private/TGRESTController.h">
          </FileRef>
       </Group>
       <Group
@@ -54,19 +67,6 @@
          </FileRef>
          <FileRef
             location = "group:/Users/john/Code/RESTEasy/Classes/TGRESTStore.m">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:Private"
-         name = "Private">
-         <FileRef
-            location = "group:TGPrivateFunctions.h">
-         </FileRef>
-         <FileRef
-            location = "group:TGPrivateFunctions.m">
-         </FileRef>
-         <FileRef
-            location = "group:TGRESTEasyLogging.h">
          </FileRef>
       </Group>
       <FileRef
