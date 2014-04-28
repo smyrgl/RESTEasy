@@ -44,35 +44,250 @@ RESTEasy is my proposed solution to these problems.  Want a RESTful server setup
 
 You now have a RESTful API server running inside your Objective-C client project!  It can be reached via HTTP calls just like any other server and its ready to start accepting requests right away.  But that's only the beginning of the power this unlocks...
 
-## Simple examples
+## Beginner stuff
 
 Before I dive into everything that RESTEasy can do, let's start with a few basic examples and then I will show you how to bend this library to your will.  
 
 ### Setup the server with a simple resource
 
 ```objective-c
-
-[[TGRESTServer sharedServer] startServerWithOptions:nil];
-
-TGRESTResource *person = [TGRESTResource newResourceWithName:@"person" model:@{
+TGRESTResource *people = [TGRESTResource newResourceWithName:@"people" model:@{
 														@"name": [NSNumber numberWithInteger:TGPropertyTypeString],
 														@"numberOfKids": [NSNumber numberWithInteger:TGPropertyTypeInteger],
 														@"kilometersWalked": [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
 														@"avatar": [NSNumber numberWithInteger:TGPropertyTypeBlob]
 													}];
 
-[[TGRESTServer sharedServer] addResource:person];
+[[TGRESTServer sharedServer] addResource:people];
+
+[[TGRESTServer sharedServer] startServerWithOptions:nil];
 
 ```
 
-Our server is now ready to accept requests.  You can check this out using curl if you like by doing the following:
+Our server is now ready to accept requests!  
+
+### Basic CRUD
+
+You can check that the server is working using curl if you like by doing the following:
 
 ```
-curl http://localhost:8888/person
+curl http://localhost:8888/people
 []
 ```
 
-An empty array?  Well that's not very exciting but it is a start.  
+An empty array?  Well that's not very exciting but it is a start.  So how do we get data in there?  Well we could just start the normal REST way:
+
+```
+curl \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '{"name":"john","numberOfKids":1}' \
+	http://10.0.1.66:8888/people
+
+{"numberOfKids":1,"id":1,"kilometersWalked":null,"name":"john","avatar":null}
+```
+
+Huzzah!  Our first object returned successfully.  We could also repeat our first request and get this:
+
+```
+[{"numberOfKids":1,"id":1,"kilometersWalked":null,"name":"john","avatar":null}]
+```
+
+Ok then, let's try updating it so the name is "jeff" instead.
+
+```
+curl \
+	-X PUT \
+	-H "Content-Type: application/json" \
+	-d '{"name":"jeff"}' \
+	http://10.0.1.66:8888/people/1
+
+{"numberOfKids":1,"id":1,"kilometersWalked":null,"name":"jeff","avatar":null}
+```
+
+Not bad.  How about a delete?
+
+```
+curl \
+	-X DELETE \
+	http://10.0.1.66:8888/people/1
+```
+
+Works just like you'd expect.
+
+### Loading data
+
+Of course we don't want to have to load our entire dataset just with API calls.  Fortunately **RESTEasy** has you covered with some very simple ways to load your sample data.
+
+Let's say your data is in JSON with identical property names to the resource model you defined for the sake of this example--we can load it doing something like this:
+
+```objective-c
+// Let's assume this was assigned to the resource we created before
+TGRESTResource *people = ...
+
+// First lets get the JSON from disk and parse it
+NSString *pathToJSON = [[NSBundle mainBundle] pathForResource:@"testdata" ofType:@"json"];
+NSData *rawJSON = [NSData dataWithContentsOfFile:pathToJSON];
+NSError *parsingError;
+id json = [NSJSONSerialization JSONObjectWithData:rawJSON options:kNilOptions error:&parsingError];
+
+if (!error) {
+	// Now pass it to the server
+	[[TGRESTServer sharedServer] addData:json forResource:people];
+}
+```
+
+The objects that you pass will first be sanitized and harvested of any matching parameters and as long as at least one property name matches it will injest the entire JSON object and create data for each.  Easy right?
+
+### Relational data and routes
+
+You can set one-to-many relations between your resources really easily.  All you have to do is something like this:
+
+```objective-c
+TGRESTResource *people = [TGRESTResource newResourceWithName:@"people" 
+																					model:@{
+               															@"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                                           	@"numberOfKids": [NSNumber numberWithInteger:TGPropertyTypeInteger],
+                                           	@"kilometersWalked": [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
+                                           	@"avatar": [NSNumber numberWithInteger:TGPropertyTypeBlob]
+                                           }];
+        
+TGRESTResource *cars = [TGRESTResource newResourceWithName:@"cars"
+                                        model:@{
+                                  							@"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                                  							@"color": [NSNumber numberWithInteger:TGPropertyTypeString]
+                                  			}
+                        								actions:TGResourceRESTActionsDELETE | TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT
+                     										primaryKey:nil
+                												parentResources:@[people]];
+        
+        [[TGRESTServer sharedServer] addResource:people];
+        [[TGRESTServer sharedServer] addResource:cars];
+```
+
+And by doing that we get the following default routes created:
+
+| Resource | Verb   | URI Pattern      | Result                             |
+|----------|--------|------------------|------------------------------------|
+| people   | GET    | /people          | List of all people                 |
+| people   | GET    | /people/:id      | Single person by id                |
+| people   | POST   | /people          | Creates a new person               |
+| people   | PUT    | /people/:id      | Updates a person by id             |
+| people   | DELETE | /people/:id      | Deletes a person by id             |
+| cars     | GET    | /cars            | List of all cars                   |
+| cars     | GET    | /cars/:id        | Single car by id                   |
+| cars     | GET    | /people/:id/cars | All cars for person by id          |
+| cars     | POST   | /cars            | Creates a new car                  |
+| cars     | POST   | /people/:id/cars | Creates a new car for person by id |
+| cars     | PUT    | /cars/:id        | Updates a car by id                |
+| cars     | DELETE | /cars/:id        | Deletes a car by id                |
+
+This follows a concept similar to shallow nesting as [described here](http://guides.rubyonrails.org/routing.html#nested-resources) with a few minor differences (which mostly involve restriction of nested resources which is not the point of this library).
+
+## Intermediate stuff
+
+Ok the above should give you a pretty good idea of how to get started quickly.  But what about customization?
+
+Although **RESTEasy** is supposed to be about mocking webservices not creating exact replicas, there are a few areas where you might understandably need a little more than the basics.  **RESTEasy** was architected to make this as simple as possible without jeprodizing the core mission of being approachable and dead simple to setup and start using.
+
+### Customizing the request/response representations
+
+So your data doesn't exactly match the JSON representations that your server provides?  There are a few reasons this might happen:
+
+- Property names are just plain different.
+- Certain properties are interpreted or calculated at runtime.
+- You have structure to your JSON which isn't directly connected to the underlying data
+- Cthulhu knows why but how do I not have to think about it?
+
+Yes you could normalize the data before importing (and that's cerainly an option) but if you want more control look no further than the `TGRESTSerializer` protocol for all your data representation needs.
+
+This protocol is pretty simple, it defines three class methods:
+
+```objective-c
++ (id)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource;
++ (id)dataWithCollection:(NSArray *)collection resource:(TGRESTResource *)resource;
++ (NSDictionary *)requestParametersWithBody:(NSDictionary *)body resource:(TGRESTResource *)resource;
+```
+
+The first two are for generating responses from either a single object or collection of objects after they are retrieved from the datastore and the third method provides the paramters of an incoming request which you can normalize however you like.  It's actually wrong to call this a serializer since it doesn't actually serialize/deserialize anything (although when you think about sequencing of events these methods are invoked either directly before or directly after "real" serialization), it is instead a way of morphing the data into whatever you want it to look like before it goes in or comes out of the server resource controller.
+
+You can change property names, formatting, inject default or static values, anything you like.  The philosophy here is that if you are going to need to perform an ugly hack to get your data representations to look right then lets do a proper ugly hack and isolate it from the rest of the framework.
+
+There is a default implementation of a class that conforms to the `TGRESTSerializer` protocol called `TGRESTDefaultSerializer`.  It is really instructive to look at its implementation file.
+
+```objective-c
+#import "TGRESTDefaultSerializer.h"
+
+@implementation TGRESTDefaultSerializer
+
++ (id)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource
+{
+    NSParameterAssert(object);
+    NSParameterAssert(resource);
+    
+    return object;
+}
+
++ (id)dataWithCollection:(NSArray *)collection resource:(TGRESTResource *)resource
+{
+    NSParameterAssert(collection);
+    NSParameterAssert(resource);
+    
+    return collection;
+}
+
++ (NSDictionary *)requestParametersWithBody:(NSDictionary *)body resource:(TGRESTResource *)resource
+{
+    NSParameterAssert(resource);
+    
+    return body;
+}
+
+@end
+```
+
+So it does absolutely nothing which is exactly the point.  If you want to customize the requests or responses to make them fit the way an existing API works you can do so and you don't need to touch your data representations as they will be blissfully ignorant of all of this.
+
+### Loading a custom serializer
+
+Once you create a class that implements the `TGRESTSerializer` protocol you need to load it onto the server.  There are two ways of doing this.
+
+#### Default serializer
+
+This is the serializer that is used if there are no specified resource serializers.  If you want to contain it all in one class with a single set of rules this is an easy way to go, just remember that unlike the resource serializers you can only set this when starting the server up.
+
+To set the default serializer do this:
+
+```objective-c
+NSDictionary *options = @{TGRESTServerDefaultSerializerClassOptionKey: [MyCustomSerializer class]};
+[[TGRESTServer sharedServer] startServerWithOptions:options];
+```
+
+Notice that you are passing the **class** of your custom serializer not an instance.  
+
+### Resource serializer
+
+You can set a resource serializer anytime you like, even when the server is running.  The way it works is that the resource controller will look for a serializer for the resource first and only go to the default serializer if it can't find one.  So this lets you assign custom serializers where necessary but you can always count on the default being there if you haven't defined one.
+
+Setting a serializer for a resource is as easy as:
+
+```objective-c
+[[TGRESTServer sharedServer] setSerializerClass:[MyCustomSerializer class] forResource:people];
+```
+
+Then to remove it:
+
+```objective-c
+[[TGRESTServer sharedServer] removeCustomSerializerForResource:people];
+```
+
+### Setting latency minimum and maximums
+
+**Coming Soon**
+
+### Setting timeout frequencies
+
+**Coming Soon**
 
 ## Usage
 

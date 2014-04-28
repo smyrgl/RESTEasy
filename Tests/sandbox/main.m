@@ -14,11 +14,12 @@ int main(int argc, const char * argv[])
 
     @autoreleasepool {
         
-        TGRESTResource *people = [TGRESTResource newResourceWithName:@"people"
-                                                                 model:@{
-                                                                         @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
-                                                                         @"email": [NSNumber numberWithInteger:TGPropertyTypeString]
-                                                                         }];
+        TGRESTResource *people = [TGRESTResource newResourceWithName:@"people" model:@{
+                                                                                       @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                                                                                       @"numberOfKids": [NSNumber numberWithInteger:TGPropertyTypeInteger],
+                                                                                       @"kilometersWalked": [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
+                                                                                       @"avatar": [NSNumber numberWithInteger:TGPropertyTypeBlob]
+                                                                                       }];
         
         TGRESTResource *cars = [TGRESTResource newResourceWithName:@"cars"
                                                               model:@{

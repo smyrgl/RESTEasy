@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TGRESTSerializer.h"
 
 @class TGRESTStore;
 @class TGRESTResource;
