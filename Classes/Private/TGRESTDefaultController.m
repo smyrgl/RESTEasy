@@ -15,6 +15,7 @@
 #import <GCDWebServer/GCDWebServerURLEncodedFormRequest.h>
 #import "TGPrivateFunctions.h"
 #import "TGRESTEasyLogging.h"
+#import "TGRESTSerializer.h"
 
 @implementation TGRESTDefaultController
 
@@ -50,7 +51,8 @@
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
-        return [GCDWebServerDataResponse responseWithJSONObject:allData];
+        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithCollection:allData resource:resource]];
     }
 }
 
@@ -69,7 +71,8 @@
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
-        return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:resourceResponse resource:resource]];
     }
 }
 
@@ -110,7 +113,8 @@
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
-        return [GCDWebServerDataResponse responseWithJSONObject:newObject];
+        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:newObject resource:resource]];
     }
 }
 
@@ -159,7 +163,9 @@
             TGLogError(@"Error modifying object of resource %@ with primary key %@", resource.name, lastPathComponent);
             return [self errorResponseBuilderWithError:error];
         }
-        return [GCDWebServerDataResponse responseWithJSONObject:resourceResponse];
+        
+        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:resourceResponse resource:resource]];
     }
 }
 

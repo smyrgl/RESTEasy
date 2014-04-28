@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TGRESTSerializer.h"
 
 @class GCDWebServerRequest;
 @class GCDWebServerResponse;
@@ -35,5 +36,4 @@
 + (GCDWebServerResponse *)destroyWithRequest:(GCDWebServerRequest *)request
                                 withResource:(TGRESTResource *)resource
                               usingDatastore:(TGRESTStore *)store;
-
 @end

@@ -13,8 +13,8 @@
 @protocol TGRESTSerializer <NSObject>
 
 @required
-+ (NSData *)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource;
-+ (NSData *)dataWithCollection:(NSArray *)collection resource:(TGRESTResource *)resource;
++ (NSDictionary *)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource;
++ (NSArray *)dataWithCollection:(NSArray *)collection resource:(TGRESTResource *)resource;
 
 
 @end

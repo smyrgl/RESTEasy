@@ -27,6 +27,10 @@ typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
     TGRESTServerLogLevelVerbose   = 1 << 4
 };
 
+/**
+ *  TGRESTServer is the primary class for running and managing your RESTful server using RESTEasy.  It is designed to be as simple as possible to use
+ */
+
 @interface TGRESTServer : NSObject
 
 @property (nonatomic, assign, readonly) BOOL isRunning;
@@ -49,6 +53,8 @@ typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
 - (void)addResourcesWithArray:(NSArray *)resources;
 - (void)removeResource:(TGRESTResource *)resource withData:(BOOL)removeData;
 - (void)removeAllResourcesWithData:(BOOL)removeData;
+- (NSDictionary *)serializers;
+- (void)setSerializerClass:(Class)class forResource:(TGRESTResource *)resource;
 - (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource;
 - (NSArray *)allObjectsForResource:(TGRESTResource *)resource;
 - (void)addData:(NSArray *)data forResource:(TGRESTResource *)resource;

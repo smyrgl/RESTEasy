@@ -17,12 +17,14 @@
 #import "TGRESTInMemoryStore.h"
 #import "TGRESTEasyLogging.h"
 #import "TGRESTDefaultController.h"
+#import "TGRESTDefaultSerializer.h"
 
 NSString * const TGLatencyRangeMinimumOptionKey = @"TGLatencyRangeMinimumOptionKey";
 NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionKey";
 NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionKey";
 NSString * const TGRESTServerDatastoreClassOptionKey = @"TGRESTServerDatastoreClassOptionKey";
 NSString * const TGRESTServerControllerClassOptionKey = @"TGRESTServerControllerClassOptionKey";
+NSString * const TGRESTServerSerializerClassOptionKey = @"TGRESTServerSerializerClassOptionKey";
 
 NSString * const TGRESTServerDidStartNotification = @"TGRESTServerDidStartNotification";
 NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdownNotification";
@@ -38,7 +40,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 @property (nonatomic, strong, readwrite) TGRESTStore *datastore;
 @property (nonatomic, copy, readwrite) NSString *serverName;
 @property (nonatomic, copy) NSDictionary *lastOptions;
-
+@property (nonatomic, strong) NSMutableDictionary *resourceSerializers;
 @end
 
 @implementation TGRESTServer
@@ -66,6 +68,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         self.datastore = [TGRESTInMemoryStore new];
         self.datastore.server = self;
         self.serverName = @"";
+        self.resourceSerializers = [NSMutableDictionary new];
     }
     
     return self;
@@ -196,6 +199,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [self.datastore addResource:resource];
     }
     [self.resources addObject:resource];
+    [self.resourceSerializers setObject:[TGRESTDefaultSerializer class] forKey:resource.name];
     
     if (resource.actions & TGResourceRESTActionsGET) {
         __weak typeof(self) weakSelf = self;
@@ -264,6 +268,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     }
     
     [self.resources removeObject:resource];
+    [self.resourceSerializers removeObjectForKey:resource.name];
 }
 
 - (void)removeAllResourcesWithData:(BOOL)removeData
@@ -284,6 +289,16 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     for (NSBlockOperation *op in operations) {
         [op start];
     }
+}
+
+- (NSDictionary *)serializers
+{
+    return [NSDictionary dictionaryWithDictionary:self.resourceSerializers];
+}
+
+- (void)setSerializerClass:(Class)class forResource:(TGRESTResource *)resource
+{
+    [self.resourceSerializers setObject:class forKey:resource.name];
 }
 
 - (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource
