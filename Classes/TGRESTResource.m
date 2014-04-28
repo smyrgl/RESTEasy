@@ -106,10 +106,22 @@
                                      userInfo:nil];
     }
     
+    for (NSString *modelKey in model.allKeys) {
+        if (modelKey.length == 0) {
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                           reason:[NSString stringWithFormat:@"You cannot set a model property with an empty key string"]
+                                         userInfo:nil];
+        }
+    }
+    
     if (key) {
         if (!model[key]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                            reason:[NSString stringWithFormat:@"Primary key %@ not found in model", key]
+                                         userInfo:nil];
+        } else if (key.length == 0) {
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                           reason:[NSString stringWithFormat:@"You cannot set a primary key with an empty string"]
                                          userInfo:nil];
         } else {
             TGPropertyType primaryKeyType = [model[key] integerValue];
@@ -148,7 +160,7 @@
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                            reason:[NSString stringWithFormat:@"Your model already has a key named %@, you cannot use it as a foreign key", fkeys[parent.name]]
                                          userInfo:nil];
-        } else if (!fkeys[parent.name] && resource.model[[NSString stringWithFormat:@"%@_id", parent.name]]) {
+        } else if (!fkeys[parent.name] && resource.model[[NSString stringWithFormat:@"%@_id", [parent.name singularizedString]]]) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                            reason:[NSString stringWithFormat:@"Your have not specified a foreign key for parent named %@ but the default foreign key name of %@_id is already specified in your model.  Either delete this from your model or specify a custom foreign key identifier for this parent.", parent.name, parent.name]
                                          userInfo:nil];
@@ -170,6 +182,13 @@
                     [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeInteger] forKey:defaultForeignKey];
                 }
             }
+        }
+    }
+    
+    for (NSString *modelKey in mergeModel.allKeys) {
+        NSNumber *modelType = mergeModel[modelKey];
+        if ([modelType integerValue] < 1 || [modelType integerValue] > 5) {
+            [mergeModel setObject:[NSNumber numberWithInteger:TGPropertyTypeString] forKey:modelKey];
         }
     }
     

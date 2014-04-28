@@ -329,44 +329,75 @@
 
 - (void)testForeignKeyParentNameMismatch
 {
+    TGRESTResource *parent = [TGTestFactory testResource];
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"parentID": [NSNumber numberWithInteger:TGPropertyTypeInteger]
+                            };
+    resource = [TGRESTResource newResourceWithName:@"test" model:model actions:TGResourceRESTActionsGET primaryKey:nil parentResources:@[parent] foreignKeys:@{@"parent": @"parentID"}];
     
+    XCTAssert(resource.foreignKeys[parent.name], @"There must be a foreign key for the parent resource");
+    XCTAssert(!resource.foreignKeys[@"parent"], @"There should not be a foreign key entry with the wrong name provided");
 }
 
 - (void)testExplictForeignKeyInModelTypeMismatch
 {
+    TGRESTResource *parent = [TGTestFactory testResource];
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"parentID": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
+    XCTAssertNoThrow(resource = [TGRESTResource newResourceWithName:@"test" model:model actions:TGResourceRESTActionsGET primaryKey:nil parentResources:@[parent] foreignKeys:@{parent.name: @"parentID"}], @"Trying to explicitly set a foreign key with a mismatched type should not throw an exception");
+    XCTAssert([resource.model[@"parentID"] isEqualToNumber:[NSNumber numberWithInteger:TGPropertyTypeInteger]], @"The type should be automatically recast to the correct type");
 }
 
 - (void)testPrimaryKeyEmptyString
 {
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
+    XCTAssertThrows(resource = [TGRESTResource newResourceWithName:@"myResource" model:model actions:TGResourceRESTActionsGET primaryKey:@""], @"Setting a primary key to an empty string should throw an exception");
 }
 
 - (void)testForeignKeyEmptyString
 {
+    TGRESTResource *parent = [TGTestFactory testResource];
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
+    XCTAssertThrows(resource = [TGRESTResource newResourceWithName:@"test" model:model actions:TGResourceRESTActionsGET primaryKey:nil parentResources:@[parent] foreignKeys:@{parent.name: @"parentID"}], @"Trying to set a foreign key with an empty string in the model should throw an exception");
 }
 
 - (void)testModelEmptyString
 {
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                            @"": [NSNumber numberWithInteger:TGPropertyTypeString]
+                            };
     
+    XCTAssertThrows(resource = [TGRESTResource newResourceWithName:@"test" model:model], @"Setting a primary key to an empty string should throw an exception");
 }
 
 - (void)testModelTypeNotInEnum
 {
+    TGRESTResource *resource;
+    NSDictionary *model = @{
+                            @"name": @10,
+                            };
     
+    XCTAssertNoThrow(resource = [TGRESTResource newResourceWithName:@"test" model:model], @"Setting a model property type with an invalid value should not create an exception");
+    XCTAssert(resource.model[@"name"] == [NSNumber numberWithInteger:TGPropertyTypeString], @"Should be set to the default of a string");
 }
-
-- (void)testAddDifferentResourceWithExistingName
-{
-    
-}
-
-- (void)testAddExistingResource
-{
-    
-}
-
 
 
 @end
