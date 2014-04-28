@@ -289,6 +289,62 @@ Then to remove it:
 
 **Coming Soon**
 
+## Advanced stuff
+
+Really want to hack on **RESTEasy**?  Well there are a few other things you can do.
+
+### Custom controllers
+
+You want to do something beyond basic CRUD on your resources?  While **RESTEasy** is not and will never be Rails it does have the ability to swap out the default controller for another one.  This won't change the default routes but what it will do is give you full customizability over the controller actions (Index, Show, Create, Update, Destroy).  Check out the `TGRESTController` protocol or the `TGRESTDefaultController` class for some ideas on where you can go with this as you can either subclass `TGRESTDefaultController` if you want to keep the super CRUD methods or create your own conforming controller.
+
+Once you have it you just load it onto the server much like you do with the custom serializers.
+
+```objective-c
+NSDictionary *options = @{TGRESTServerControllerClassOptionKey: [MyCustomController class]};
+[[TGRESTServer sharedServer] startServerWithOptions:options];
+```
+
+Just be sure this is really what you want as this is an advanced feature that most people won't need or want to bother with.  You should have exhausted what you can do with a custom `TGRESTSerializer` before you even think about using this.
+
+### Different store types
+
+By default there are two store types: in-memory and sqlite and they both have their uses.  But you'll notice that there are both subclasses of an abstract superclass called `TGRESTStore`.  If you want to hook up your REST API to something else (anything from a JSON file to a remote webservice) you can do so by creating a custom store that implements all the methods on `TGRESTStore`.
+
+```objective-c
+- (NSUInteger)countOfObjectsForResource:(TGRESTResource *)resource;
+
+- (NSDictionary *)getDataForObjectOfResource:(TGRESTResource *)resource
+                              withPrimaryKey:(NSString *)primaryKey
+                                       error:(NSError * __autoreleasing *)error;
+
+- (NSArray *)getDataForObjectsOfResource:(TGRESTResource *)resource
+                                  withParent:(TGRESTResource *)parent
+                            parentPrimaryKey:(NSString *)key
+                                       error:(NSError * __autoreleasing *)error;
+
+- (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
+                                error:(NSError * __autoreleasing *)error;
+
+- (NSDictionary *)createNewObjectForResource:(TGRESTResource *)resource
+                              withProperties:(NSDictionary *)properties
+                                       error:(NSError * __autoreleasing *)error;
+
+- (NSDictionary *)modifyObjectOfResource:(TGRESTResource *)resource
+                          withPrimaryKey:(NSString *)primaryKey
+                          withProperties:(NSDictionary *)properties
+                                   error:(NSError * __autoreleasing *)error;
+
+- (BOOL)deleteObjectOfResource:(TGRESTResource *)resource
+                withPrimaryKey:(NSString *)primaryKey
+                         error:(NSError * __autoreleasing *)error;
+
+- (void)addResource:(TGRESTResource *)resource;
+
+- (void)dropResource:(TGRESTResource *)resource;
+```
+
+If you want more details on implementing your own concrete store class check out the documentation for `TGRESTStore` as well as both of the existing implementations `TGRESTInMemoryStore` and `TGRESTSqliteStore`.
+
 ## Usage
 
 If you want to play with the example app, run the test suite yourself or submit a pull request then clone the repo and run `pod install` from the root directory first then open `RESTEasy.xcworkspace`.
