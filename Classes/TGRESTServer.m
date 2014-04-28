@@ -25,7 +25,6 @@ NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionK
 NSString * const TGRESTServerDatastoreClassOptionKey = @"TGRESTServerDatastoreClassOptionKey";
 NSString * const TGRESTServerControllerClassOptionKey = @"TGRESTServerControllerClassOptionKey";
 NSString * const TGRESTServerDefaultSerializerClassOptionKey = @"TGRESTServerDefaultSerializerClassOptionKey";
-NSString * const TGRESTServerResourceSerializerClassesOptionKey = @"TGRESTServerResourceSerializerClassesOptionKey";
 
 NSString * const TGRESTServerDidStartNotification = @"TGRESTServerDidStartNotification";
 NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdownNotification";
@@ -59,6 +58,14 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         sharedServer.serverName = @"shared";
     });
     return sharedServer;
+}
+
++ (instancetype)serverWithName:(NSString *)name
+{
+    TGRESTServer *newServer = [TGRESTServer new];
+    newServer.serverName = name;
+    
+    return newServer;
 }
 
 - (instancetype)init
@@ -146,10 +153,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     
     if (options[TGRESTServerDefaultSerializerClassOptionKey]) {
         self.defaultSerializer = options[TGRESTServerDefaultSerializerClassOptionKey];
-    }
-    
-    if (options[TGRESTServerResourceSerializerClassesOptionKey]) {
-        [self.resourceSerializers addEntriesFromDictionary:options[TGRESTServerResourceSerializerClassesOptionKey]];
     }
     
     [serverOptionsDict setObject:@"RESTEasy" forKey:GCDWebServerOption_ServerName];
@@ -323,6 +326,11 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 - (void)setSerializerClass:(Class)class forResource:(TGRESTResource *)resource
 {
     [self.resourceSerializers setObject:class forKey:resource.name];
+}
+
+- (void)removeCustomSerializerForResource:(TGRESTResource *)resource
+{
+    [self.resourceSerializers removeObjectForKey:resource.name];
 }
 
 - (NSUInteger)numberOfObjectsForResource:(TGRESTResource *)resource
