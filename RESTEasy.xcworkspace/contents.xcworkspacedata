@@ -8,20 +8,39 @@
    <Group
       location = "group:Classes"
       name = "Classes">
+      <FileRef
+         location = "group:RESTEasy.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTServer.h">
+      </FileRef>
+      <FileRef
+         location = "group:TGRESTServer.m">
+      </FileRef>
       <Group
          location = "container:"
          name = "Controller">
+         <FileRef
+            location = "group:Classes/TGRESTDefaultController.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/TGRESTDefaultController.m">
+         </FileRef>
          <FileRef
             location = "group:Classes/TGRESTDefaultSerializer.h">
          </FileRef>
          <FileRef
             location = "group:Classes/TGRESTDefaultSerializer.m">
          </FileRef>
+      </Group>
+      <Group
+         location = "container:"
+         name = "Model">
          <FileRef
-            location = "group:/Users/john/Code/RESTEasy/Classes/Private/TGRESTDefaultController.h">
+            location = "group:Classes/TGRESTResource.h">
          </FileRef>
          <FileRef
-            location = "group:/Users/john/Code/RESTEasy/Classes/Private/TGRESTDefaultController.m">
+            location = "group:Classes/TGRESTResource.m">
          </FileRef>
       </Group>
       <Group
@@ -41,10 +60,10 @@
          location = "container:"
          name = "Protocols">
          <FileRef
-            location = "group:Classes/Private/TGRESTSerializer.h">
+            location = "group:Classes/TGRESTController.h">
          </FileRef>
          <FileRef
-            location = "group:Classes/Private/TGRESTController.h">
+            location = "group:Classes/TGRESTSerializer.h">
          </FileRef>
       </Group>
       <Group
@@ -63,27 +82,12 @@
             location = "group:Classes/TGRESTSqliteStore.m">
          </FileRef>
          <FileRef
-            location = "group:/Users/john/Code/RESTEasy/Classes/TGRESTStore.h">
+            location = "group:Classes/TGRESTStore.h">
          </FileRef>
          <FileRef
-            location = "group:/Users/john/Code/RESTEasy/Classes/TGRESTStore.m">
+            location = "group:Classes/TGRESTStore.m">
          </FileRef>
       </Group>
-      <FileRef
-         location = "group:RESTEasy.h">
-      </FileRef>
-      <FileRef
-         location = "group:TGRESTResource.h">
-      </FileRef>
-      <FileRef
-         location = "group:TGRESTResource.m">
-      </FileRef>
-      <FileRef
-         location = "group:TGRESTServer.h">
-      </FileRef>
-      <FileRef
-         location = "group:TGRESTServer.m">
-      </FileRef>
    </Group>
    <FileRef
       location = "group:Example/RESTEasyApp/RESTEasyApp.xcodeproj">

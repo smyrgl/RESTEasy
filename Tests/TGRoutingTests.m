@@ -355,7 +355,16 @@
 
 - (void)testBaseParentDeleteRoute
 {
+    __weak typeof(self) weakSelf = self;
     
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
+                             parameters:nil
+                                success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    
+                                }
+                                failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    
+                                }];
 }
 
 - (void)testBaseChildDeleteRoute

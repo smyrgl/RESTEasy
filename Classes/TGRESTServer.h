@@ -28,7 +28,7 @@ typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
 };
 
 /**
- *  TGRESTServer is the primary class for running and managing your RESTful server using RESTEasy.  It is designed to be as simple as possible to use
+ *  TGRESTServer is the primary class for running and managing your RESTful server using RESTEasy.  It is designed to be as simple as possible to use, while providing reasonable options for configuration relevant to its intented use cases as a prototyping and testing server.  
  */
 
 @interface TGRESTServer : NSObject
