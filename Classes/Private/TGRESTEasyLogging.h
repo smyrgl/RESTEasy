@@ -18,11 +18,11 @@
 #define TG_LOG_FLAG_VERBOSE (1 << 4)  // 0...1000
 
 #define TG_LOG_LEVEL_OFF     0
-#define TG_LOG_LEVEL_FATAL   (MR_LOG_FLAG_FATAL)
-#define TG_LOG_LEVEL_ERROR   (MR_LOG_FLAG_FATAL | MR_LOG_FLAG_ERROR )                                                    // 0...0001
-#define TG_LOG_LEVEL_WARN    (MR_LOG_FLAG_FATAL | MR_LOG_FLAG_ERROR | MR_LOG_FLAG_WARN)                                    // 0...0011
-#define TG_LOG_LEVEL_INFO    (MR_LOG_FLAG_FATAL | MR_LOG_FLAG_ERROR | MR_LOG_FLAG_WARN | MR_LOG_FLAG_INFO)                    // 0...0111
-#define TG_LOG_LEVEL_VERBOSE (MR_LOG_FLAG_FATAL | MR_LOG_FLAG_ERROR | MR_LOG_FLAG_WARN | MR_LOG_FLAG_INFO | MR_LOG_FLAG_VERBOSE) // 0...1111
+#define TG_LOG_LEVEL_FATAL   (TG_LOG_FLAG_FATAL)
+#define TG_LOG_LEVEL_ERROR   (TG_LOG_FLAG_FATAL | TG_LOG_FLAG_ERROR )                                                    // 0...0001
+#define TG_LOG_LEVEL_WARN    (TG_LOG_FLAG_FATAL | TG_LOG_FLAG_ERROR | TG_LOG_FLAG_WARN)                                    // 0...0011
+#define TG_LOG_LEVEL_INFO    (TG_LOG_FLAG_FATAL | TG_LOG_FLAG_ERROR | TG_LOG_FLAG_WARN | TG_LOG_FLAG_INFO)                    // 0...0111
+#define TG_LOG_LEVEL_VERBOSE (TG_LOG_FLAG_FATAL | TG_LOG_FLAG_ERROR | TG_LOG_FLAG_WARN | TG_LOG_FLAG_INFO | TG_LOG_FLAG_VERBOSE) // 0...1111
 
 #define LOG_ASYNC_ENABLED YES
 
