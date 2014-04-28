@@ -356,20 +356,50 @@
 - (void)testBaseParentDeleteRoute
 {
     __weak typeof(self) weakSelf = self;
+    __block NSDictionary *response;
+    __block NSUInteger statusCode;
     
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
-                                    
+                                    response = responseObject;
+                                    statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
-                                    
+                                    XCTFail(@"The parent base delete route must not fail %@", error);
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(response.allKeys.count == 0, @"The response must be empty");
+    XCTAssert(statusCode == 204, @"The delete must return a 204 no content status");
 }
 
 - (void)testBaseChildDeleteRoute
 {
+    __weak typeof(self) weakSelf = self;
+    __block NSDictionary *response;
+    __block NSUInteger statusCode;
     
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
+                             parameters:nil
+                                success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    response = responseObject;
+                                    statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                }
+                                failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    XCTFail(@"The child base delete route must not fail %@", error);
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(response.allKeys.count == 0, @"The response must be empty");
+    XCTAssert(statusCode == 204, @"The delete must return a 204 no content status");
+
 }
 
 
@@ -377,17 +407,67 @@
 
 - (void)testNestedShowRoute
 {
+    __weak typeof(self) weakSelf = self;
+    __block NSUInteger statusCode;
     
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 XCTFail(@"The request to show a child object using a nested route must not succeed");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(statusCode == 405, @"The status code for the route should be 405 method not allowed");
 }
 
 - (void)testNestedUpdateRoute
 {
+    __weak typeof(self) weakSelf = self;
+    __block NSUInteger statusCode;
     
+    NSDictionary *params = @{@"address": [GZInternet email]};
+    
+    [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"/%@/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
+                          parameters:params
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 XCTFail(@"The update request for the nested child route must not succeed");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(statusCode == 405, @"The status code for the route should be 405 method not allowed");
 }
 
 - (void)testNestedDeleteRoute
 {
+    __weak typeof(self) weakSelf = self;
+    __block NSUInteger statusCode;
     
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
+                             parameters:nil
+                                success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    XCTFail(@"The delete request for the nested child route must not succeed");
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                }
+                                failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(statusCode == 405, @"The status code for the route should be 405 method not allowed");
 }
 
 - (void)testNestedIndexRouteParentKeyNonexistant

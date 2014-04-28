@@ -120,15 +120,9 @@ NSString *TGShowRegex(TGRESTResource *resource)
 {
     NSMutableString *regex = [NSMutableString new];
     
-    // First append the default match
+    // Shallow nested, use the base path only
     
     [regex appendString:[NSString stringWithFormat:@"^(/%@/\\w+/?$)", resource.name]];
-    
-    // Now add any paths from the parents
-    
-    for (TGRESTResource *parent in resource.parentResources) {
-        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/\\w+/?$)", parent.name, resource.name]];
-    }
     
     return [NSString stringWithString:regex];
 }
@@ -154,15 +148,9 @@ NSString *TGUpdateRegex(TGRESTResource *resource)
 {
     NSMutableString *regex = [NSMutableString new];
     
-    // First append the default match
+    // Shallow nested, use the base path only
     
     [regex appendString:[NSString stringWithFormat:@"^(/%@/\\w+/?$)", resource.name]];
-    
-    // Now add any paths from the parents
-    
-    for (TGRESTResource *parent in resource.parentResources) {
-        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/\\w+/?$)", parent.name, resource.name]];
-    }
     
     return [NSString stringWithString:regex];
 }
@@ -171,15 +159,9 @@ NSString *TGDestroyRegex(TGRESTResource *resource)
 {
     NSMutableString *regex = [NSMutableString new];
     
-    // First append the default match
+    // Shallow nested, use the base path only
     
     [regex appendString:[NSString stringWithFormat:@"^(/%@/\\w+/?$)", resource.name]];
-    
-    // Now add any paths from the parents
-    
-    for (TGRESTResource *parent in resource.parentResources) {
-        [regex appendString:[NSString stringWithFormat:@"|(/%@/\\w+/%@/\\w+/?$)", parent.name, resource.name]];
-    }
     
     return [NSString stringWithString:regex];
 }
