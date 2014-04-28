@@ -24,7 +24,8 @@ NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionK
 NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionKey";
 NSString * const TGRESTServerDatastoreClassOptionKey = @"TGRESTServerDatastoreClassOptionKey";
 NSString * const TGRESTServerControllerClassOptionKey = @"TGRESTServerControllerClassOptionKey";
-NSString * const TGRESTServerSerializerClassOptionKey = @"TGRESTServerSerializerClassOptionKey";
+NSString * const TGRESTServerDefaultSerializerClassOptionKey = @"TGRESTServerDefaultSerializerClassOptionKey";
+NSString * const TGRESTServerResourceSerializerClassesOptionKey = @"TGRESTServerResourceSerializerClassesOptionKey";
 
 NSString * const TGRESTServerDidStartNotification = @"TGRESTServerDidStartNotification";
 NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdownNotification";
@@ -41,6 +42,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 @property (nonatomic, copy, readwrite) NSString *serverName;
 @property (nonatomic, copy) NSDictionary *lastOptions;
 @property (nonatomic, strong) NSMutableDictionary *resourceSerializers;
+@property (nonatomic, strong, readwrite) Class<TGRESTSerializer> defaultSerializer;
 @end
 
 @implementation TGRESTServer
@@ -69,6 +71,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         self.datastore.server = self;
         self.serverName = @"";
         self.resourceSerializers = [NSMutableDictionary new];
+        self.defaultSerializer = [TGRESTDefaultSerializer class];
     }
     
     return self;
@@ -139,6 +142,14 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [serverOptionsDict setObject:options[TGWebServerPortNumberOptionKey] forKey:GCDWebServerOption_Port];;
     } else {
         [serverOptionsDict setObject:@8888 forKey:GCDWebServerOption_Port];
+    }
+    
+    if (options[TGRESTServerDefaultSerializerClassOptionKey]) {
+        self.defaultSerializer = options[TGRESTServerDefaultSerializerClassOptionKey];
+    }
+    
+    if (options[TGRESTServerResourceSerializerClassesOptionKey]) {
+        [self.resourceSerializers addEntriesFromDictionary:options[TGRESTServerResourceSerializerClassesOptionKey]];
     }
     
     [serverOptionsDict setObject:@"RESTEasy" forKey:GCDWebServerOption_ServerName];
@@ -214,8 +225,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [self.datastore addResource:resource];
     }
     [self.resources setObject:resource forKey:resource.name];
-    
-    [self.resourceSerializers setObject:[TGRESTDefaultSerializer class] forKey:resource.name];
     
     if (resource.actions & TGResourceRESTActionsGET) {
         __weak typeof(self) weakSelf = self;

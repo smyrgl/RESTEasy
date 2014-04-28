@@ -10,13 +10,15 @@
 
 @class TGRESTStore;
 @class TGRESTResource;
+@class TGRESTSerializer;
 
 extern NSString * const TGLatencyRangeMinimumOptionKey;
 extern NSString * const TGLatencyRangeMaximumOptionKey;
 extern NSString * const TGWebServerPortNumberOptionKey;
 extern NSString * const TGRESTServerDatastoreClassOptionKey;
 extern NSString * const TGRESTServerControllerClassOptionKey;
-extern NSString * const TGRESTServerSerializerClassOptionKey;
+extern NSString * const TGRESTServerDefaultSerializerClassOptionKey;
+extern NSString * const TGRESTServerResourceSerializerClassesOptionKey;
 
 typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
     TGRESTServerLogLevelOff       = 0,
@@ -39,6 +41,7 @@ typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
 @property (nonatomic, copy, readonly) NSString *serverBonjourName;
 @property (nonatomic, copy, readonly) NSURL *serverBonjourURL;
 @property (nonatomic, strong, readonly) TGRESTStore *datastore;
+@property (nonatomic, strong, readonly) Class<TGRESTSerializer> defaultSerializer;
 
 + (instancetype)sharedServer;
 

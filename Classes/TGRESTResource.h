@@ -160,7 +160,7 @@ typedef NS_OPTIONS(NSUInteger, TGResourceRESTActions) {
                          primaryKey:(NSString *)key;
 
 /**
- *  Simplest constructor that includes support for relational resources.
+ *  Constructor that includes support for relational resources.
  *
  *  @param name    Name of the resource, must be unique on the server you are adding it to.
  *  @param model   Keys representing property names and values that must be boxed values of `TGPropertyType`.

@@ -51,7 +51,13 @@
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
-        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        Class <TGRESTSerializer> serializer;
+        if (store.server.serializers[resource.name]) {
+            serializer = store.server.serializers[resource.name];
+        } else {
+            serializer = store.server.defaultSerializer;
+        }
+        
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithCollection:allData resource:resource]];
     }
 }
@@ -71,7 +77,13 @@
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
-        Class <TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        Class <TGRESTSerializer> serializer;
+        if (store.server.serializers[resource.name]) {
+            serializer = store.server.serializers[resource.name];
+        } else {
+            serializer = store.server.defaultSerializer;
+        }
+        
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:resourceResponse resource:resource]];
     }
 }
@@ -99,7 +111,13 @@
             body = TGParseURLEncodedForm(formURLString);
         }
         
-        Class<TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        Class <TGRESTSerializer> serializer;
+        if (store.server.serializers[resource.name]) {
+            serializer = store.server.serializers[resource.name];
+        } else {
+            serializer = store.server.defaultSerializer;
+        }
+        
         body = [serializer requestParametersWithBody:body resource:resource];
         NSError *error;
         NSDictionary *sanitizedBody = [self sanitizedPropertiesForResource:resource withProperties:body];
@@ -148,7 +166,13 @@
             body = TGParseURLEncodedForm(formURLString);
         }
         
-        Class<TGRESTSerializer> serializer = store.server.serializers[resource.name];
+        Class <TGRESTSerializer> serializer;
+        if (store.server.serializers[resource.name]) {
+            serializer = store.server.serializers[resource.name];
+        } else {
+            serializer = store.server.defaultSerializer;
+        }
+        
         body = [serializer requestParametersWithBody:body resource:resource];
         
         NSDictionary *sanitizedBody = [self sanitizedPropertiesForResource:resource withProperties:body];
