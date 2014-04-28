@@ -77,7 +77,7 @@
     NSParameterAssert(key);
     
     NSError *lookup;
-    [self getDataForObjectOfResource:resource withPrimaryKey:key error:&lookup];
+    [self getDataForObjectOfResource:parent withPrimaryKey:key error:&lookup];
     
     if (lookup) {
         if (error) {
@@ -226,6 +226,28 @@
             return NO;
         } else {
             [objects setObject:[NSNull null] forKey:objectKey];
+            
+            for (TGRESTResource *child in resource.childResources) {
+                id normalizedKey;
+                if (resource.primaryKeyType == TGPropertyTypeInteger) {
+                    normalizedKey = [NSNumber numberWithInteger:[primaryKey integerValue]];
+                } else {
+                    normalizedKey = primaryKey;
+                }
+                NSString *fKeyName = child.foreignKeys[resource.name];
+                NSPredicate *matchPredicate = [NSPredicate predicateWithFormat:@"self.%@ == %@", child.foreignKeys[resource.name], normalizedKey];
+                NSMutableDictionary *childObjects = self.inMemoryDatastore[child.name];
+
+                for (NSString *childKey in childObjects.allKeys) {
+                    NSDictionary *existingChildDict = childObjects[childKey];
+                    if ([matchPredicate evaluateWithObject:existingChildDict]) {
+                        NSMutableDictionary *updateObject = [NSMutableDictionary dictionaryWithDictionary:existingChildDict];
+                        [updateObject setObject:[NSNull null] forKey:fKeyName];
+                        [childObjects setObject:[NSDictionary dictionaryWithDictionary:updateObject] forKey:childKey];
+                    }
+                }
+            }
+            
             return YES;
         }
     }

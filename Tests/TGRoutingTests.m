@@ -467,26 +467,92 @@
     
     [self waitForTimeout:1];
     
-    XCTAssert(statusCode == 405, @"The status code for the route should be 405 method not allowed");
+    XCTAssert(statusCode == 405, @"The status code for the route must be 405 method not allowed");
 }
 
 - (void)testNestedIndexRouteParentKeyNonexistant
 {
+    __block NSUInteger statusCode;
+    __weak typeof(self) weakSelf = self;
     
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, @50, self.childResource.name]
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 XCTFail(@"The nested index route for a non-existant object must not succeed");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(statusCode == 404, @"The status code for the route must be 404 not found");
 }
 
 - (void)testNestedIndexRouteDeletedParent
 {
+    __weak typeof(self) weakSelf = self;
     
+    NSString *parentPrimaryKey = [self.testParentObjectDict[self.parentResource.primaryKey] copy];
+    
+    // First delete the parent resource
+    
+    [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, parentPrimaryKey]
+                             parameters:nil
+                                success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                }
+                                failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    XCTFail(@"The parent base delete route must not fail %@", error);
+                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                }];
+    
+    [self waitForTimeout:1];
+    
+    // Now try to access the child
+    
+    __block NSUInteger statusCode;
+    
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, parentPrimaryKey, self.childResource.name]
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 XCTFail(@"The child object must not be reachable by the nested parent path");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(statusCode == 404, @"The deleted path must return a 404 not found for a nested resource");
 }
 
 - (void)testNestedIndexRouteNotParentResource
 {
+    TGRESTResource *noParentResource = [TGTestFactory testResource];
+    [TGTestFactory createTestDataForResource:noParentResource count:5];
     
-}
-
-- (void)testDeepNesting
-{
+    __weak typeof(self) weakSelf = self;
+    __block NSUInteger statusCode;
+    
+    [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], noParentResource.name]
+                          parameters:nil
+                             success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 XCTFail(@"The request for the index of a non-child object must not succeed");
+                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                             }
+                             failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
+                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                             }];
+    
+    [self waitForTimeout:1];
+    
+    XCTAssert(statusCode == 405, @"The invalid path must return a 405 method not allowed");
     
 }
 

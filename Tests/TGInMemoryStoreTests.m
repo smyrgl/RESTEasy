@@ -26,5 +26,10 @@
     [super tearDown];
 }
 
+- (void)foreignKeyNullOnDelete
+{
+    
+}
+
 
 @end
