@@ -24,6 +24,10 @@
                               withResource:(TGRESTResource *)resource
                             usingDatastore:(TGRESTStore *)store
 {
+    NSParameterAssert(request);
+    NSParameterAssert(resource);
+    NSParameterAssert(store);
+    
     @autoreleasepool {
         if (request.URL.pathComponents.count > 2) {
             NSString *parentName = request.URL.pathComponents[1];
@@ -54,6 +58,10 @@
                              withResource:(TGRESTResource *)resource
                            usingDatastore:(TGRESTStore *)store
 {
+    NSParameterAssert(request);
+    NSParameterAssert(resource);
+    NSParameterAssert(store);
+    
     @autoreleasepool {
         NSString *lastPathComponent = request.URL.lastPathComponent;
         NSError *error;
@@ -69,6 +77,10 @@
                                withResource:(TGRESTResource *)resource
                              usingDatastore:(TGRESTStore *)store
 {
+    NSParameterAssert(request);
+    NSParameterAssert(resource);
+    NSParameterAssert(store);
+    
     @autoreleasepool {
         GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
         NSDictionary *body;
@@ -106,6 +118,10 @@
                                withResource:(TGRESTResource *)resource
                              usingDatastore:(TGRESTStore *)store
 {
+    NSParameterAssert(request);
+    NSParameterAssert(resource);
+    NSParameterAssert(store);
+    
     @autoreleasepool {
         NSString *lastPathComponent = request.URL.lastPathComponent;
         if ([lastPathComponent isEqualToString:resource.name]) {
@@ -151,6 +167,10 @@
                                 withResource:(TGRESTResource *)resource
                               usingDatastore:(TGRESTStore *)store
 {
+    NSParameterAssert(request);
+    NSParameterAssert(resource);
+    NSParameterAssert(store);
+    
     @autoreleasepool {
         NSString *lastPathComponent = request.URL.lastPathComponent;
         if ([lastPathComponent isEqualToString:resource.name]) {
@@ -186,6 +206,8 @@
 
 + (NSDictionary *)sanitizedPropertiesForResource:(TGRESTResource *)resource withProperties:(NSDictionary *)properties
 {
+    NSParameterAssert(resource);
+    
     NSMutableDictionary *returnDict = [NSMutableDictionary new];
     for (NSString *key in resource.model.allKeys) {
         if (properties[key]) {
