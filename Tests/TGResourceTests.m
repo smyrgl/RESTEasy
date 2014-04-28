@@ -139,7 +139,7 @@
     
     // Now test that the properties are the expected defaults
     
-    NSString *expectedForeignKey = [NSString stringWithFormat:@"%@_id", parentResource.name];
+    NSString *expectedForeignKey = [NSString stringWithFormat:@"%@_id", [parentResource.name singularizedString]];
     
     NSMutableDictionary *expectedModel = [NSMutableDictionary dictionaryWithDictionary:model];
     [expectedModel setObject:[NSNumber numberWithInteger:parentResource.primaryKeyType] forKey:expectedForeignKey];

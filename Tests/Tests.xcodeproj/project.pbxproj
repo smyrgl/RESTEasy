@@ -33,6 +33,9 @@
 		527CCB8F190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */; };
 		527CCB91190C72AD004DFD92 /* TGRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRoutingTests.m */; };
 		527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRoutingTests.m */; };
+		527CCC3C190E1D6E004DFD92 /* TGRESTController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCC3B190E1D6E004DFD92 /* TGRESTController.m */; };
+		527CCC3D190E1D6E004DFD92 /* TGRESTController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCC3B190E1D6E004DFD92 /* TGRESTController.m */; };
+		527CCC3E190E1D6E004DFD92 /* TGRESTController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCC3B190E1D6E004DFD92 /* TGRESTController.m */; };
 		52C61D27190C48510056CDFD /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D22190C48510056CDFD /* TGRESTStore.m */; };
 		52C61D28190C48510056CDFD /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D22190C48510056CDFD /* TGRESTStore.m */; };
 		52C61D29190C48510056CDFD /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D22190C48510056CDFD /* TGRESTStore.m */; };
@@ -94,6 +97,8 @@
 		527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInMemoryStoreTests.m; sourceTree = "<group>"; };
 		527CCB90190C72AD004DFD92 /* TGRoutingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRoutingTests.m; sourceTree = "<group>"; };
 		527CCB98190CC7B1004DFD92 /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
+		527CCC3A190E1D6E004DFD92 /* TGRESTController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTController.h; sourceTree = "<group>"; };
+		527CCC3B190E1D6E004DFD92 /* TGRESTController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRESTController.m; sourceTree = "<group>"; };
 		52C61D21190C48510056CDFD /* TGRESTStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTStore.h; path = ../Classes/TGRESTStore.h; sourceTree = "<group>"; };
 		52C61D22190C48510056CDFD /* TGRESTStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTStore.m; path = ../Classes/TGRESTStore.m; sourceTree = "<group>"; };
 		52C61D23190C48510056CDFD /* TGRESTInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTInMemoryStore.h; path = ../Classes/TGRESTInMemoryStore.h; sourceTree = "<group>"; };
@@ -187,6 +192,8 @@
 				52541F5E1909A91D000A44FA /* TGPrivateFunctions.h */,
 				52541F5F1909A91D000A44FA /* TGPrivateFunctions.m */,
 				527CCB98190CC7B1004DFD92 /* TGRESTEasyLogging.h */,
+				527CCC3A190E1D6E004DFD92 /* TGRESTController.h */,
+				527CCC3B190E1D6E004DFD92 /* TGRESTController.m */,
 			);
 			name = Private;
 			path = ../Classes/Private;
@@ -526,6 +533,7 @@
 			files = (
 				52C61D29190C48510056CDFD /* TGRESTStore.m in Sources */,
 				52541F89190A0A8C000A44FA /* main.m in Sources */,
+				527CCC3E190E1D6E004DFD92 /* TGRESTController.m in Sources */,
 				52541F91190A0C0F000A44FA /* TGRESTResource.m in Sources */,
 				52C61D2C190C48510056CDFD /* TGRESTInMemoryStore.m in Sources */,
 				52541F93190A0C13000A44FA /* TGPrivateFunctions.m in Sources */,
@@ -554,6 +562,7 @@
 				527CCB8E190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */,
 				52541FAB190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
 				52541F95190B0BCD000A44FA /* TGServerCRUDTests.m in Sources */,
+				527CCC3C190E1D6E004DFD92 /* TGRESTController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +580,7 @@
 				52541F5419099368000A44FA /* TGRESTResource.m in Sources */,
 				52541F611909A91D000A44FA /* TGPrivateFunctions.m in Sources */,
 				52541F4C190986C0000A44FA /* TGRESTServer.m in Sources */,
+				527CCC3D190E1D6E004DFD92 /* TGRESTController.m in Sources */,
 				52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
 				527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */,
 				52C61D36190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */,
