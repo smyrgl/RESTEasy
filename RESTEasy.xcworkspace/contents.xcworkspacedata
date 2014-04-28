@@ -18,13 +18,19 @@
             location = "group:TGPrivateFunctions.m">
          </FileRef>
          <FileRef
-            location = "group:TGRESTEasyLogging.h">
-         </FileRef>
-         <FileRef
             location = "group:TGRESTController.h">
          </FileRef>
          <FileRef
-            location = "group:TGRESTController.m">
+            location = "group:TGRESTSerializer.h">
+         </FileRef>
+         <FileRef
+            location = "group:TGRESTEasyLogging.h">
+         </FileRef>
+         <FileRef
+            location = "group:/Users/john/Code/RESTEasy/Classes/Private/TGRESTDefaultController.h">
+         </FileRef>
+         <FileRef
+            location = "group:/Users/john/Code/RESTEasy/Classes/Private/TGRESTDefaultController.m">
          </FileRef>
       </Group>
       <FileRef

@@ -15,6 +15,8 @@ extern NSString * const TGLatencyRangeMinimumOptionKey;
 extern NSString * const TGLatencyRangeMaximumOptionKey;
 extern NSString * const TGWebServerPortNumberOptionKey;
 extern NSString * const TGRESTServerDatastoreClassOptionKey;
+extern NSString * const TGRESTServerControllerClassOptionKey;
+extern NSString * const TGRESTServerSerializerClassOptionKey;
 
 typedef NS_OPTIONS(NSUInteger, TGRESTServerLogLevel) {
     TGRESTServerLogLevelOff       = 0,

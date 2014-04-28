@@ -13,8 +13,9 @@
 @class TGRESTResource;
 @class TGRESTStore;
 
-@interface TGRESTController : NSObject
+@protocol TGRESTController <NSObject>
 
+@required
 + (GCDWebServerResponse *)indexWithRequest:(GCDWebServerRequest *)request
                               withResource:(TGRESTResource *)resource
                             usingDatastore:(TGRESTStore *)store;

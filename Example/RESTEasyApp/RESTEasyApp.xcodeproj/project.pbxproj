@@ -17,7 +17,7 @@
 		527CCBBD190DD1CF004DFD92 /* TGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBBC190DD1CF004DFD92 /* TGViewController.m */; };
 		527CCBBF190DD1CF004DFD92 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 527CCBBE190DD1CF004DFD92 /* Images.xcassets */; };
 		527CCBEE190DD2E1004DFD92 /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBDE190DD2E1004DFD92 /* TGPrivateFunctions.m */; };
-		527CCBEF190DD2E1004DFD92 /* TGRESTController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE1190DD2E1004DFD92 /* TGRESTController.m */; };
+		527CCBEF190DD2E1004DFD92 /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE1190DD2E1004DFD92 /* TGRESTDefaultController.m */; };
 		527CCBF0190DD2E1004DFD92 /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE5190DD2E1004DFD92 /* TGRESTResource.m */; };
 		527CCBF1190DD2E1004DFD92 /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE7190DD2E1004DFD92 /* TGRESTServer.m */; };
 		527CCBF2190DD2E1004DFD92 /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE9190DD2E1004DFD92 /* TGRESTStore.m */; };
@@ -47,8 +47,8 @@
 		527CCBDD190DD2E1004DFD92 /* TGPrivateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPrivateFunctions.h; sourceTree = "<group>"; };
 		527CCBDE190DD2E1004DFD92 /* TGPrivateFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPrivateFunctions.m; sourceTree = "<group>"; };
 		527CCBDF190DD2E1004DFD92 /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
-		527CCBE0190DD2E1004DFD92 /* TGRESTController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTController.h; sourceTree = "<group>"; };
-		527CCBE1190DD2E1004DFD92 /* TGRESTController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRESTController.m; sourceTree = "<group>"; };
+		527CCBE0190DD2E1004DFD92 /* TGRESTDefaultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTDefaultController.h; sourceTree = "<group>"; };
+		527CCBE1190DD2E1004DFD92 /* TGRESTDefaultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRESTDefaultController.m; sourceTree = "<group>"; };
 		527CCBE3190DD2E1004DFD92 /* RESTEasy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RESTEasy.h; path = ../../Classes/RESTEasy.h; sourceTree = "<group>"; };
 		527CCBE4190DD2E1004DFD92 /* TGRESTResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTResource.h; path = ../../Classes/TGRESTResource.h; sourceTree = "<group>"; };
 		527CCBE5190DD2E1004DFD92 /* TGRESTResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTResource.m; path = ../../Classes/TGRESTResource.m; sourceTree = "<group>"; };
@@ -166,8 +166,8 @@
 				527CCBDD190DD2E1004DFD92 /* TGPrivateFunctions.h */,
 				527CCBDE190DD2E1004DFD92 /* TGPrivateFunctions.m */,
 				527CCBDF190DD2E1004DFD92 /* TGRESTEasyLogging.h */,
-				527CCBE0190DD2E1004DFD92 /* TGRESTController.h */,
-				527CCBE1190DD2E1004DFD92 /* TGRESTController.m */,
+				527CCBE0190DD2E1004DFD92 /* TGRESTDefaultController.h */,
+				527CCBE1190DD2E1004DFD92 /* TGRESTDefaultController.m */,
 			);
 			name = Private;
 			path = ../../Classes/Private;
@@ -274,7 +274,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				527CCBEF190DD2E1004DFD92 /* TGRESTController.m in Sources */,
+				527CCBEF190DD2E1004DFD92 /* TGRESTDefaultController.m in Sources */,
 				527CCBBD190DD1CF004DFD92 /* TGViewController.m in Sources */,
 				527CCBB3190DD1CF004DFD92 /* main.m in Sources */,
 				527CCBF1190DD2E1004DFD92 /* TGRESTServer.m in Sources */,

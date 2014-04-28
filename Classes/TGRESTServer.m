@@ -16,12 +16,13 @@
 #import "TGRESTStore.h"
 #import "TGRESTInMemoryStore.h"
 #import "TGRESTEasyLogging.h"
-#import "TGRESTController.h"
+#import "TGRESTDefaultController.h"
 
 NSString * const TGLatencyRangeMinimumOptionKey = @"TGLatencyRangeMinimumOptionKey";
 NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionKey";
 NSString * const TGWebServerPortNumberOptionKey = @"TGWebServerPortNumberOptionKey";
 NSString * const TGRESTServerDatastoreClassOptionKey = @"TGRESTServerDatastoreClassOptionKey";
+NSString * const TGRESTServerControllerClassOptionKey = @"TGRESTServerControllerClassOptionKey";
 
 NSString * const TGRESTServerDidStartNotification = @"TGRESTServerDidStartNotification";
 NSString * const TGRESTServerDidShutdownNotification = @"TGRESTServerDidShutdownNotification";
@@ -203,14 +204,14 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGIndexRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTController indexWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [TGRESTDefaultController indexWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
                                }];
         
         [self.webServer addHandlerForMethod:@"GET"
                                   pathRegex:TGShowRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTController showWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [TGRESTDefaultController showWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
                                }];
     }
     
@@ -221,7 +222,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGCreateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTController createWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [TGRESTDefaultController createWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
                                }];
         
     }
@@ -233,7 +234,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGDestroyRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTController destroyWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [TGRESTDefaultController destroyWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
                                }];
     }
     
@@ -244,7 +245,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGUpdateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTController updateWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [TGRESTDefaultController updateWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
                                }];
     }
 }
@@ -339,34 +340,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
             TGLogWarn(@"No matching keys for object %@", objectDictionary);
         }
     }
-}
-
-#pragma mark - Private
-
-+ (GCDWebServerResponse *)errorResponseBuilderWithError:(NSError *)error
-{
-    NSParameterAssert(error);
-    
-    if (error.code == TGRESTStoreObjectAlreadyDeletedErrorCode) {
-        return [GCDWebServerResponse responseWithStatusCode:410];
-    } else if (error.code == TGRESTStoreObjectNotFoundErrorCode) {
-        return [GCDWebServerResponse responseWithStatusCode:404];
-    } else if (error.code == TGRESTStoreBadRequestErrorCode) {
-        return [GCDWebServerResponse responseWithStatusCode:400];
-    } else {
-        return [GCDWebServerResponse responseWithStatusCode:500];
-    }
-}
-
-+ (NSDictionary *)sanitizedPropertiesForResource:(TGRESTResource *)resource withProperties:(NSDictionary *)properties
-{
-    NSMutableDictionary *returnDict = [NSMutableDictionary new];
-    for (NSString *key in resource.model.allKeys) {
-        if (properties[key]) {
-            [returnDict setObject:properties[key] forKey:key];
-        }
-    }
-    return [NSDictionary dictionaryWithDictionary:returnDict];
 }
 
 @end

@@ -6,7 +6,7 @@
 //
 //
 
-#import "TGRESTController.h"
+#import "TGRESTDefaultController.h"
 #import "TGRESTResource.h"
 #import "TGRESTStore.h"
 #import <GCDWebServer/GCDWebServer.h>
@@ -16,7 +16,7 @@
 #import "TGPrivateFunctions.h"
 #import "TGRESTEasyLogging.h"
 
-@implementation TGRESTController
+@implementation TGRESTDefaultController
 
 #pragma mark - Controller actions
 
