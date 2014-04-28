@@ -14,18 +14,24 @@ int main(int argc, const char * argv[])
 
     @autoreleasepool {
         
-        TGRESTResource *person = [TGRESTResource newResourceWithName:@"people"
-                                                                 model:@{@"name": [NSNumber numberWithInteger:TGPropertyTypeString]}];
+        TGRESTResource *people = [TGRESTResource newResourceWithName:@"people"
+                                                                 model:@{
+                                                                         @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                                                                         @"email": [NSNumber numberWithInteger:TGPropertyTypeString]
+                                                                         }];
         
-        TGRESTResource *email = [TGRESTResource newResourceWithName:@"emails"
-                                                              model:@{@"address": [NSNumber numberWithInteger:TGPropertyTypeString]}
+        TGRESTResource *cars = [TGRESTResource newResourceWithName:@"cars"
+                                                              model:@{
+                                                                      @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
+                                                                      @"color": [NSNumber numberWithInteger:TGPropertyTypeString]
+                                                                      }
                                                             actions:TGResourceRESTActionsDELETE | TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT
                                                          primaryKey:nil
-                                                    parentResources:@[person]];
+                                                    parentResources:@[people]];
         
-        [[TGRESTServer sharedServer] addResource:person];
-        [[TGRESTServer sharedServer] addResource:email];
-
+        [[TGRESTServer sharedServer] addResource:people];
+        [[TGRESTServer sharedServer] addResource:cars];
+        
         [[TGRESTServer sharedServer] startServerWithOptions:nil];
         
         __block BOOL serverRunning = YES;

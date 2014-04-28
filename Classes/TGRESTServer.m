@@ -139,35 +139,10 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     [serverOptionsDict setObject:@"RESTEasy" forKey:GCDWebServerOption_ServerName];
     [serverOptionsDict setObject:[NSString stringWithFormat:@"RESTEasy_%@", self.serverName] forKey:GCDWebServerOption_BonjourName];
     
-    __block BOOL started = NO;
-    __block BOOL retrying = NO;
-    int retryCount = 0;
-    
-    __weak typeof(self) weakSelf = self;
     NSDictionary *startOptions = [NSDictionary dictionaryWithDictionary:serverOptionsDict];
     
-    while (!started && retryCount < 10) {
-        if (retryCount == 0) {
-            started = [self.webServer startWithOptions:startOptions];
-            if (!started) {
-                retryCount++;
-            }
-        } else if (!retrying) {
-            TGLogWarn(@"Failed to start server, retrying...");
-            retrying = YES;
-            retryCount++;
-            dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 200ull * NSEC_PER_MSEC);
-                dispatch_after(time, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    TGLogInfo(@"Retrying server start...");
-                    started = [weakSelf.webServer startWithOptions:startOptions];
-                    retrying = NO;
-                });
-            });
-            [NSThread sleepForTimeInterval:0.2f];
-        }
-    }
-    
+    NSError *startError;
+    BOOL started = [self.webServer startWithOptions:startOptions error:&startError];
     
     if (started) {
         NSMutableString *status = [NSMutableString stringWithString:@"\n"];
@@ -185,7 +160,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         [[NSNotificationCenter defaultCenter] postNotificationName:TGRESTServerDidStartNotification object:self];
     } else {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:[NSString stringWithFormat:@"Server failed to start with retry count %d", retryCount]
+                                       reason:[NSString stringWithFormat:@"Server failed to start with error %@", startError]
                                      userInfo:nil];
     }
 }

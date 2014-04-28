@@ -1,0 +1,434 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		527CCBA7190DD1CF004DFD92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBA6190DD1CF004DFD92 /* Foundation.framework */; };
+		527CCBA9190DD1CF004DFD92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */; };
+		527CCBAB190DD1CF004DFD92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBAA190DD1CF004DFD92 /* UIKit.framework */; };
+		527CCBB1190DD1CF004DFD92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 527CCBAF190DD1CF004DFD92 /* InfoPlist.strings */; };
+		527CCBB3190DD1CF004DFD92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBB2190DD1CF004DFD92 /* main.m */; };
+		527CCBB7190DD1CF004DFD92 /* TGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBB6190DD1CF004DFD92 /* TGAppDelegate.m */; };
+		527CCBBA190DD1CF004DFD92 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 527CCBB8190DD1CF004DFD92 /* Main.storyboard */; };
+		527CCBBD190DD1CF004DFD92 /* TGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBBC190DD1CF004DFD92 /* TGViewController.m */; };
+		527CCBBF190DD1CF004DFD92 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 527CCBBE190DD1CF004DFD92 /* Images.xcassets */; };
+		527CCBEE190DD2E1004DFD92 /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBDE190DD2E1004DFD92 /* TGPrivateFunctions.m */; };
+		527CCBEF190DD2E1004DFD92 /* TGRESTController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE1190DD2E1004DFD92 /* TGRESTController.m */; };
+		527CCBF0190DD2E1004DFD92 /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE5190DD2E1004DFD92 /* TGRESTResource.m */; };
+		527CCBF1190DD2E1004DFD92 /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE7190DD2E1004DFD92 /* TGRESTServer.m */; };
+		527CCBF2190DD2E1004DFD92 /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBE9190DD2E1004DFD92 /* TGRESTStore.m */; };
+		527CCBF3190DD2E1004DFD92 /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBEB190DD2E1004DFD92 /* TGRESTInMemoryStore.m */; };
+		527CCBF4190DD2E1004DFD92 /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBED190DD2E1004DFD92 /* TGRESTSqliteStore.m */; };
+		D0E5AF8015184CB4837B5A51 /* libPods-RESTEasyApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 123DF7B39AC840EBBF3F60D0 /* libPods-RESTEasyApp.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		123DF7B39AC840EBBF3F60D0 /* libPods-RESTEasyApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RESTEasyApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		34CB08749A3D45D98F9363E5 /* Pods-RESTEasyApp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RESTEasyApp.xcconfig"; path = "../../Pods/Pods-RESTEasyApp.xcconfig"; sourceTree = "<group>"; };
+		527CCBA3190DD1CF004DFD92 /* RESTEasyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RESTEasyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		527CCBA6190DD1CF004DFD92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		527CCBAA190DD1CF004DFD92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		527CCBAE190DD1CF004DFD92 /* RESTEasyApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RESTEasyApp-Info.plist"; sourceTree = "<group>"; };
+		527CCBB0190DD1CF004DFD92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		527CCBB2190DD1CF004DFD92 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		527CCBB4190DD1CF004DFD92 /* RESTEasyApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RESTEasyApp-Prefix.pch"; sourceTree = "<group>"; };
+		527CCBB5190DD1CF004DFD92 /* TGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGAppDelegate.h; sourceTree = "<group>"; };
+		527CCBB6190DD1CF004DFD92 /* TGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TGAppDelegate.m; sourceTree = "<group>"; };
+		527CCBB9190DD1CF004DFD92 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		527CCBBB190DD1CF004DFD92 /* TGViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGViewController.h; sourceTree = "<group>"; };
+		527CCBBC190DD1CF004DFD92 /* TGViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TGViewController.m; sourceTree = "<group>"; };
+		527CCBBE190DD1CF004DFD92 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		527CCBC5190DD1CF004DFD92 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		527CCBDD190DD2E1004DFD92 /* TGPrivateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPrivateFunctions.h; sourceTree = "<group>"; };
+		527CCBDE190DD2E1004DFD92 /* TGPrivateFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPrivateFunctions.m; sourceTree = "<group>"; };
+		527CCBDF190DD2E1004DFD92 /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
+		527CCBE0190DD2E1004DFD92 /* TGRESTController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTController.h; sourceTree = "<group>"; };
+		527CCBE1190DD2E1004DFD92 /* TGRESTController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRESTController.m; sourceTree = "<group>"; };
+		527CCBE3190DD2E1004DFD92 /* RESTEasy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RESTEasy.h; path = ../../Classes/RESTEasy.h; sourceTree = "<group>"; };
+		527CCBE4190DD2E1004DFD92 /* TGRESTResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTResource.h; path = ../../Classes/TGRESTResource.h; sourceTree = "<group>"; };
+		527CCBE5190DD2E1004DFD92 /* TGRESTResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTResource.m; path = ../../Classes/TGRESTResource.m; sourceTree = "<group>"; };
+		527CCBE6190DD2E1004DFD92 /* TGRESTServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTServer.h; path = ../../Classes/TGRESTServer.h; sourceTree = "<group>"; };
+		527CCBE7190DD2E1004DFD92 /* TGRESTServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTServer.m; path = ../../Classes/TGRESTServer.m; sourceTree = "<group>"; };
+		527CCBE8190DD2E1004DFD92 /* TGRESTStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTStore.h; path = /Users/john/Code/RESTEasy/Classes/TGRESTStore.h; sourceTree = "<absolute>"; };
+		527CCBE9190DD2E1004DFD92 /* TGRESTStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTStore.m; path = /Users/john/Code/RESTEasy/Classes/TGRESTStore.m; sourceTree = "<absolute>"; };
+		527CCBEA190DD2E1004DFD92 /* TGRESTInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTInMemoryStore.h; path = ../../Classes/TGRESTInMemoryStore.h; sourceTree = "<group>"; };
+		527CCBEB190DD2E1004DFD92 /* TGRESTInMemoryStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTInMemoryStore.m; path = ../../Classes/TGRESTInMemoryStore.m; sourceTree = "<group>"; };
+		527CCBEC190DD2E1004DFD92 /* TGRESTSqliteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTSqliteStore.h; path = ../../Classes/TGRESTSqliteStore.h; sourceTree = "<group>"; };
+		527CCBED190DD2E1004DFD92 /* TGRESTSqliteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTSqliteStore.m; path = ../../Classes/TGRESTSqliteStore.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		527CCBA0190DD1CF004DFD92 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				527CCBA9190DD1CF004DFD92 /* CoreGraphics.framework in Frameworks */,
+				527CCBAB190DD1CF004DFD92 /* UIKit.framework in Frameworks */,
+				527CCBA7190DD1CF004DFD92 /* Foundation.framework in Frameworks */,
+				D0E5AF8015184CB4837B5A51 /* libPods-RESTEasyApp.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		527CCB9A190DD1CF004DFD92 = {
+			isa = PBXGroup;
+			children = (
+				527CCBAC190DD1CF004DFD92 /* RESTEasyApp */,
+				527CCBA5190DD1CF004DFD92 /* Frameworks */,
+				527CCBA4190DD1CF004DFD92 /* Products */,
+				527CCBDB190DD2CE004DFD92 /* Vendor */,
+				34CB08749A3D45D98F9363E5 /* Pods-RESTEasyApp.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		527CCBA4190DD1CF004DFD92 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBA3190DD1CF004DFD92 /* RESTEasyApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		527CCBA5190DD1CF004DFD92 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBA6190DD1CF004DFD92 /* Foundation.framework */,
+				527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */,
+				527CCBAA190DD1CF004DFD92 /* UIKit.framework */,
+				527CCBC5190DD1CF004DFD92 /* XCTest.framework */,
+				123DF7B39AC840EBBF3F60D0 /* libPods-RESTEasyApp.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		527CCBAC190DD1CF004DFD92 /* RESTEasyApp */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBB5190DD1CF004DFD92 /* TGAppDelegate.h */,
+				527CCBB6190DD1CF004DFD92 /* TGAppDelegate.m */,
+				527CCBB8190DD1CF004DFD92 /* Main.storyboard */,
+				527CCBBB190DD1CF004DFD92 /* TGViewController.h */,
+				527CCBBC190DD1CF004DFD92 /* TGViewController.m */,
+				527CCBBE190DD1CF004DFD92 /* Images.xcassets */,
+				527CCBAD190DD1CF004DFD92 /* Supporting Files */,
+			);
+			path = RESTEasyApp;
+			sourceTree = "<group>";
+		};
+		527CCBAD190DD1CF004DFD92 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBAE190DD1CF004DFD92 /* RESTEasyApp-Info.plist */,
+				527CCBAF190DD1CF004DFD92 /* InfoPlist.strings */,
+				527CCBB2190DD1CF004DFD92 /* main.m */,
+				527CCBB4190DD1CF004DFD92 /* RESTEasyApp-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		527CCBDB190DD2CE004DFD92 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBDC190DD2D5004DFD92 /* RESTEasy */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
+		527CCBDC190DD2D5004DFD92 /* RESTEasy */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBE2190DD2E1004DFD92 /* Private */,
+				527CCBE3190DD2E1004DFD92 /* RESTEasy.h */,
+				527CCBE4190DD2E1004DFD92 /* TGRESTResource.h */,
+				527CCBE5190DD2E1004DFD92 /* TGRESTResource.m */,
+				527CCBE6190DD2E1004DFD92 /* TGRESTServer.h */,
+				527CCBE7190DD2E1004DFD92 /* TGRESTServer.m */,
+				527CCBE8190DD2E1004DFD92 /* TGRESTStore.h */,
+				527CCBE9190DD2E1004DFD92 /* TGRESTStore.m */,
+				527CCBEA190DD2E1004DFD92 /* TGRESTInMemoryStore.h */,
+				527CCBEB190DD2E1004DFD92 /* TGRESTInMemoryStore.m */,
+				527CCBEC190DD2E1004DFD92 /* TGRESTSqliteStore.h */,
+				527CCBED190DD2E1004DFD92 /* TGRESTSqliteStore.m */,
+			);
+			name = RESTEasy;
+			sourceTree = "<group>";
+		};
+		527CCBE2190DD2E1004DFD92 /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				527CCBDD190DD2E1004DFD92 /* TGPrivateFunctions.h */,
+				527CCBDE190DD2E1004DFD92 /* TGPrivateFunctions.m */,
+				527CCBDF190DD2E1004DFD92 /* TGRESTEasyLogging.h */,
+				527CCBE0190DD2E1004DFD92 /* TGRESTController.h */,
+				527CCBE1190DD2E1004DFD92 /* TGRESTController.m */,
+			);
+			name = Private;
+			path = ../../Classes/Private;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		527CCBA2190DD1CF004DFD92 /* RESTEasyApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 527CCBD5190DD1CF004DFD92 /* Build configuration list for PBXNativeTarget "RESTEasyApp" */;
+			buildPhases = (
+				B39B858513DB450B953A53C0 /* Check Pods Manifest.lock */,
+				527CCB9F190DD1CF004DFD92 /* Sources */,
+				527CCBA0190DD1CF004DFD92 /* Frameworks */,
+				527CCBA1190DD1CF004DFD92 /* Resources */,
+				B461BD8A02D2416589EFD678 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RESTEasyApp;
+			productName = RESTEasyApp;
+			productReference = 527CCBA3190DD1CF004DFD92 /* RESTEasyApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		527CCB9B190DD1CF004DFD92 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = TG;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Tiny Little Gears";
+			};
+			buildConfigurationList = 527CCB9E190DD1CF004DFD92 /* Build configuration list for PBXProject "RESTEasyApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 527CCB9A190DD1CF004DFD92;
+			productRefGroup = 527CCBA4190DD1CF004DFD92 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				527CCBA2190DD1CF004DFD92 /* RESTEasyApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		527CCBA1190DD1CF004DFD92 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				527CCBBF190DD1CF004DFD92 /* Images.xcassets in Resources */,
+				527CCBB1190DD1CF004DFD92 /* InfoPlist.strings in Resources */,
+				527CCBBA190DD1CF004DFD92 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B39B858513DB450B953A53C0 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B461BD8A02D2416589EFD678 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../../Pods/Pods-RESTEasyApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		527CCB9F190DD1CF004DFD92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				527CCBEF190DD2E1004DFD92 /* TGRESTController.m in Sources */,
+				527CCBBD190DD1CF004DFD92 /* TGViewController.m in Sources */,
+				527CCBB3190DD1CF004DFD92 /* main.m in Sources */,
+				527CCBF1190DD2E1004DFD92 /* TGRESTServer.m in Sources */,
+				527CCBEE190DD2E1004DFD92 /* TGPrivateFunctions.m in Sources */,
+				527CCBF3190DD2E1004DFD92 /* TGRESTInMemoryStore.m in Sources */,
+				527CCBF4190DD2E1004DFD92 /* TGRESTSqliteStore.m in Sources */,
+				527CCBF0190DD2E1004DFD92 /* TGRESTResource.m in Sources */,
+				527CCBF2190DD2E1004DFD92 /* TGRESTStore.m in Sources */,
+				527CCBB7190DD1CF004DFD92 /* TGAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		527CCBAF190DD1CF004DFD92 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				527CCBB0190DD1CF004DFD92 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		527CCBB8190DD1CF004DFD92 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				527CCBB9190DD1CF004DFD92 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		527CCBD3190DD1CF004DFD92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		527CCBD4190DD1CF004DFD92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		527CCBD6190DD1CF004DFD92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34CB08749A3D45D98F9363E5 /* Pods-RESTEasyApp.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RESTEasyApp/RESTEasyApp-Prefix.pch";
+				INFOPLIST_FILE = "RESTEasyApp/RESTEasyApp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		527CCBD7190DD1CF004DFD92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34CB08749A3D45D98F9363E5 /* Pods-RESTEasyApp.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RESTEasyApp/RESTEasyApp-Prefix.pch";
+				INFOPLIST_FILE = "RESTEasyApp/RESTEasyApp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		527CCB9E190DD1CF004DFD92 /* Build configuration list for PBXProject "RESTEasyApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				527CCBD3190DD1CF004DFD92 /* Debug */,
+				527CCBD4190DD1CF004DFD92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		527CCBD5190DD1CF004DFD92 /* Build configuration list for PBXNativeTarget "RESTEasyApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				527CCBD6190DD1CF004DFD92 /* Debug */,
+				527CCBD7190DD1CF004DFD92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 527CCB9B190DD1CF004DFD92 /* Project object */;
+}

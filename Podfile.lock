@@ -23,9 +23,9 @@ PODS:
   - FMDB/common (2.2)
   - FMDB/standard (2.2):
     - FMDB/common
-  - GCDWebServer (2.3.2):
+  - GCDWebServer (2.4):
     - GCDWebServer/Core
-  - GCDWebServer/Core (2.3.2)
+  - GCDWebServer/Core (2.4)
   - Gizou (0.1.3)
   - InflectorKit (0.0.1)
   - XCAsyncTestCase (0.0.1)
@@ -33,15 +33,19 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - FMDB
-  - GCDWebServer
+  - GCDWebServer (from `https://github.com/swisspol/GCDWebServer.git`)
   - Gizou
   - InflectorKit
   - XCAsyncTestCase
 
+EXTERNAL SOURCES:
+  GCDWebServer:
+    :git: https://github.com/swisspol/GCDWebServer.git
+
 SPEC CHECKSUMS:
   AFNetworking: ae513199cca79e9d7af2708ccabe2ed075550c42
   FMDB: e0dd09464b4e1a1cd7fa51ea835ae821b5656865
-  GCDWebServer: b79038630071a8110ece267b0e490fb1f388e58e
+  GCDWebServer: a3de9733b63cc1594942744c7e32c8f22bf0aa6f
   Gizou: 5d17a448abd3f2b7ce5002f28073cdc717dc76c3
   InflectorKit: 9dccab02f95541093995adac639342c9eb9e6c12
   XCAsyncTestCase: 6e92e14f923ed5925d93bc80720ef0e81e1e896f
