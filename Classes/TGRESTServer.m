@@ -36,7 +36,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 @property (nonatomic, strong) GCDWebServer *webServer;
 @property (nonatomic, assign) CGFloat latencyMin;
 @property (nonatomic, assign) CGFloat latencyMax;
-@property (nonatomic, strong) NSMutableSet *resources;
+@property (nonatomic, strong) NSMutableDictionary *resources;
 @property (nonatomic, strong, readwrite) TGRESTStore *datastore;
 @property (nonatomic, copy, readwrite) NSString *serverName;
 @property (nonatomic, copy) NSDictionary *lastOptions;
@@ -64,7 +64,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     self = [super init];
     if (self) {
         self.webServer = [[GCDWebServer alloc] init];
-        self.resources = [NSMutableSet new];
+        self.resources = [NSMutableDictionary new];
         self.datastore = [TGRESTInMemoryStore new];
         self.datastore.server = self;
         self.serverName = @"";
@@ -127,7 +127,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     }
     
     self.datastore.server = self;
-    [self addResourcesWithArray:[self.resources allObjects]];
+    [self addResourcesWithArray:[self.resources allValues]];
     
     [options[TGWebServerPortNumberOptionKey] integerValue];
     self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
@@ -153,7 +153,10 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         NSMutableString *status = [NSMutableString stringWithString:@"\n"];
         
         [status appendFormat:@"Server started with Status: -------- \n"];
-        [status appendFormat:@"Resources:           %@\n", self.resources];
+        [status appendFormat:@"Resources:           \n"];
+        for (TGRESTResource *resource in self.resources.allValues) {
+            [status appendFormat:@"%@                       \n", resource];
+        }
         [status appendFormat:@"Server URL:          %@\n", self.serverURL];
         [status appendFormat:@"Server Port:         %lu\n", (unsigned long)self.webServer.port];
         [status appendFormat:@"Server Latency Min:  %.2f sec\n", self.latencyMin];
@@ -182,7 +185,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 
 - (NSSet *)currentResources
 {
-    return [NSSet setWithSet:self.resources];
+    return [NSSet setWithArray:self.resources.allValues];
 }
 
 - (void)addResource:(TGRESTResource *)resource
@@ -195,10 +198,18 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                      userInfo:nil];
     }
     
+    if (self.resources[resource.name] && ![[(TGRESTResource *)self.resources[resource.name] model] isEqual:resource.model]) {
+        TGLogWarn(@"Added a resource that matches an existing resource name but has a different model.  Removing the old resource first and purging all of its data");
+        [self removeResource:self.resources[resource.name] withData:YES];
+    } else if (self.resources[resource.name]) {
+        TGLogInfo(@"Added a resource that matches an existing resource with the same model.  Resource will be updated non-destructively.");
+        [self removeResource:self.resources[resource.name] withData:NO];
+    }
+    
     if (self.datastore) {
         [self.datastore addResource:resource];
     }
-    [self.resources addObject:resource];
+    [self.resources setObject:resource forKey:resource.name];
     [self.resourceSerializers setObject:[TGRESTDefaultSerializer class] forKey:resource.name];
     
     if (resource.actions & TGResourceRESTActionsGET) {
@@ -266,8 +277,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     if (removeData) {
         [self.datastore dropResource:resource];
     }
-    
-    [self.resources removeObject:resource];
+    [self.resources removeObjectForKey:resource.name];
     [self.resourceSerializers removeObjectForKey:resource.name];
 }
 
@@ -279,7 +289,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     
     __weak typeof(self) weakSelf = self;
 
-    for (TGRESTResource *resource in self.resources) {
+    for (TGRESTResource *resource in self.resources.allValues) {
         NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
             [weakSelf removeResource:resource withData:removeData];
         }];
@@ -305,7 +315,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 {
     NSParameterAssert(resource);
     
-    if (![self.resources containsObject:resource]) {
+    if (!self.resources[resource.name]) {
         TGLogWarn(@"The resource %@ has not been added to the server", resource.name);
         return 0;
     } else {

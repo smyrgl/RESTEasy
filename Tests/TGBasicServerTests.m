@@ -28,6 +28,8 @@
     [super tearDown];
 }
 
+#pragma mark - Normal testing
+
 - (void)testStartServer
 {
     XCTAssert(![[TGRESTServer sharedServer] isRunning], @"Server must not be running");
@@ -79,6 +81,24 @@
     [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2];
     
     XCTAssert(response.count == 100, @"There must be 100 objects in the response");
+}
+
+#pragma mark - Negative testing
+
+- (void)testAddSameNameResource
+{
+    XCTAssert([[TGRESTServer sharedServer] currentResources].count == 0, @"There should be zero current resources");
+    TGRESTResource *oldResource = [TGTestFactory testResource];
+    [[TGRESTServer sharedServer] addResource:oldResource];
+    XCTAssert([[TGRESTServer sharedServer] currentResources].count == 1, @"There should be one resource");
+    XCTAssert([[[TGRESTServer sharedServer] currentResources] anyObject] == oldResource, @"The old resource should be the same as the returned resource");
+    
+    NSDictionary *model = @{@"newprop": [NSNumber numberWithInteger:TGPropertyTypeString]};
+    TGRESTResource *newResource = [TGRESTResource newResourceWithName:oldResource.name model:model];
+    [[TGRESTServer sharedServer] addResource:newResource];
+    XCTAssert([[TGRESTServer sharedServer] currentResources].count == 1, @"There should be one resource");
+    XCTAssert([[[TGRESTServer sharedServer] currentResources] anyObject] == newResource, @"The new resource should be the same as the returned resource");
+
 }
 
 @end
