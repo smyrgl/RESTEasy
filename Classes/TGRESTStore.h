@@ -13,11 +13,12 @@
 
 
 /**
- *  `TGRESTStore` is an abstract superclass that defines the API through which the `TGRESTController` and `TGRESTServer` access the datastore.  The datastore will convert requests for resources by primaryKey (or relational keys) in CRUD operations and return the results as either a dictionary of key/value pairs matching the `TGRESTResource` model or an array of dictionaries (if applicable).
+
+`TGRESTStore` is an abstract superclass that defines the API through which the TGRESTController and TGRESTServer access the datastore.  The datastore will convert requests for resources by primaryKey (or relational keys) in CRUD operations and return the results as either a dictionary of key/value pairs matching the TGRESTResource model or an array of dictionaries (if applicable).
  
-    Although you do not need to understand this class in order to use `RESTEasy` it provides a mechanism for a wide variety of store types.  For example if you wanted to use an on-disk XML or JSON file directly you could create your own subclass of `TGRESTStore` and hook up to anything you like.
+Although you do not need to understand this class in order to use **RESTEasy** it provides a mechanism for a wide variety of store types.  For example if you wanted to use an on-disk XML or JSON file directly you could create your own subclass of TGRESTStore and hook up to anything you like.
  
-    @see `TGRESTInMemoryStore` for the default concrete implementation and `TGRESTSqliteStore` if you want a persistence option.
+See TGRESTInMemoryStore for the default concrete implementation and TGRESTSqliteStore if you want a persistence option.
  */
 
 @interface TGRESTStore : NSObject

@@ -11,45 +11,23 @@
 @class TGRESTResource;
 
 /**
- *  If you want to customize the formatting of responses that are returned by the server then you need to create a class which adopts this protocol and assign it to the server.  Note that calling this a "serializer" is a bit of a misnomer--the methods described here are strictly for formatting the JSON response, they do not create it directly.  The default implementation of this protocol `TGRESTDefaultSerializer` in fact does nothing but return the dictionary or array objects unchanged.
  
-    So what is the purpose of supporting the create of custom serializers?  If you really need to change the response format to match that of a server response for testing purposes then this will allow you to mutate the data and format in the JSON without changing the underlying data structure of the resource.  Some possible use cases for this are:
+ If you want to customize the formatting of responses that are returned by the server then you need to create a class which adopts this protocol and assign it to the server.  Note that calling this a "serializer" is a bit of a misnomer--the methods described here are strictly for formatting the JSON response, they do not create it directly.  The default implementation of this protocol `TGRESTDefaultSerializer` in fact does nothing but return the dictionary or array objects unchanged.
  
-    - You have model data you want to load that doesn't match the JSON request/response representation and you don't want to change the source data itself.
-    - You want to add custom attributes to the object representation to mimic the serialization structure that your server uses.  For example you can simulate values for pagination, properties that aren't part of the model or whatever custom nesting you like as the outputs of this will be serialized directly into JSON using `NSJSONSerialization`.  
-    - Same as above but you want to remove or rename attributes or even combine them.  Doesn't matter, do anything you like!
-    - By default the serializer returns the full embeded objects for any one-to-many relations but if you want to only include the IDs for example?  This makes it easy to do so.
+ So what is the purpose of supporting the create of custom serializers?  If you really need to change the response format to match that of a server response for testing purposes then this will allow you to mutate the data and format in the JSON without changing the underlying data structure of the resource.  Some possible use cases for this are:
  
-    ### Creating a serializer class
+ - You have model data you want to load that doesn't match the JSON request/response representation and you don't want to change the source data itself.
+ - You want to add custom attributes to the object representation to mimic the serialization structure that your server uses.  For example you can simulate values for pagination, properties that aren't part of the model or whatever custom nesting you like as the outputs of this will be serialized directly into JSON using `NSJSONSerialization`.
+ - Same as above but you want to remove or rename attributes or even combine them.  Doesn't matter, do anything you like!
+ - By default the serializer returns the full embeded objects for any one-to-many relations but if you want to only include the IDs for example?  This makes it easy to do so.
+ 
+ ### Creating a serializer class
     
-    Take a look at `TGRESTDefaultSerializer` to get an idea of where to start.  It contains a shell implementation that is the default serializer, all you need to do is create a similar class that adopts these three class methods and you are ready to go.
+ Take a look at `TGRESTDefaultSerializer` to get an idea of where to start.  It contains a shell implementation that is the default serializer, all you need to do is create a similar class that adopts these three class methods and you are ready to go.
  
-    ### Using the serializer class
+ ### Using the serializer class
  
-    This is done as a configuration on `TGRESTServer`.  If you want to set a single custom serializer for all resources on the server then you pass your custom CLASS (not an instance or a string representation) for the option key `TGRESTServerSerializerClassOptionKey`:  
-    
-    ```
-    NSDictionary *options = @{
-                            TGRESTServerSerializerClassOptionKey: [MyCustomSerializer class]
-                            };
-    [[TGRESTServer sharedServer] startServerWithOptions:options];
-    ```
-    
-    If you want to have a serializer used per resource then you pass a dictionary for the `TGRESTServerSerializerClassOptionKey`.
- 
-    ```
-    NSDictionary *serializers = @{
-                                @"myResourceName": [MyCustomSerializer class],
-                                @"myOtherResourceName": [MyOtherCustomSerializer class]
-                                };
-    NSDictionary *options = @{
-                            TGRESTServerSerializerClassOptionKey: serializers
-                            };
-
-    [[TGRESTServer sharedServer] startServerWithOptions:options];
-    ```
-    
-    @see `TGRESTServer` for more on configuring the server serializers.
+ This is done as a configuration on `TGRESTServer`.  You can set a default custom serializer for the server or serializers for named resources (or both) by using the options dictionary on `-startWithOptions:`.
  */
 
 @protocol TGRESTSerializer <NSObject>
@@ -62,9 +40,7 @@
  *  @param object   Dictionary for the object with keys matching the properties of the resource model and values of the object properties.
  *  @param resource Resource for the object.
  *
- *  @return JSON conformant object (either `NSDictionary` or `NSArray`) that can be serialized to build the response.
- 
-    @warning Although this might look a lot like the `NSJSONSerialization` methods you need to be aware that this method still returns an `NSDictionary` object NOT an `NSData` object.  In other words the actual JSON encoding is performed immediately after this step.
+ *  @return JSON conformant object (either `NSDictionary` or `NSArray`) that can be serialized to build the response.  
  */
 
 + (id)dataWithSingularObject:(NSDictionary *)object resource:(TGRESTResource *)resource;
