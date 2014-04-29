@@ -50,17 +50,20 @@
     __block NSMutableDictionary *returnDictionary = [NSMutableDictionary new];
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *results = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = %@", resource.name, resource.primaryKey, primaryKey]];
-        for (NSString *key in resource.model) {
-            [returnDictionary setObject:[results objectForColumnName:key] forKey:key];
+        if ([results next]) {
+            for (NSString *key in resource.model) {
+                [returnDictionary setObject:[results objectForColumnName:key] forKey:key];
+            }
+        } else {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:nil];
+            }
+            returnDictionary = nil;
         }
         [results close];
     }];
-    if (returnDictionary.allKeys.count == 0) {
-        return nil;
-    } else {
-        return [NSDictionary dictionaryWithDictionary:returnDictionary];
-    }
-
+    
+    return [NSDictionary dictionaryWithDictionary:returnDictionary];
 }
 
 - (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
@@ -90,17 +93,18 @@
     NSParameterAssert(properties);
     
     __block BOOL saveSuccess;
+    __block uint64_t lastInsertRowID;
     NSMutableString *keyString = [NSMutableString new];
     NSMutableString *valueString = [NSMutableString new];
     for (NSString *key in properties) {
         [keyString appendString:[NSString stringWithFormat:@"'%@', ", key]];
-        [valueString appendString:[NSString stringWithFormat:@"'%@', ", properties[key]]];
+        [valueString appendString:[NSString stringWithFormat:@":%@, ", key]];
     }
     [keyString deleteCharactersInRange:NSMakeRange(keyString.length - 2, 2)];
     [valueString deleteCharactersInRange:NSMakeRange(valueString.length - 2, 2)];
-    __block uint64_t lastInsertRowID;
+
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        saveSuccess = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES(%@)", resource.name, keyString, valueString]];
+        saveSuccess = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", resource.name, keyString, valueString] withParameterDictionary:properties];
         if (saveSuccess) {
             lastInsertRowID = db.lastInsertRowId;
         }

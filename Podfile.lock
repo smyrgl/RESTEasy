@@ -18,11 +18,10 @@ PODS:
   - AFNetworking/UIKit (2.2.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - FMDB (2.2):
-    - FMDB/standard
   - FMDB/common (2.2)
-  - FMDB/standard (2.2):
+  - FMDB/standalone (2.2):
     - FMDB/common
+    - sqlite3/fts
   - Foundry (0.1.1):
     - Gizou
   - GCDWebServer (2.4):
@@ -30,12 +29,15 @@ PODS:
   - GCDWebServer/Core (2.4)
   - Gizou (0.1.3)
   - InflectorKit (0.0.1)
+  - sqlite3/common (3.8.4.3)
+  - sqlite3/fts (3.8.4.3):
+    - sqlite3/common
   - SVProgressHUD (1.0)
   - XCAsyncTestCase (0.0.1)
 
 DEPENDENCIES:
   - AFNetworking
-  - FMDB
+  - FMDB/standalone
   - Foundry
   - GCDWebServer (~> 2.4)
   - Gizou
@@ -50,6 +52,7 @@ SPEC CHECKSUMS:
   GCDWebServer: fb6eba9a0fb08455cd762b6c035a5068b8f4960b
   Gizou: 5d17a448abd3f2b7ce5002f28073cdc717dc76c3
   InflectorKit: 9dccab02f95541093995adac639342c9eb9e6c12
+  sqlite3: 04f92b2dcd748b522bf96cc9b16ccb2b0acd9cc8
   SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
   XCAsyncTestCase: 6e92e14f923ed5925d93bc80720ef0e81e1e896f
 

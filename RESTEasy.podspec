@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   s.frameworks = 'Foundation'
   s.dependency 'GCDWebServer', '~> 2.4'
   s.dependency 'Gizou', '~> 0.1.3'
-  s.dependency 'FMDB', '~> 2.2'
+  s.dependency 'FMDB/standalone', '~> 2.2'
   s.dependency 'InflectorKit', '~> 0.0.1'
 end

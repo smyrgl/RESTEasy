@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		521B2AC4190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */; };
+		521B2AC5190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */; };
 		52541F86190A0A8C000A44FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D0393419097EEE00D3900F /* Foundation.framework */; };
 		52541F89190A0A8C000A44FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F88190A0A8C000A44FA /* main.m */; };
 		52541F8D190A0A8C000A44FA /* sandbox.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 52541F8C190A0A8C000A44FA /* sandbox.1 */; };
-		52541F95190B0BCD000A44FA /* TGServerCRUDTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F94190B0BCD000A44FA /* TGServerCRUDTests.m */; };
-		52541F96190B0BCD000A44FA /* TGServerCRUDTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F94190B0BCD000A44FA /* TGServerCRUDTests.m */; };
+		52541F95190B0BCD000A44FA /* TGCRUDTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F94190B0BCD000A44FA /* TGCRUDTests.m */; };
+		52541F96190B0BCD000A44FA /* TGCRUDTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F94190B0BCD000A44FA /* TGCRUDTests.m */; };
 		52541F9B190B0CBD000A44FA /* TGRESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F9A190B0CBD000A44FA /* TGRESTClient.m */; };
 		52541F9C190B0CBD000A44FA /* TGRESTClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F9A190B0CBD000A44FA /* TGRESTClient.m */; };
 		52541F9F190B0DFA000A44FA /* TGTestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F9E190B0DFA000A44FA /* TGTestFactory.m */; };
@@ -79,11 +81,12 @@
 
 /* Begin PBXFileReference section */
 		03255C32D5AD457792CED848 /* Pods-iostests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iostests.xcconfig"; path = "../Pods/Pods-iostests.xcconfig"; sourceTree = "<group>"; };
+		521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCustomSerializerTests.m; sourceTree = "<group>"; };
 		52541F85190A0A8C000A44FA /* sandbox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sandbox; sourceTree = BUILT_PRODUCTS_DIR; };
 		52541F88190A0A8C000A44FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		52541F8B190A0A8C000A44FA /* sandbox-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sandbox-Prefix.pch"; sourceTree = "<group>"; };
 		52541F8C190A0A8C000A44FA /* sandbox.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = sandbox.1; sourceTree = "<group>"; };
-		52541F94190B0BCD000A44FA /* TGServerCRUDTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerCRUDTests.m; sourceTree = "<group>"; };
+		52541F94190B0BCD000A44FA /* TGCRUDTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCRUDTests.m; sourceTree = "<group>"; };
 		52541F99190B0CBD000A44FA /* TGRESTClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTClient.h; sourceTree = "<group>"; };
 		52541F9A190B0CBD000A44FA /* TGRESTClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRESTClient.m; sourceTree = "<group>"; };
 		52541F9D190B0DFA000A44FA /* TGTestFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTestFactory.h; sourceTree = "<group>"; };
@@ -166,6 +169,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		521B2ABE190FFA1600A8F04F /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				52C61D34190C619E0056CDFD /* TGSqliteStoreTests.m */,
+				527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */,
+			);
+			name = Store;
+			sourceTree = "<group>";
+		};
+		521B2ABF190FFA2100A8F04F /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				52D039591909810400D3900F /* TGBasicServerTests.m */,
+				52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */,
+				52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */,
+			);
+			name = Server;
+			sourceTree = "<group>";
+		};
+		521B2AC0190FFA2F00A8F04F /* Routes */ = {
+			isa = PBXGroup;
+			children = (
+				527CCB90190C72AD004DFD92 /* TGRoutingTests.m */,
+			);
+			name = Routes;
+			sourceTree = "<group>";
+		};
+		521B2AC1190FFA3A00A8F04F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				52541FA4190B2FC5000A44FA /* TGResourceTests.m */,
+				52541F94190B0BCD000A44FA /* TGCRUDTests.m */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		521B2AC2190FFA5F00A8F04F /* Serializer */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */,
+			);
+			name = Serializer;
+			sourceTree = "<group>";
+		};
 		52541F46190986AA000A44FA /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,14 +257,11 @@
 		52541F97190B0C8B000A44FA /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				52D039591909810400D3900F /* TGBasicServerTests.m */,
-				527CCB90190C72AD004DFD92 /* TGRoutingTests.m */,
-				52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */,
-				52FF8A94190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m */,
-				52541FA4190B2FC5000A44FA /* TGResourceTests.m */,
-				52541F94190B0BCD000A44FA /* TGServerCRUDTests.m */,
-				52C61D34190C619E0056CDFD /* TGSqliteStoreTests.m */,
-				527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */,
+				521B2AC2190FFA5F00A8F04F /* Serializer */,
+				521B2AC1190FFA3A00A8F04F /* Resources */,
+				521B2AC0190FFA2F00A8F04F /* Routes */,
+				521B2ABF190FFA2100A8F04F /* Server */,
+				521B2ABE190FFA1600A8F04F /* Store */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -607,11 +651,12 @@
 				527CCB91190C72AD004DFD92 /* TGRoutingTests.m in Sources */,
 				527CCCD5190EA692004DFD92 /* TGRESTResource.m in Sources */,
 				527CCCE1190EA692004DFD92 /* TGRESTStore.m in Sources */,
+				521B2AC4190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */,
 				52541F9B190B0CBD000A44FA /* TGRESTClient.m in Sources */,
 				527CCB8E190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */,
 				52541FAB190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
 				527CCCCF190EA692004DFD92 /* TGRESTDefaultController.m in Sources */,
-				52541F95190B0BCD000A44FA /* TGServerCRUDTests.m in Sources */,
+				52541F95190B0BCD000A44FA /* TGCRUDTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,8 +679,9 @@
 				527CCCD6190EA692004DFD92 /* TGRESTResource.m in Sources */,
 				52C61D36190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */,
 				527CCCD0190EA692004DFD92 /* TGRESTDefaultController.m in Sources */,
+				521B2AC5190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */,
 				527CCB8F190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */,
-				52541F96190B0BCD000A44FA /* TGServerCRUDTests.m in Sources */,
+				52541F96190B0BCD000A44FA /* TGCRUDTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

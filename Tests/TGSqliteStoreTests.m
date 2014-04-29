@@ -45,8 +45,6 @@
     [super tearDown];
 }
 
-/*
-
 - (void)testCountOfObjectsForResource
 {
     NSUInteger count = [self.store countOfObjectsForResource:self.testNormalResource];
@@ -102,6 +100,6 @@
     
     XCTAssert(!fetchError, @"There must not be a fetch error");
     XCTAssert([copyRandomObject isEqualToDictionary:randomObject], @"The returned dictionary should be equal to the one that was returned during the creation process.");
-} */
+}
 
 @end

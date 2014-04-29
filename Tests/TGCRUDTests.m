@@ -11,13 +11,13 @@
 #import "TGTestFactory.h"
 #import <Gizou/Gizou.h>
 
-@interface TGServerCRUDTests : XCTestCase
+@interface TGCRUDTests : XCTestCase
 
 @property (nonatomic, strong) TGRESTResource *testResource;
 
 @end
 
-@implementation TGServerCRUDTests
+@implementation TGCRUDTests
 
 - (void)setUp
 {
