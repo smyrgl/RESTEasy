@@ -56,7 +56,9 @@
                 [returnDictionary setObject:[results objectForColumnName:key] forKey:key];
             }
         } else {
-            if (error) {
+            if (error && primaryKey.integerValue <= db.lastInsertRowId) {
+                *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectAlreadyDeletedErrorCode userInfo:nil];
+            } else {
                 *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:nil];
             }
             returnDictionary = nil;
@@ -64,13 +66,35 @@
         [results close];
     }];
     
-    return [NSDictionary dictionaryWithDictionary:returnDictionary];
+    return returnDictionary;
+}
+
+- (NSArray *)getDataForObjectsOfResource:(TGRESTResource *)resource
+                              withParent:(TGRESTResource *)parent
+                        parentPrimaryKey:(NSString *)key
+                                   error:(NSError * __autoreleasing *)error
+{
+    NSMutableArray *returnArray = [NSMutableArray new];
+    
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *results = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = %@", resource.name, resource.foreignKeys[parent.name], key]];
+        while ([results next]) {
+            NSMutableDictionary *objectDict = [NSMutableDictionary new];
+            for (NSString *key in resource.model) {
+                [objectDict setObject:[results objectForColumnName:key] forKey:key];
+            }
+            [returnArray addObject:objectDict];
+        }
+        [results close];
+    }];
+    
+    return returnArray;
 }
 
 - (NSArray *)getAllObjectsForResource:(TGRESTResource *)resource
                                 error:(NSError * __autoreleasing *)error
 {
-    __block NSMutableArray *returnArray = [NSMutableArray new];
+    NSMutableArray *returnArray = [NSMutableArray new];
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *results = [db executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@", resource.name]];
         while ([results next]) {
@@ -83,7 +107,7 @@
         [results close];
     }];
     
-    return [NSArray arrayWithArray:returnArray];
+    return returnArray;
 }
 
 - (NSDictionary *)createNewObjectForResource:(TGRESTResource *)resource
@@ -133,9 +157,24 @@
 {
     NSParameterAssert(resource);
     
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must implement %@ in your custom TGRESTStore", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
+    __block BOOL updateSuccess;
+    NSMutableString *updateString = [NSMutableString new];
+    for (NSString *key in properties) {
+        [updateString appendString:[NSString stringWithFormat:@"%@ = :%@", key, key]];
+    }
+
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        updateSuccess = [db executeUpdate:[NSString stringWithFormat:@"UPDATE OR ROLLBACK %@ SET %@ WHERE %@ = %@", resource.name, updateString, resource.primaryKey, primaryKey] withParameterDictionary:properties];
+        if (!updateSuccess && error) {
+            *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:@{NSLocalizedDescriptionKey: db.lastErrorMessage}];
+        }
+    }];
+    
+    if (!updateSuccess) {
+        return nil;
+    }
+    
+    return [self getDataForObjectOfResource:resource withPrimaryKey:primaryKey error:error];
 }
 
 - (BOOL)deleteObjectOfResource:(TGRESTResource *)resource
@@ -145,9 +184,16 @@
     NSParameterAssert(resource);
     NSParameterAssert(primaryKey);
     
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must implement %@ in your custom TGRESTStore", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
+    __block BOOL deleteSuccess;
+    
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        deleteSuccess = [db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = %@", resource.name, resource.primaryKey, primaryKey]];
+        if (!deleteSuccess && error) {
+            *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:@{NSLocalizedDescriptionKey: db.lastErrorMessage}];
+        }
+    }];
+    
+    return deleteSuccess;
 }
 
 - (void)addResource:(TGRESTResource *)resource

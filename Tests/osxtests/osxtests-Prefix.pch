@@ -8,5 +8,6 @@
     #import <Cocoa/Cocoa.h>
     #import <AFNetworking/AFNetworking.h>
     #import <XCAsyncTestCase/XCTestCase+AsyncTesting.h>
-    #import "RESTEasy.h"
+    #import "RESTEasyCore.h"
+    #import "RESTEasySqlite.h"
 #endif

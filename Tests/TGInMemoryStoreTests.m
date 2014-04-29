@@ -8,7 +8,8 @@
 
 #import <XCTest/XCTest.h>
 #import "TGTestFactory.h"
-#import "TGRESTInMemoryStore.h"
+#import "RESTEasyCore.h"
+#import "RESTEasySqlite.h"
 
 @interface TGInMemoryStoreTests : XCTestCase
 
