@@ -1,5 +1,12 @@
 # RESTEasy CHANGELOG
 
+## 0.1.3
+
+Subspec
+
+- Sqlite persistence is now in a subspec for those who don't need it. 
+- Some project refactoring to support this.
+
 ## 0.1.2
 
 Example app
