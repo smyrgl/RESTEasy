@@ -56,8 +56,9 @@
         [self.store createNewObjectForResource:self.testNormalResource withProperties:newResourceDict error:&createError];
         XCTAssert(!createError, @"There should not be an error");
         count++;
-        XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == count, @"The number of objects must equal the incremented expected count.");
     }
+    
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == count, @"The number of objects must equal the incremented expected count.");
 }
 
 - (void)testCreateResource
