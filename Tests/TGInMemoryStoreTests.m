@@ -230,13 +230,38 @@
 
 - (void)testAddResource
 {
+    TGRESTResource *newResource = [TGTestFactory testResource];
+    [self.store addResource:newResource];
+    NSDictionary *buildObjectDict = [TGTestFactory buildTestDataForResource:newResource];
     
+    NSDictionary *createdObjectDict;
+
+    NSError *error;
+    XCTAssertNoThrow(createdObjectDict = [self.store createNewObjectForResource:newResource withProperties:buildObjectDict error:&error], @"Creating an object for the new resource must not throw an exception");
+    
+    XCTAssertNil(error, @"There must not be an error %@", error);
+    XCTAssert(createdObjectDict, @"There must be an object returned");
 }
 
 - (void)testRemoveResource
 {
+    TGRESTResource *newResource = [TGTestFactory testResource];
+    [self.store addResource:newResource];
+    NSDictionary *buildObjectDict = [TGTestFactory buildTestDataForResource:newResource];
     
+    NSDictionary *createdObjectDict = [self.store createNewObjectForResource:newResource withProperties:buildObjectDict error:nil];
+    XCTAssert(createdObjectDict, @"There must be an object returned");
+    
+    [self.store dropResource:newResource];
+    
+    NSError *error;
+    NSDictionary *droppedObject = [self.store getDataForObjectOfResource:newResource withPrimaryKey:createdObjectDict[newResource.primaryKey] error:&error];
+    
+    XCTAssert(error, @"An error must be thrown when trying to access a non-existant object");
+    XCTAssertNil(droppedObject, @"There must be no object returned");
 }
+
+/*
 
 - (void)testStringPrimaryKeyType
 {
@@ -282,6 +307,8 @@
 {
     
 }
+ 
+ */
 
 #pragma mark - Negative tests
 
