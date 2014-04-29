@@ -9,6 +9,30 @@
 /* Begin PBXBuildFile section */
 		521B2AC4190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */; };
 		521B2AC5190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */; };
+		521B2ADF19101AA700A8F04F /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC819101AA700A8F04F /* TGRESTServer.m */; };
+		521B2AE019101AA700A8F04F /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC819101AA700A8F04F /* TGRESTServer.m */; };
+		521B2AE119101AA700A8F04F /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AC819101AA700A8F04F /* TGRESTServer.m */; };
+		521B2AE219101AA700A8F04F /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACA19101AA700A8F04F /* TGRESTDefaultController.m */; };
+		521B2AE319101AA700A8F04F /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACA19101AA700A8F04F /* TGRESTDefaultController.m */; };
+		521B2AE419101AA700A8F04F /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACA19101AA700A8F04F /* TGRESTDefaultController.m */; };
+		521B2AE519101AA700A8F04F /* TGRESTDefaultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACC19101AA700A8F04F /* TGRESTDefaultSerializer.m */; };
+		521B2AE619101AA700A8F04F /* TGRESTDefaultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACC19101AA700A8F04F /* TGRESTDefaultSerializer.m */; };
+		521B2AE719101AA700A8F04F /* TGRESTDefaultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACC19101AA700A8F04F /* TGRESTDefaultSerializer.m */; };
+		521B2AE819101AA700A8F04F /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACF19101AA700A8F04F /* TGRESTResource.m */; };
+		521B2AE919101AA700A8F04F /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACF19101AA700A8F04F /* TGRESTResource.m */; };
+		521B2AEA19101AA700A8F04F /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ACF19101AA700A8F04F /* TGRESTResource.m */; };
+		521B2AEB19101AA700A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AD219101AA700A8F04F /* TGPrivateFunctions.m */; };
+		521B2AEC19101AA700A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AD219101AA700A8F04F /* TGPrivateFunctions.m */; };
+		521B2AED19101AA700A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AD219101AA700A8F04F /* TGPrivateFunctions.m */; };
+		521B2AEE19101AA700A8F04F /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AD919101AA700A8F04F /* TGRESTInMemoryStore.m */; };
+		521B2AEF19101AA700A8F04F /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AD919101AA700A8F04F /* TGRESTInMemoryStore.m */; };
+		521B2AF019101AA700A8F04F /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AD919101AA700A8F04F /* TGRESTInMemoryStore.m */; };
+		521B2AF119101AA700A8F04F /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ADB19101AA700A8F04F /* TGRESTSqliteStore.m */; };
+		521B2AF219101AA700A8F04F /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ADB19101AA700A8F04F /* TGRESTSqliteStore.m */; };
+		521B2AF319101AA700A8F04F /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ADB19101AA700A8F04F /* TGRESTSqliteStore.m */; };
+		521B2AF419101AA700A8F04F /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ADD19101AA700A8F04F /* TGRESTStore.m */; };
+		521B2AF519101AA700A8F04F /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ADD19101AA700A8F04F /* TGRESTStore.m */; };
+		521B2AF619101AA700A8F04F /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2ADD19101AA700A8F04F /* TGRESTStore.m */; };
 		52541F86190A0A8C000A44FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D0393419097EEE00D3900F /* Foundation.framework */; };
 		52541F89190A0A8C000A44FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F88190A0A8C000A44FA /* main.m */; };
 		52541F8D190A0A8C000A44FA /* sandbox.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 52541F8C190A0A8C000A44FA /* sandbox.1 */; };
@@ -26,30 +50,6 @@
 		527CCB8F190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */; };
 		527CCB91190C72AD004DFD92 /* TGRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRoutingTests.m */; };
 		527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCB90190C72AD004DFD92 /* TGRoutingTests.m */; };
-		527CCCCC190EA692004DFD92 /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB5190EA692004DFD92 /* TGRESTServer.m */; };
-		527CCCCD190EA692004DFD92 /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB5190EA692004DFD92 /* TGRESTServer.m */; };
-		527CCCCE190EA692004DFD92 /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB5190EA692004DFD92 /* TGRESTServer.m */; };
-		527CCCCF190EA692004DFD92 /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB7190EA692004DFD92 /* TGRESTDefaultController.m */; };
-		527CCCD0190EA692004DFD92 /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB7190EA692004DFD92 /* TGRESTDefaultController.m */; };
-		527CCCD1190EA692004DFD92 /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB7190EA692004DFD92 /* TGRESTDefaultController.m */; };
-		527CCCD2190EA692004DFD92 /* TGRESTDefaultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB9190EA692004DFD92 /* TGRESTDefaultSerializer.m */; };
-		527CCCD3190EA692004DFD92 /* TGRESTDefaultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB9190EA692004DFD92 /* TGRESTDefaultSerializer.m */; };
-		527CCCD4190EA692004DFD92 /* TGRESTDefaultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCB9190EA692004DFD92 /* TGRESTDefaultSerializer.m */; };
-		527CCCD5190EA692004DFD92 /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCBC190EA692004DFD92 /* TGRESTResource.m */; };
-		527CCCD6190EA692004DFD92 /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCBC190EA692004DFD92 /* TGRESTResource.m */; };
-		527CCCD7190EA692004DFD92 /* TGRESTResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCBC190EA692004DFD92 /* TGRESTResource.m */; };
-		527CCCD8190EA692004DFD92 /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCBF190EA692004DFD92 /* TGPrivateFunctions.m */; };
-		527CCCD9190EA692004DFD92 /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCBF190EA692004DFD92 /* TGPrivateFunctions.m */; };
-		527CCCDA190EA692004DFD92 /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCBF190EA692004DFD92 /* TGPrivateFunctions.m */; };
-		527CCCDB190EA692004DFD92 /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCC6190EA692004DFD92 /* TGRESTInMemoryStore.m */; };
-		527CCCDC190EA692004DFD92 /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCC6190EA692004DFD92 /* TGRESTInMemoryStore.m */; };
-		527CCCDD190EA692004DFD92 /* TGRESTInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCC6190EA692004DFD92 /* TGRESTInMemoryStore.m */; };
-		527CCCDE190EA692004DFD92 /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCC8190EA692004DFD92 /* TGRESTSqliteStore.m */; };
-		527CCCDF190EA692004DFD92 /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCC8190EA692004DFD92 /* TGRESTSqliteStore.m */; };
-		527CCCE0190EA692004DFD92 /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCC8190EA692004DFD92 /* TGRESTSqliteStore.m */; };
-		527CCCE1190EA692004DFD92 /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCCA190EA692004DFD92 /* TGRESTStore.m */; };
-		527CCCE2190EA692004DFD92 /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCCA190EA692004DFD92 /* TGRESTStore.m */; };
-		527CCCE3190EA692004DFD92 /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCCCA190EA692004DFD92 /* TGRESTStore.m */; };
 		52C61D35190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D34190C619E0056CDFD /* TGSqliteStoreTests.m */; };
 		52C61D36190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C61D34190C619E0056CDFD /* TGSqliteStoreTests.m */; };
 		52D0393319097EEE00D3900F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D0393219097EEE00D3900F /* XCTest.framework */; };
@@ -82,6 +82,26 @@
 /* Begin PBXFileReference section */
 		03255C32D5AD457792CED848 /* Pods-iostests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iostests.xcconfig"; path = "../Pods/Pods-iostests.xcconfig"; sourceTree = "<group>"; };
 		521B2AC3190FFA9300A8F04F /* TGCustomSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCustomSerializerTests.m; sourceTree = "<group>"; };
+		521B2AC619101AA700A8F04F /* RESTEasy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RESTEasy.h; path = ../Classes/RESTEasy.h; sourceTree = "<group>"; };
+		521B2AC719101AA700A8F04F /* TGRESTServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTServer.h; path = ../Classes/TGRESTServer.h; sourceTree = "<group>"; };
+		521B2AC819101AA700A8F04F /* TGRESTServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTServer.m; path = ../Classes/TGRESTServer.m; sourceTree = "<group>"; };
+		521B2AC919101AA700A8F04F /* TGRESTDefaultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTDefaultController.h; path = Classes/TGRESTDefaultController.h; sourceTree = "<group>"; };
+		521B2ACA19101AA700A8F04F /* TGRESTDefaultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTDefaultController.m; path = Classes/TGRESTDefaultController.m; sourceTree = "<group>"; };
+		521B2ACB19101AA700A8F04F /* TGRESTDefaultSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTDefaultSerializer.h; path = Classes/TGRESTDefaultSerializer.h; sourceTree = "<group>"; };
+		521B2ACC19101AA700A8F04F /* TGRESTDefaultSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTDefaultSerializer.m; path = Classes/TGRESTDefaultSerializer.m; sourceTree = "<group>"; };
+		521B2ACE19101AA700A8F04F /* TGRESTResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTResource.h; path = Classes/TGRESTResource.h; sourceTree = "<group>"; };
+		521B2ACF19101AA700A8F04F /* TGRESTResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTResource.m; path = Classes/TGRESTResource.m; sourceTree = "<group>"; };
+		521B2AD119101AA700A8F04F /* TGPrivateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPrivateFunctions.h; sourceTree = "<group>"; };
+		521B2AD219101AA700A8F04F /* TGPrivateFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPrivateFunctions.m; sourceTree = "<group>"; };
+		521B2AD319101AA700A8F04F /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
+		521B2AD519101AA700A8F04F /* TGRESTController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTController.h; path = Classes/TGRESTController.h; sourceTree = "<group>"; };
+		521B2AD619101AA700A8F04F /* TGRESTSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTSerializer.h; path = Classes/TGRESTSerializer.h; sourceTree = "<group>"; };
+		521B2AD819101AA700A8F04F /* TGRESTInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTInMemoryStore.h; path = Classes/TGRESTInMemoryStore.h; sourceTree = "<group>"; };
+		521B2AD919101AA700A8F04F /* TGRESTInMemoryStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTInMemoryStore.m; path = Classes/TGRESTInMemoryStore.m; sourceTree = "<group>"; };
+		521B2ADA19101AA700A8F04F /* TGRESTSqliteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTSqliteStore.h; path = Classes/sqlite/TGRESTSqliteStore.h; sourceTree = "<group>"; };
+		521B2ADB19101AA700A8F04F /* TGRESTSqliteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTSqliteStore.m; path = Classes/sqlite/TGRESTSqliteStore.m; sourceTree = "<group>"; };
+		521B2ADC19101AA700A8F04F /* TGRESTStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTStore.h; path = Classes/TGRESTStore.h; sourceTree = "<group>"; };
+		521B2ADD19101AA700A8F04F /* TGRESTStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTStore.m; path = Classes/TGRESTStore.m; sourceTree = "<group>"; };
 		52541F85190A0A8C000A44FA /* sandbox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sandbox; sourceTree = BUILT_PRODUCTS_DIR; };
 		52541F88190A0A8C000A44FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		52541F8B190A0A8C000A44FA /* sandbox-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sandbox-Prefix.pch"; sourceTree = "<group>"; };
@@ -95,26 +115,6 @@
 		52541FAA190B305B000A44FA /* TGServerAdvancedConfigurationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServerAdvancedConfigurationTests.m; sourceTree = "<group>"; };
 		527CCB8D190C6A0F004DFD92 /* TGInMemoryStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInMemoryStoreTests.m; sourceTree = "<group>"; };
 		527CCB90190C72AD004DFD92 /* TGRoutingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRoutingTests.m; sourceTree = "<group>"; };
-		527CCCB3190EA692004DFD92 /* RESTEasy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RESTEasy.h; path = ../Classes/RESTEasy.h; sourceTree = "<group>"; };
-		527CCCB4190EA692004DFD92 /* TGRESTServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTServer.h; path = ../Classes/TGRESTServer.h; sourceTree = "<group>"; };
-		527CCCB5190EA692004DFD92 /* TGRESTServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTServer.m; path = ../Classes/TGRESTServer.m; sourceTree = "<group>"; };
-		527CCCB6190EA692004DFD92 /* TGRESTDefaultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTDefaultController.h; path = Classes/TGRESTDefaultController.h; sourceTree = "<group>"; };
-		527CCCB7190EA692004DFD92 /* TGRESTDefaultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTDefaultController.m; path = Classes/TGRESTDefaultController.m; sourceTree = "<group>"; };
-		527CCCB8190EA692004DFD92 /* TGRESTDefaultSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTDefaultSerializer.h; path = Classes/TGRESTDefaultSerializer.h; sourceTree = "<group>"; };
-		527CCCB9190EA692004DFD92 /* TGRESTDefaultSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTDefaultSerializer.m; path = Classes/TGRESTDefaultSerializer.m; sourceTree = "<group>"; };
-		527CCCBB190EA692004DFD92 /* TGRESTResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTResource.h; path = Classes/TGRESTResource.h; sourceTree = "<group>"; };
-		527CCCBC190EA692004DFD92 /* TGRESTResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTResource.m; path = Classes/TGRESTResource.m; sourceTree = "<group>"; };
-		527CCCBE190EA692004DFD92 /* TGPrivateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPrivateFunctions.h; sourceTree = "<group>"; };
-		527CCCBF190EA692004DFD92 /* TGPrivateFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPrivateFunctions.m; sourceTree = "<group>"; };
-		527CCCC0190EA692004DFD92 /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
-		527CCCC2190EA692004DFD92 /* TGRESTController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTController.h; path = Classes/TGRESTController.h; sourceTree = "<group>"; };
-		527CCCC3190EA692004DFD92 /* TGRESTSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTSerializer.h; path = Classes/TGRESTSerializer.h; sourceTree = "<group>"; };
-		527CCCC5190EA692004DFD92 /* TGRESTInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTInMemoryStore.h; path = Classes/TGRESTInMemoryStore.h; sourceTree = "<group>"; };
-		527CCCC6190EA692004DFD92 /* TGRESTInMemoryStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTInMemoryStore.m; path = Classes/TGRESTInMemoryStore.m; sourceTree = "<group>"; };
-		527CCCC7190EA692004DFD92 /* TGRESTSqliteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTSqliteStore.h; path = Classes/TGRESTSqliteStore.h; sourceTree = "<group>"; };
-		527CCCC8190EA692004DFD92 /* TGRESTSqliteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTSqliteStore.m; path = Classes/TGRESTSqliteStore.m; sourceTree = "<group>"; };
-		527CCCC9190EA692004DFD92 /* TGRESTStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGRESTStore.h; path = Classes/TGRESTStore.h; sourceTree = "<group>"; };
-		527CCCCA190EA692004DFD92 /* TGRESTStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRESTStore.m; path = Classes/TGRESTStore.m; sourceTree = "<group>"; };
 		52C61D34190C619E0056CDFD /* TGSqliteStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSqliteStoreTests.m; sourceTree = "<group>"; };
 		52D0392F19097EEE00D3900F /* iostests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iostests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D0393219097EEE00D3900F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -213,6 +213,63 @@
 			name = Serializer;
 			sourceTree = "<group>";
 		};
+		521B2ACD19101AA700A8F04F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AC919101AA700A8F04F /* TGRESTDefaultController.h */,
+				521B2ACA19101AA700A8F04F /* TGRESTDefaultController.m */,
+				521B2ACB19101AA700A8F04F /* TGRESTDefaultSerializer.h */,
+				521B2ACC19101AA700A8F04F /* TGRESTDefaultSerializer.m */,
+			);
+			name = Controller;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		521B2AD019101AA700A8F04F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				521B2ACE19101AA700A8F04F /* TGRESTResource.h */,
+				521B2ACF19101AA700A8F04F /* TGRESTResource.m */,
+			);
+			name = Model;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		521B2AD419101AA700A8F04F /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AD119101AA700A8F04F /* TGPrivateFunctions.h */,
+				521B2AD219101AA700A8F04F /* TGPrivateFunctions.m */,
+				521B2AD319101AA700A8F04F /* TGRESTEasyLogging.h */,
+			);
+			name = Private;
+			path = ../Classes/Private;
+			sourceTree = "<group>";
+		};
+		521B2AD719101AA700A8F04F /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AD519101AA700A8F04F /* TGRESTController.h */,
+				521B2AD619101AA700A8F04F /* TGRESTSerializer.h */,
+			);
+			name = Protocols;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		521B2ADE19101AA700A8F04F /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AD819101AA700A8F04F /* TGRESTInMemoryStore.h */,
+				521B2AD919101AA700A8F04F /* TGRESTInMemoryStore.m */,
+				521B2ADA19101AA700A8F04F /* TGRESTSqliteStore.h */,
+				521B2ADB19101AA700A8F04F /* TGRESTSqliteStore.m */,
+				521B2ADC19101AA700A8F04F /* TGRESTStore.h */,
+				521B2ADD19101AA700A8F04F /* TGRESTStore.m */,
+			);
+			name = Store;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		52541F46190986AA000A44FA /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,14 +281,14 @@
 		52541F47190986B7000A44FA /* RESTEasy */ = {
 			isa = PBXGroup;
 			children = (
-				527CCCB3190EA692004DFD92 /* RESTEasy.h */,
-				527CCCB4190EA692004DFD92 /* TGRESTServer.h */,
-				527CCCB5190EA692004DFD92 /* TGRESTServer.m */,
-				527CCCBA190EA692004DFD92 /* Controller */,
-				527CCCBD190EA692004DFD92 /* Model */,
-				527CCCC1190EA692004DFD92 /* Private */,
-				527CCCC4190EA692004DFD92 /* Protocols */,
-				527CCCCB190EA692004DFD92 /* Store */,
+				521B2AC619101AA700A8F04F /* RESTEasy.h */,
+				521B2AC719101AA700A8F04F /* TGRESTServer.h */,
+				521B2AC819101AA700A8F04F /* TGRESTServer.m */,
+				521B2ACD19101AA700A8F04F /* Controller */,
+				521B2AD019101AA700A8F04F /* Model */,
+				521B2AD419101AA700A8F04F /* Private */,
+				521B2AD719101AA700A8F04F /* Protocols */,
+				521B2ADE19101AA700A8F04F /* Store */,
 			);
 			name = RESTEasy;
 			sourceTree = "<group>";
@@ -275,63 +332,6 @@
 				52541F9E190B0DFA000A44FA /* TGTestFactory.m */,
 			);
 			name = Utilities;
-			sourceTree = "<group>";
-		};
-		527CCCBA190EA692004DFD92 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				527CCCB6190EA692004DFD92 /* TGRESTDefaultController.h */,
-				527CCCB7190EA692004DFD92 /* TGRESTDefaultController.m */,
-				527CCCB8190EA692004DFD92 /* TGRESTDefaultSerializer.h */,
-				527CCCB9190EA692004DFD92 /* TGRESTDefaultSerializer.m */,
-			);
-			name = Controller;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		527CCCBD190EA692004DFD92 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				527CCCBB190EA692004DFD92 /* TGRESTResource.h */,
-				527CCCBC190EA692004DFD92 /* TGRESTResource.m */,
-			);
-			name = Model;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		527CCCC1190EA692004DFD92 /* Private */ = {
-			isa = PBXGroup;
-			children = (
-				527CCCBE190EA692004DFD92 /* TGPrivateFunctions.h */,
-				527CCCBF190EA692004DFD92 /* TGPrivateFunctions.m */,
-				527CCCC0190EA692004DFD92 /* TGRESTEasyLogging.h */,
-			);
-			name = Private;
-			path = ../Classes/Private;
-			sourceTree = "<group>";
-		};
-		527CCCC4190EA692004DFD92 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				527CCCC2190EA692004DFD92 /* TGRESTController.h */,
-				527CCCC3190EA692004DFD92 /* TGRESTSerializer.h */,
-			);
-			name = Protocols;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		527CCCCB190EA692004DFD92 /* Store */ = {
-			isa = PBXGroup;
-			children = (
-				527CCCC5190EA692004DFD92 /* TGRESTInMemoryStore.h */,
-				527CCCC6190EA692004DFD92 /* TGRESTInMemoryStore.m */,
-				527CCCC7190EA692004DFD92 /* TGRESTSqliteStore.h */,
-				527CCCC8190EA692004DFD92 /* TGRESTSqliteStore.m */,
-				527CCCC9190EA692004DFD92 /* TGRESTStore.h */,
-				527CCCCA190EA692004DFD92 /* TGRESTStore.m */,
-			);
-			name = Store;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		52D0392419097EC600D3900F = {
@@ -622,15 +622,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				527CCCD4190EA692004DFD92 /* TGRESTDefaultSerializer.m in Sources */,
+				521B2AE719101AA700A8F04F /* TGRESTDefaultSerializer.m in Sources */,
 				52541F89190A0A8C000A44FA /* main.m in Sources */,
-				527CCCD1190EA692004DFD92 /* TGRESTDefaultController.m in Sources */,
-				527CCCE3190EA692004DFD92 /* TGRESTStore.m in Sources */,
-				527CCCDD190EA692004DFD92 /* TGRESTInMemoryStore.m in Sources */,
-				527CCCD7190EA692004DFD92 /* TGRESTResource.m in Sources */,
-				527CCCDA190EA692004DFD92 /* TGPrivateFunctions.m in Sources */,
-				527CCCE0190EA692004DFD92 /* TGRESTSqliteStore.m in Sources */,
-				527CCCCE190EA692004DFD92 /* TGRESTServer.m in Sources */,
+				521B2AE419101AA700A8F04F /* TGRESTDefaultController.m in Sources */,
+				521B2AF619101AA700A8F04F /* TGRESTStore.m in Sources */,
+				521B2AF019101AA700A8F04F /* TGRESTInMemoryStore.m in Sources */,
+				521B2AEA19101AA700A8F04F /* TGRESTResource.m in Sources */,
+				521B2AED19101AA700A8F04F /* TGPrivateFunctions.m in Sources */,
+				521B2AF319101AA700A8F04F /* TGRESTSqliteStore.m in Sources */,
+				521B2AE119101AA700A8F04F /* TGRESTServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,24 +638,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				527CCCD2190EA692004DFD92 /* TGRESTDefaultSerializer.m in Sources */,
+				521B2AE219101AA700A8F04F /* TGRESTDefaultController.m in Sources */,
 				52C61D35190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */,
+				521B2AF419101AA700A8F04F /* TGRESTStore.m in Sources */,
 				52FF8A95190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m in Sources */,
 				52541F9F190B0DFA000A44FA /* TGTestFactory.m in Sources */,
-				527CCCDE190EA692004DFD92 /* TGRESTSqliteStore.m in Sources */,
-				527CCCD8190EA692004DFD92 /* TGPrivateFunctions.m in Sources */,
+				521B2AE519101AA700A8F04F /* TGRESTDefaultSerializer.m in Sources */,
+				521B2AEE19101AA700A8F04F /* TGRESTInMemoryStore.m in Sources */,
 				52541FA5190B2FC5000A44FA /* TGResourceTests.m in Sources */,
-				527CCCDB190EA692004DFD92 /* TGRESTInMemoryStore.m in Sources */,
 				52D0395A1909810400D3900F /* TGBasicServerTests.m in Sources */,
-				527CCCCC190EA692004DFD92 /* TGRESTServer.m in Sources */,
 				527CCB91190C72AD004DFD92 /* TGRoutingTests.m in Sources */,
-				527CCCD5190EA692004DFD92 /* TGRESTResource.m in Sources */,
-				527CCCE1190EA692004DFD92 /* TGRESTStore.m in Sources */,
 				521B2AC4190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */,
+				521B2AF119101AA700A8F04F /* TGRESTSqliteStore.m in Sources */,
 				52541F9B190B0CBD000A44FA /* TGRESTClient.m in Sources */,
 				527CCB8E190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */,
+				521B2ADF19101AA700A8F04F /* TGRESTServer.m in Sources */,
 				52541FAB190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
-				527CCCCF190EA692004DFD92 /* TGRESTDefaultController.m in Sources */,
+				521B2AE819101AA700A8F04F /* TGRESTResource.m in Sources */,
+				521B2AEB19101AA700A8F04F /* TGPrivateFunctions.m in Sources */,
 				52541F95190B0BCD000A44FA /* TGCRUDTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -664,23 +664,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				527CCCD3190EA692004DFD92 /* TGRESTDefaultSerializer.m in Sources */,
+				521B2AE619101AA700A8F04F /* TGRESTDefaultSerializer.m in Sources */,
 				52541FA0190B0DFA000A44FA /* TGTestFactory.m in Sources */,
-				527CCCDC190EA692004DFD92 /* TGRESTInMemoryStore.m in Sources */,
 				52541FA6190B2FC5000A44FA /* TGResourceTests.m in Sources */,
 				52D0395B1909810400D3900F /* TGBasicServerTests.m in Sources */,
-				527CCCE2190EA692004DFD92 /* TGRESTStore.m in Sources */,
-				527CCCCD190EA692004DFD92 /* TGRESTServer.m in Sources */,
-				527CCCDF190EA692004DFD92 /* TGRESTSqliteStore.m in Sources */,
+				521B2AF219101AA700A8F04F /* TGRESTSqliteStore.m in Sources */,
+				521B2AEC19101AA700A8F04F /* TGPrivateFunctions.m in Sources */,
 				52541F9C190B0CBD000A44FA /* TGRESTClient.m in Sources */,
+				521B2AEF19101AA700A8F04F /* TGRESTInMemoryStore.m in Sources */,
 				52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
+				521B2AE019101AA700A8F04F /* TGRESTServer.m in Sources */,
 				527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */,
-				527CCCD9190EA692004DFD92 /* TGPrivateFunctions.m in Sources */,
-				527CCCD6190EA692004DFD92 /* TGRESTResource.m in Sources */,
+				521B2AE919101AA700A8F04F /* TGRESTResource.m in Sources */,
+				521B2AF519101AA700A8F04F /* TGRESTStore.m in Sources */,
 				52C61D36190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */,
-				527CCCD0190EA692004DFD92 /* TGRESTDefaultController.m in Sources */,
 				521B2AC5190FFA9300A8F04F /* TGCustomSerializerTests.m in Sources */,
 				527CCB8F190C6A0F004DFD92 /* TGInMemoryStoreTests.m in Sources */,
+				521B2AE319101AA700A8F04F /* TGRESTDefaultController.m in Sources */,
 				52541F96190B0BCD000A44FA /* TGCRUDTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

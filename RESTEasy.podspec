@@ -11,13 +11,16 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.8'
   s.requires_arc = true
 
-  s.source_files = "Classes/**/*.{h,m}"
+  s.source_files = 'Classes/*.{h,m}', 'Classes/private/*.h'
   s.public_header_files = 'Classes/*.h'
-  s.private_header_files = 'Classes/Private/*.h'
+  s.private_header_files = 'Classes/private/*.h'
 
   s.frameworks = 'Foundation'
   s.dependency 'GCDWebServer', '~> 2.4'
-  s.dependency 'Gizou', '~> 0.1.3'
-  s.dependency 'FMDB/standalone', '~> 2.2'
   s.dependency 'InflectorKit', '~> 0.0.1'
+
+  subspec 'sqlite' do |sp|
+    sp.source_files = 'Classes/sqlite'
+    sp.dependency 'FMDB/standalone', '~> 2.2'
+  end
 end
