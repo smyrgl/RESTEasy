@@ -219,7 +219,8 @@ def apple_doc_command
 end
 
 def run_tests(scheme, sdk)
-  sh("xcodebuild -workspace RESTEasy.xcworkspace -scheme '#{scheme}' -sdk '#{sdk}' -configuration Release clean test | xcpretty -c ; exit ${PIPESTATUS[0]}") rescue nil
+  #sh("xcodebuild -workspace RESTEasy.xcworkspace -scheme '#{scheme}' -sdk '#{sdk}' -configuration Release clean test | xcpretty -c ; exit ${PIPESTATUS[0]}") rescue nil
+  sh("xctool -workspace RESTEasy.xcworkspace -scheme '#{scheme}' -sdk '#{sdk}' -configuration Release clean test") rescue nil
 end
 
 def is_mavericks_or_above

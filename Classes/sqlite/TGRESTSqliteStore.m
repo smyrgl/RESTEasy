@@ -13,6 +13,7 @@
 #import "TGPrivateFunctions.h"
 #import "TGRESTResource.h"
 #import "TGRESTEasyLogging.h"
+#import "TGRESTStore.h"
 
 @interface TGRESTSqliteStore ()
 

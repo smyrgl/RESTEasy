@@ -1,5 +1,11 @@
 # RESTEasy CHANGELOG
 
+## 0.1.4
+
+Subspec fix
+
+- Resolving header depedencies in the subspec build.
+
 ## 0.1.3
 
 Subspec
