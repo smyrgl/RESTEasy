@@ -7,8 +7,16 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "TGTestFactory.h"
+#import "TGRESTInMemoryStore.h"
 
 @interface TGInMemoryStoreTests : XCTestCase
+
+@property (nonatomic, strong) TGRESTResource *testNormalResource;
+@property (nonatomic, strong) TGRESTResource *testParentResource;
+@property (nonatomic, strong) TGRESTResource *testChildResource;
+
+@property (nonatomic, strong) TGRESTInMemoryStore *store;
 
 @end
 
@@ -17,19 +25,265 @@
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    self.store = [TGRESTInMemoryStore new];
+    self.testNormalResource = [TGTestFactory testResource];
+    self.testParentResource = [TGTestFactory testResource];
+    self.testChildResource = [TGTestFactory testResourceWithParent:self.testParentResource];
+    
+    [self.store addResource:self.testNormalResource];
+    [self.store addResource:self.testParentResource];
+    [self.store addResource:self.testChildResource];
 }
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [self.store dropResource:self.testNormalResource];
+    [self.store dropResource:self.testParentResource];
+    [self.store dropResource:self.testChildResource];
+    
     [super tearDown];
 }
 
-- (void)foreignKeyNullOnDelete
+- (void)testCountOfObjectsForResource
+{
+    NSUInteger count = [self.store countOfObjectsForResource:self.testNormalResource];
+    XCTAssert(count == 0, @"There should be no objects");
+    
+    NSArray *newObjects = [TGTestFactory buildTestDataForResource:self.testNormalResource count:10];
+    for (NSDictionary *newResourceDict in newObjects) {
+        NSError *createError;
+        [self.store createNewObjectForResource:self.testNormalResource withProperties:newResourceDict error:&createError];
+        XCTAssert(!createError, @"There should not be an error");
+        count++;
+    }
+    
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == count, @"The number of objects must equal the incremented expected count.");
+}
+
+- (void)testCreateResource
+{
+    NSUInteger count = [self.store countOfObjectsForResource:self.testNormalResource];
+    XCTAssert(count == 0, @"There should be no objects");
+    
+    NSDictionary *properties = [TGTestFactory buildTestDataForResource:self.testNormalResource];
+    NSError *error;
+    [self.store createNewObjectForResource:self.testNormalResource
+                            withProperties:properties
+                                     error:&error];
+    
+    XCTAssert(!error, @"There should not be an error");
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == 1, @"There should be 1 object");
+}
+
+- (void)testGetResource
+{
+    NSMutableSet *createdObjects = [NSMutableSet new];
+    NSArray *newObjects = [TGTestFactory buildTestDataForResource:self.testNormalResource count:10];
+    for (NSDictionary *newResourceDict in newObjects) {
+        NSError *error;
+        NSDictionary *newObjectDict = [self.store createNewObjectForResource:self.testNormalResource withProperties:newResourceDict error:&error];
+        XCTAssert(!error, @"There should not be an error");
+        [createdObjects addObject:newObjectDict];
+    }
+    
+    XCTAssert(createdObjects.count == 10, @"There should be 10 objects");
+    NSDictionary *randomObject = [createdObjects anyObject];
+    XCTAssert(randomObject[self.testNormalResource.primaryKey], @"The object dictionary must have a primary key.");
+    
+    NSError *fetchError;
+    NSDictionary *copyRandomObject = [self.store getDataForObjectOfResource:self.testNormalResource withPrimaryKey:randomObject[self.testNormalResource.primaryKey] error:&fetchError];
+    
+    XCTAssert(!fetchError, @"There must not be a fetch error");
+    XCTAssert([copyRandomObject isEqualToDictionary:randomObject], @"The returned dictionary should be equal to the one that was returned during the creation process.");
+}
+
+- (void)testGetAllObjectsForResource
+{
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == 0, @"There should be no objects");
+    
+    NSArray *newObjects = [TGTestFactory buildTestDataForResource:self.testNormalResource count:10];
+    
+    NSMutableArray *mergeArray = [NSMutableArray new];
+
+    for (NSDictionary *newResourceDict in newObjects) {
+        NSError *createError;
+        NSMutableDictionary *mergeDict = [NSMutableDictionary dictionaryWithDictionary:newResourceDict];
+        NSDictionary *newObj = [self.store createNewObjectForResource:self.testNormalResource withProperties:newResourceDict error:&createError];
+        [mergeDict addEntriesFromDictionary:newObj];
+        [mergeArray addObject:mergeDict];
+        XCTAssert(!createError, @"There should not be an error");
+    }
+    
+    NSError *fetchError;
+    XCTAssert([mergeArray isEqualToArray:[self.store getAllObjectsForResource:self.testNormalResource error:&fetchError]], @"The fetch for all objects must be the same as the expected array");
+    XCTAssert(!fetchError, @"There must not be an error");
+}
+
+- (void)testGetAllChildObjectsForParent
+{
+    NSDictionary *parentAttributes = [TGTestFactory buildTestDataForResource:self.testParentResource];
+    NSArray *childAttributes = [TGTestFactory buildTestDataForResource:self.testChildResource count:5];
+    
+    NSError *parentCreateError;
+    NSDictionary *parentObject = [self.store createNewObjectForResource:self.testParentResource withProperties:parentAttributes error:&parentCreateError];
+    XCTAssertNil(parentCreateError, @"There must not be an error creating the parent resource %@", parentCreateError);
+    
+    NSMutableArray *childArray = [NSMutableArray new];
+    
+    for (NSDictionary *childPropertiesDict in childAttributes) {
+        NSMutableDictionary *childProperties = [NSMutableDictionary dictionaryWithDictionary:childPropertiesDict];
+        [childProperties setObject:parentObject[self.testParentResource.primaryKey] forKey:self.testChildResource.foreignKeys[self.testParentResource.name]];
+        NSError *createChildError;
+        NSDictionary *childObject = [self.store createNewObjectForResource:self.testChildResource withProperties:childProperties error:&createChildError];
+        XCTAssertNil(createChildError, @"There must not be an error creating a child object %@", createChildError);
+        [childArray addObject:childObject];
+    }
+    
+    NSError *fetchError;
+    NSArray *fetchChildren = [self.store getDataForObjectsOfResource:self.testChildResource withParent:self.testParentResource parentPrimaryKey:parentObject[self.testParentResource.primaryKey] error:&fetchError];
+    
+    XCTAssertNil(fetchError, @"There must not be an error fetch child objects for a parent %@", fetchError);
+    XCTAssert([fetchChildren isEqualToArray:childArray], @"The returned array must be identical to the array of children that were created.");
+}
+
+- (void)testModifyObject
+{
+    NSDictionary *properties = [TGTestFactory buildTestDataForResource:self.testNormalResource];
+    NSError *error;
+    
+    NSDictionary *newObject = [self.store createNewObjectForResource:self.testNormalResource
+                            withProperties:properties
+                                     error:&error];
+    
+    XCTAssert(!error, @"There must not be an error creating a new object %@", error);
+    
+    NSDictionary *newProperties = [TGTestFactory buildTestDataForResource:self.testNormalResource];
+    NSError *modifyError;
+    NSDictionary *updatedObject = [self.store modifyObjectOfResource:self.testNormalResource withPrimaryKey:newObject[self.testNormalResource.primaryKey] withProperties:newProperties error:&modifyError];
+    
+    XCTAssertNil(modifyError, @"There must not be an error modifying an existing resource %@", modifyError);
+    XCTAssert([updatedObject[self.testNormalResource.primaryKey] isEqual:newObject[self.testNormalResource.primaryKey]], @"The primary key must be the same on both objects");
+    
+    NSMutableDictionary *updatedObjectMinusKey = [updatedObject mutableCopy];
+    [updatedObjectMinusKey removeObjectForKey:self.testNormalResource.primaryKey];
+    
+    XCTAssert([updatedObjectMinusKey isEqualToDictionary:newProperties], @"The updated object minus the primary key must be equal to the properties provided");
+}
+
+- (void)testDeleteObject
+{
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:self.testNormalResource];
+    NSError *createError;
+    NSDictionary *createdNewObject = [self.store createNewObjectForResource:self.testNormalResource withProperties:newObject error:&createError];
+    XCTAssert(!createError, @"There must not be an error creating the error");
+    
+    NSError *deleteError;
+    XCTAssertNoThrow([self.store deleteObjectOfResource:self.testNormalResource withPrimaryKey:createdNewObject[self.testNormalResource.primaryKey] error:&deleteError], @"Deleting should not throw an error.");
+    
+    XCTAssert(!deleteError, @"There must not be an error deleting the resource");
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == 0, @"The count must have been zero");
+}
+
+- (void)testDeleteObjectCount
+{
+    NSUInteger count = [self.store countOfObjectsForResource:self.testNormalResource];
+    XCTAssert(count == 0, @"There must be no objects");
+    
+    NSArray *newObjects = [TGTestFactory buildTestDataForResource:self.testNormalResource count:10];
+    NSMutableSet *createdObjects = [NSMutableSet new];
+    for (NSDictionary *newResourceDict in newObjects) {
+        NSError *createError;
+        NSDictionary *createdNewObject = [self.store createNewObjectForResource:self.testNormalResource withProperties:newResourceDict error:&createError];
+        [createdObjects addObject:createdNewObject];
+        XCTAssert(!createError, @"There must not be an error creating the error");
+        count++;
+    }
+    
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == count, @"The reported resource count must equal the number of objects created.");
+    
+    NSError *deleteError;
+    [self.store deleteObjectOfResource:self.testNormalResource withPrimaryKey:[createdObjects anyObject][self.testNormalResource.primaryKey] error:&deleteError];
+    
+    XCTAssert(!deleteError, @"There must not be an error deleting the resource");
+    XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == count - 1, @"The count must have been decremented by one");
+}
+
+- (void)testGetDeletedObject
+{
+    NSDictionary *newObject = [TGTestFactory buildTestDataForResource:self.testNormalResource];
+    NSError *createError;
+    NSDictionary *createdNewObject = [self.store createNewObjectForResource:self.testNormalResource withProperties:newObject error:&createError];
+    XCTAssert(!createError, @"There must not be an error creating the error");
+    
+    NSError *deleteError;
+    [self.store deleteObjectOfResource:self.testNormalResource withPrimaryKey:createdNewObject[self.testNormalResource.primaryKey] error:&deleteError];
+    XCTAssert(!deleteError, @"There must not be an error deleting the resource");
+    
+    NSError *fetchError;
+    NSDictionary *deletedObject = [self.store getDataForObjectOfResource:self.testNormalResource withPrimaryKey:createdNewObject[self.testNormalResource.primaryKey] error:&fetchError];
+    
+    XCTAssert(fetchError, @"The must be a fetch error returned");
+    XCTAssert(fetchError.code == TGRESTStoreObjectAlreadyDeletedErrorCode, @"The error must be of an already deleted error code");
+    XCTAssertNil(deletedObject, @"The return dictionary must be nil");
+}
+
+- (void)testAddResource
 {
     
 }
+
+- (void)testRemoveResource
+{
+    
+}
+
+- (void)testStringPrimaryKeyType
+{
+    
+}
+
+- (void)testIntegerPrimaryKeyType
+{
+    
+}
+
+- (void)testStringForeignKeyType
+{
+    
+}
+
+- (void)testIntegerForeignKeyType
+{
+    
+}
+
+- (void)testStringPropertyType
+{
+    
+}
+
+- (void)testIntegerPropertyType
+{
+    
+}
+
+- (void)testFloatPropertyType
+{
+    
+}
+
+- (void)testBlobPropertyType
+{
+    
+}
+
+- (void)testOtherPropertyType
+{
+    
+}
+
+#pragma mark - Negative tests
 
 
 @end

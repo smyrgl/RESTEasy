@@ -98,11 +98,21 @@
     }
     [keyString deleteCharactersInRange:NSMakeRange(keyString.length - 2, 2)];
     [valueString deleteCharactersInRange:NSMakeRange(valueString.length - 2, 2)];
+    __block uint64_t lastInsertRowID;
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         saveSuccess = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES(%@)", resource.name, keyString, valueString]];
+        if (saveSuccess) {
+            lastInsertRowID = db.lastInsertRowId;
+        }
     }];
     if (saveSuccess) {
-        return properties;
+        NSMutableDictionary *dict = [properties mutableCopy];
+        if (resource.primaryKeyType == TGPropertyTypeString) {
+            [dict setObject:[NSString stringWithFormat:@"%llu", lastInsertRowID] forKey:resource.primaryKey];
+        } else {
+            [dict setObject:[NSNumber numberWithInteger:lastInsertRowID] forKey:resource.primaryKey];
+        }
+        return [NSDictionary dictionaryWithDictionary:dict];
     } else {
         if (error) {
             *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreUnknownErrorCode userInfo:nil];

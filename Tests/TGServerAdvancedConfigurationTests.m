@@ -26,4 +26,24 @@
     [super tearDown];
 }
 
+- (void)testMinimumLatency
+{
+    
+}
+
+- (void)testMaximumLatency
+{
+    
+}
+
+- (void)testPortNumber
+{
+    
+}
+
+- (void)testServerName
+{
+    
+}
+
 @end

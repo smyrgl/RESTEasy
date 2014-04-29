@@ -45,6 +45,8 @@
     [super tearDown];
 }
 
+/*
+
 - (void)testCountOfObjectsForResource
 {
     NSUInteger count = [self.store countOfObjectsForResource:self.testNormalResource];
@@ -76,7 +78,6 @@
     XCTAssert([self.store countOfObjectsForResource:self.testNormalResource] == 1, @"There should be 1 object");
 }
 
-/*
 - (void)testGetResource
 {
     NSMutableSet *createdObjects = [NSMutableSet new];
@@ -85,7 +86,11 @@
         NSError *error;
         NSDictionary *newObjectDict = [self.store createNewObjectForResource:self.testNormalResource withProperties:newResourceDict error:&error];
         XCTAssert(!error, @"There should not be an error");
-        [createdObjects addObject:newObjectDict];
+        if (newObjectDict) {
+            [createdObjects addObject:newObjectDict];
+        } else {
+            XCTFail(@"Creating a new object must return a dictionary");
+        }
     }
     
     XCTAssert(createdObjects.count == 10, @"There should be 10 objects");
