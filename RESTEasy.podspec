@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "RESTEasy"
-  s.version          = "0.1.1"
+  s.version          = "0.1.2"
   s.summary          = "A dead simple RESTful server that runs INSIDE your iOS/OSX app."
   s.homepage         = "https://github.com/smyrgl/RESTEasy"
   s.license          = 'MIT'

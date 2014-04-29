@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		521B2AAB190F330A00A8F04F /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AAA190F330A00A8F04F /* Person.m */; };
+		521B2AAE190F334F00A8F04F /* Pet.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AAD190F334F00A8F04F /* Pet.m */; };
+		521B2AB2190F357D00A8F04F /* TGRESTEasyAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AB1190F357D00A8F04F /* TGRESTEasyAPI.m */; };
+		521B2AB5190F378200A8F04F /* TGPersonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AB4190F378200A8F04F /* TGPersonTableViewController.m */; };
+		521B2AB8190F378E00A8F04F /* TGPetTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2AB7190F378D00A8F04F /* TGPetTableViewController.m */; };
 		527CCBA7190DD1CF004DFD92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBA6190DD1CF004DFD92 /* Foundation.framework */; };
 		527CCBA9190DD1CF004DFD92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */; };
 		527CCBAB190DD1CF004DFD92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBAA190DD1CF004DFD92 /* UIKit.framework */; };
@@ -14,7 +19,6 @@
 		527CCBB3190DD1CF004DFD92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBB2190DD1CF004DFD92 /* main.m */; };
 		527CCBB7190DD1CF004DFD92 /* TGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBB6190DD1CF004DFD92 /* TGAppDelegate.m */; };
 		527CCBBA190DD1CF004DFD92 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 527CCBB8190DD1CF004DFD92 /* Main.storyboard */; };
-		527CCBBD190DD1CF004DFD92 /* TGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCBBC190DD1CF004DFD92 /* TGViewController.m */; };
 		527CCBBF190DD1CF004DFD92 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 527CCBBE190DD1CF004DFD92 /* Images.xcassets */; };
 		527CCCAB190EA683004DFD92 /* TGRESTServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCC94190EA683004DFD92 /* TGRESTServer.m */; };
 		527CCCAC190EA683004DFD92 /* TGRESTDefaultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 527CCC96190EA683004DFD92 /* TGRESTDefaultController.m */; };
@@ -30,6 +34,16 @@
 /* Begin PBXFileReference section */
 		123DF7B39AC840EBBF3F60D0 /* libPods-RESTEasyApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RESTEasyApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34CB08749A3D45D98F9363E5 /* Pods-RESTEasyApp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RESTEasyApp.xcconfig"; path = "../../Pods/Pods-RESTEasyApp.xcconfig"; sourceTree = "<group>"; };
+		521B2AA9190F330A00A8F04F /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		521B2AAA190F330A00A8F04F /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		521B2AAC190F334F00A8F04F /* Pet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pet.h; sourceTree = "<group>"; };
+		521B2AAD190F334F00A8F04F /* Pet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pet.m; sourceTree = "<group>"; };
+		521B2AB0190F357D00A8F04F /* TGRESTEasyAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyAPI.h; sourceTree = "<group>"; };
+		521B2AB1190F357D00A8F04F /* TGRESTEasyAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRESTEasyAPI.m; sourceTree = "<group>"; };
+		521B2AB3190F378200A8F04F /* TGPersonTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPersonTableViewController.h; sourceTree = "<group>"; };
+		521B2AB4190F378200A8F04F /* TGPersonTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPersonTableViewController.m; sourceTree = "<group>"; };
+		521B2AB6190F378D00A8F04F /* TGPetTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPetTableViewController.h; sourceTree = "<group>"; };
+		521B2AB7190F378D00A8F04F /* TGPetTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPetTableViewController.m; sourceTree = "<group>"; };
 		527CCBA3190DD1CF004DFD92 /* RESTEasyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RESTEasyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		527CCBA6190DD1CF004DFD92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -41,8 +55,6 @@
 		527CCBB5190DD1CF004DFD92 /* TGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGAppDelegate.h; sourceTree = "<group>"; };
 		527CCBB6190DD1CF004DFD92 /* TGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TGAppDelegate.m; sourceTree = "<group>"; };
 		527CCBB9190DD1CF004DFD92 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		527CCBBB190DD1CF004DFD92 /* TGViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGViewController.h; sourceTree = "<group>"; };
-		527CCBBC190DD1CF004DFD92 /* TGViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TGViewController.m; sourceTree = "<group>"; };
 		527CCBBE190DD1CF004DFD92 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		527CCBC5190DD1CF004DFD92 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		527CCC92190EA683004DFD92 /* RESTEasy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RESTEasy.h; path = ../../Classes/RESTEasy.h; sourceTree = "<group>"; };
@@ -82,6 +94,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		521B2AA6190F32B000A8F04F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AA9190F330A00A8F04F /* Person.h */,
+				521B2AAA190F330A00A8F04F /* Person.m */,
+				521B2AAC190F334F00A8F04F /* Pet.h */,
+				521B2AAD190F334F00A8F04F /* Pet.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		521B2AAF190F353B00A8F04F /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				521B2AB0190F357D00A8F04F /* TGRESTEasyAPI.h */,
+				521B2AB1190F357D00A8F04F /* TGRESTEasyAPI.m */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
 		527CCB9A190DD1CF004DFD92 = {
 			isa = PBXGroup;
 			children = (
@@ -116,12 +148,12 @@
 		527CCBAC190DD1CF004DFD92 /* RESTEasyApp */ = {
 			isa = PBXGroup;
 			children = (
+				521B2AAF190F353B00A8F04F /* Network */,
+				521B2AA6190F32B000A8F04F /* Models */,
 				527CCC91190EA3F1004DFD92 /* Controllers */,
 				527CCBB5190DD1CF004DFD92 /* TGAppDelegate.h */,
 				527CCBB6190DD1CF004DFD92 /* TGAppDelegate.m */,
 				527CCBB8190DD1CF004DFD92 /* Main.storyboard */,
-				527CCBBB190DD1CF004DFD92 /* TGViewController.h */,
-				527CCBBC190DD1CF004DFD92 /* TGViewController.m */,
 				527CCBBE190DD1CF004DFD92 /* Images.xcassets */,
 				527CCBAD190DD1CF004DFD92 /* Supporting Files */,
 			);
@@ -165,6 +197,10 @@
 		527CCC91190EA3F1004DFD92 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				521B2AB3190F378200A8F04F /* TGPersonTableViewController.h */,
+				521B2AB4190F378200A8F04F /* TGPersonTableViewController.m */,
+				521B2AB6190F378D00A8F04F /* TGPetTableViewController.h */,
+				521B2AB7190F378D00A8F04F /* TGPetTableViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -330,14 +366,18 @@
 				527CCCAD190EA683004DFD92 /* TGRESTDefaultSerializer.m in Sources */,
 				527CCCB2190EA683004DFD92 /* TGRESTStore.m in Sources */,
 				527CCCAE190EA683004DFD92 /* TGRESTResource.m in Sources */,
-				527CCBBD190DD1CF004DFD92 /* TGViewController.m in Sources */,
 				527CCCAB190EA683004DFD92 /* TGRESTServer.m in Sources */,
 				527CCBB3190DD1CF004DFD92 /* main.m in Sources */,
+				521B2AB5190F378200A8F04F /* TGPersonTableViewController.m in Sources */,
+				521B2AAB190F330A00A8F04F /* Person.m in Sources */,
 				527CCCB0190EA683004DFD92 /* TGRESTInMemoryStore.m in Sources */,
 				527CCCB1190EA683004DFD92 /* TGRESTSqliteStore.m in Sources */,
+				521B2AB2190F357D00A8F04F /* TGRESTEasyAPI.m in Sources */,
 				527CCBB7190DD1CF004DFD92 /* TGAppDelegate.m in Sources */,
 				527CCCAF190EA683004DFD92 /* TGPrivateFunctions.m in Sources */,
+				521B2AAE190F334F00A8F04F /* Pet.m in Sources */,
 				527CCCAC190EA683004DFD92 /* TGRESTDefaultController.m in Sources */,
+				521B2AB8190F378E00A8F04F /* TGPetTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

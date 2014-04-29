@@ -19,24 +19,41 @@
                                                                    @"email": [NSNumber numberWithInteger:TGPropertyTypeString]
                                                                    }];
     
-    TGRESTResource *cars = [TGRESTResource newResourceWithName:@"cars"
+    TGRESTResource *pets = [TGRESTResource newResourceWithName:@"pets"
                                                          model:@{
                                                                  @"name": [NSNumber numberWithInteger:TGPropertyTypeString],
-                                                                 @"color": [NSNumber numberWithInteger:TGPropertyTypeString]
+                                                                 @"breed": [NSNumber numberWithInteger:TGPropertyTypeString]
                                                                  }
                                                        actions:TGResourceRESTActionsDELETE | TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT
                                                     primaryKey:nil
                                                parentResources:@[people]];
     
     [[TGRESTServer sharedServer] addResource:people];
-    [[TGRESTServer sharedServer] addResource:cars];
+    [[TGRESTServer sharedServer] addResource:pets];
     
     NSDictionary *options = @{
-                              TGRESTServerDatastoreClassOptionKey: [TGRESTSqliteStore class]
+                              TGRESTServerDatastoreClassOptionKey: [TGRESTInMemoryStore class]
                               };
     
     [[TGRESTServer sharedServer] startServerWithOptions:options];
-
+    
+    NSArray *peopleArray = [Person foundryAttributesNumber:10];
+    [[TGRESTServer sharedServer] addData:peopleArray forResource:people];
+    NSArray *createdPeopleArray = [[TGRESTServer sharedServer] allObjectsForResource:people];
+    
+    NSMutableArray *petsArray = [NSMutableArray new];
+    
+    for (NSDictionary *personDict in createdPeopleArray) {
+        NSArray *personPetsArray = [Pet foundryAttributesNumber:5];
+        for (NSDictionary *pet in personPetsArray) {
+            NSMutableDictionary *petMutable = [pet mutableCopy];
+            [petMutable setObject:personDict[people.primaryKey] forKey:pets.foreignKeys[people.name]];
+            [petsArray addObject:petMutable];
+        }
+    }
+    
+    [[TGRESTServer sharedServer] addData:[NSArray arrayWithArray:petsArray] forResource:pets];
+    
     return YES;
 }
 

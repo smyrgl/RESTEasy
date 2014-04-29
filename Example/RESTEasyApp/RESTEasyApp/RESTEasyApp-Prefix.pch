@@ -13,4 +13,9 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import <Foundry/Foundry.h>
+    #import <Gizou/Gizou.h>
+    #import "RESTEasy.h"
+    #import "Person.h"
+    #import "Pet.h"
 #endif

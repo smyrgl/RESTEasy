@@ -101,7 +101,7 @@
         NSDictionary *body;
         if ([request.contentType hasPrefix:@"application/json"]) {
             NSError *jsonError;
-            body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
+            body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:kNilOptions error:&jsonError];
             if (jsonError) {
                 return [GCDWebServerResponse responseWithStatusCode:400];
             }
@@ -155,7 +155,7 @@
         NSDictionary *body;
         if ([dataRequest.contentType hasPrefix:@"application/json"]) {
             NSError *jsonError;
-            body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:NSJSONReadingAllowFragments error:&jsonError];
+            body = [NSJSONSerialization JSONObjectWithData:dataRequest.data options:kNilOptions error:&jsonError];
             if (jsonError) {
                 TGLogError(@"Failed to deserialize JSON payload %@", jsonError);
                 return [GCDWebServerResponse responseWithStatusCode:400];
