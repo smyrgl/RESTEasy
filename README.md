@@ -368,6 +368,10 @@ it simply add the following line to your Podfile:
 
     pod "RESTEasy"
 
+Don't need or want persistence?  You can install just the core files that rely on the in memory store only and don't have depdencies on FMDB or sqlite by using the 'core' subspec like so:
+
+    pod "RESTEasy/core"
+
 ## Acknowledgements 
 
 This library would not have been possible without a couple of fantastic subprojects that it makes use of. 
