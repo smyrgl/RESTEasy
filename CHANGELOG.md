@@ -1,5 +1,11 @@
 # RESTEasy CHANGELOG
 
+## 0.1.6
+
+Sqlite
+
+- Sqlite store can now perform all CRUD operations and is passing the same tests as the in-memory store.
+
 ## 0.1.5
 
 Subspec refactor
