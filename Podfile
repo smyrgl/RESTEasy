@@ -46,3 +46,6 @@ target :sandbox do
   xcodeproj 'Tests/Tests.xcodeproj'
 end
 
+def core_pods
+
+end

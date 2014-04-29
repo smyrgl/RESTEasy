@@ -9,10 +9,13 @@
 #ifndef _RESTEasy_h
 #define _RESTEasy_h
 
-#import "TGRESTResource.h"
-#import "TGRESTServer.h"
-#import "TGRESTStore.h"
-#import "TGRESTInMemoryStore.h"
-#import "TGRESTSqliteStore.h"
+#if __has_include("RESTEasyCore.h")
+#import "RESTEasyCore.h"
+#endif
+
+#if __has_include("RESTEasySqlite.h")
+#import "RESTEasySqlite.h"
+#endif
+
 
 #endif

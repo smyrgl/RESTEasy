@@ -11,41 +11,71 @@
       <FileRef
          location = "group:RESTEasy.h">
       </FileRef>
-      <FileRef
-         location = "group:TGRESTServer.h">
-      </FileRef>
-      <FileRef
-         location = "group:TGRESTServer.m">
-      </FileRef>
       <Group
          location = "container:"
-         name = "Controller">
+         name = "core">
          <FileRef
-            location = "group:Classes/TGRESTDefaultController.h">
+            location = "group:Classes/core/RESTEasyCore.h">
          </FileRef>
          <FileRef
-            location = "group:Classes/TGRESTDefaultController.m">
+            location = "group:Classes/core/TGRESTController.h">
          </FileRef>
          <FileRef
-            location = "group:Classes/TGRESTDefaultSerializer.h">
+            location = "group:Classes/core/TGRESTDefaultController.h">
          </FileRef>
          <FileRef
-            location = "group:Classes/TGRESTDefaultSerializer.m">
+            location = "group:Classes/core/TGRESTDefaultController.m">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTDefaultSerializer.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTDefaultSerializer.m">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTInMemoryStore.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTInMemoryStore.m">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTResource.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTResource.m">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTSerializer.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTServer.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTServer.m">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTStore.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/core/TGRESTStore.m">
          </FileRef>
       </Group>
       <Group
          location = "container:"
-         name = "Model">
+         name = "sqlite">
          <FileRef
-            location = "group:Classes/TGRESTResource.h">
+            location = "group:Classes/sqlite/RESTEasySqlite.h">
          </FileRef>
          <FileRef
-            location = "group:Classes/TGRESTResource.m">
+            location = "group:Classes/sqlite/TGRESTSqliteStore.h">
+         </FileRef>
+         <FileRef
+            location = "group:Classes/sqlite/TGRESTSqliteStore.m">
          </FileRef>
       </Group>
       <Group
          location = "group:Private"
-         name = "Private">
+         name = "private">
          <FileRef
             location = "group:TGPrivateFunctions.h">
          </FileRef>
@@ -54,38 +84,6 @@
          </FileRef>
          <FileRef
             location = "group:TGRESTEasyLogging.h">
-         </FileRef>
-      </Group>
-      <Group
-         location = "container:"
-         name = "Protocols">
-         <FileRef
-            location = "group:Classes/TGRESTController.h">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/TGRESTSerializer.h">
-         </FileRef>
-      </Group>
-      <Group
-         location = "container:"
-         name = "Store">
-         <FileRef
-            location = "group:Classes/TGRESTInMemoryStore.h">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/TGRESTInMemoryStore.m">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/sqlite/TGRESTSqliteStore.h">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/sqlite/TGRESTSqliteStore.m">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/TGRESTStore.h">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/TGRESTStore.m">
          </FileRef>
       </Group>
    </Group>

@@ -1,5 +1,12 @@
 # RESTEasy CHANGELOG
 
+## 0.1.5
+
+Subspec refactor
+
+- Refactored the project layout to better handle subspec structure.
+- Move the core into its own subspec.
+
 ## 0.1.4
 
 Subspec fix
