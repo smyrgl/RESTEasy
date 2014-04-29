@@ -1,5 +1,13 @@
 # RESTEasy CHANGELOG
 
+## 0.2.0
+
+First Release to Cocoapods
+
+- Added min/max latency handling and tests.
+- Put all the controller requests into one internal method on the server to prevent duplication of the timing delay code.
+- Added documentation for the latency configuration feature.
+
 ## 0.1.6
 
 Sqlite

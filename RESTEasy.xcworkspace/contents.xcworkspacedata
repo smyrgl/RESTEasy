@@ -21,6 +21,9 @@
             location = "group:Classes/core/TGRESTController.h">
          </FileRef>
          <FileRef
+            location = "group:Classes/core/TGRESTSerializer.h">
+         </FileRef>
+         <FileRef
             location = "group:Classes/core/TGRESTDefaultController.h">
          </FileRef>
          <FileRef
@@ -43,9 +46,6 @@
          </FileRef>
          <FileRef
             location = "group:Classes/core/TGRESTResource.m">
-         </FileRef>
-         <FileRef
-            location = "group:Classes/core/TGRESTSerializer.h">
          </FileRef>
          <FileRef
             location = "group:Classes/core/TGRESTServer.h">
@@ -76,6 +76,12 @@
       <Group
          location = "group:Private"
          name = "private">
+         <FileRef
+            location = "group:TGStopwatch.h">
+         </FileRef>
+         <FileRef
+            location = "group:TGStopwatch.m">
+         </FileRef>
          <FileRef
             location = "group:TGPrivateFunctions.h">
          </FileRef>

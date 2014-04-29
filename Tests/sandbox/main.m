@@ -33,7 +33,10 @@ int main(int argc, const char * argv[])
         [[TGRESTServer sharedServer] addResource:people];
         [[TGRESTServer sharedServer] addResource:cars];
         
-        [[TGRESTServer sharedServer] startServerWithOptions:nil];
+        [[TGRESTServer sharedServer] startServerWithOptions:@{
+                                                              TGLatencyRangeMinimumOptionKey: @0.5f,
+                                                              TGLatencyRangeMaximumOptionKey: @0.6f
+                                                              }];
         
         __block BOOL serverRunning = YES;
         

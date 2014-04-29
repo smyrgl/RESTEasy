@@ -33,6 +33,9 @@
 		521B2B461910242A00A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B2E1910242A00A8F04F /* TGPrivateFunctions.m */; };
 		521B2B471910242A00A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B2E1910242A00A8F04F /* TGPrivateFunctions.m */; };
 		521B2B481910242A00A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B2E1910242A00A8F04F /* TGPrivateFunctions.m */; };
+		521B2B7219103A7200A8F04F /* TGStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B7119103A7200A8F04F /* TGStopwatch.m */; };
+		521B2B7319103A7200A8F04F /* TGStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B7119103A7200A8F04F /* TGStopwatch.m */; };
+		521B2B7419103A7200A8F04F /* TGStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B7119103A7200A8F04F /* TGStopwatch.m */; };
 		52541F86190A0A8C000A44FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D0393419097EEE00D3900F /* Foundation.framework */; };
 		52541F89190A0A8C000A44FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52541F88190A0A8C000A44FA /* main.m */; };
 		52541F8D190A0A8C000A44FA /* sandbox.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 52541F8C190A0A8C000A44FA /* sandbox.1 */; };
@@ -104,6 +107,8 @@
 		521B2B2D1910242A00A8F04F /* TGPrivateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPrivateFunctions.h; sourceTree = "<group>"; };
 		521B2B2E1910242A00A8F04F /* TGPrivateFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPrivateFunctions.m; sourceTree = "<group>"; };
 		521B2B2F1910242A00A8F04F /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
+		521B2B7019103A7200A8F04F /* TGStopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStopwatch.h; sourceTree = "<group>"; };
+		521B2B7119103A7200A8F04F /* TGStopwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStopwatch.m; sourceTree = "<group>"; };
 		52541F85190A0A8C000A44FA /* sandbox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sandbox; sourceTree = BUILT_PRODUCTS_DIR; };
 		52541F88190A0A8C000A44FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		52541F8B190A0A8C000A44FA /* sandbox-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sandbox-Prefix.pch"; sourceTree = "<group>"; };
@@ -252,6 +257,8 @@
 		521B2B301910242A00A8F04F /* private */ = {
 			isa = PBXGroup;
 			children = (
+				521B2B7019103A7200A8F04F /* TGStopwatch.h */,
+				521B2B7119103A7200A8F04F /* TGStopwatch.m */,
 				521B2B2D1910242A00A8F04F /* TGPrivateFunctions.h */,
 				521B2B2E1910242A00A8F04F /* TGPrivateFunctions.m */,
 				521B2B2F1910242A00A8F04F /* TGRESTEasyLogging.h */,
@@ -616,6 +623,7 @@
 				521B2B3F1910242A00A8F04F /* TGRESTServer.m in Sources */,
 				521B2B3C1910242A00A8F04F /* TGRESTResource.m in Sources */,
 				521B2B451910242A00A8F04F /* TGRESTSqliteStore.m in Sources */,
+				521B2B7419103A7200A8F04F /* TGStopwatch.m in Sources */,
 				52541F89190A0A8C000A44FA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -624,6 +632,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				521B2B7219103A7200A8F04F /* TGStopwatch.m in Sources */,
 				521B2B341910242A00A8F04F /* TGRESTDefaultSerializer.m in Sources */,
 				52C61D35190C619E0056CDFD /* TGSqliteStoreTests.m in Sources */,
 				52FF8A95190B4ABE0099503B /* TGServerAPIErrorHandlingTests.m in Sources */,
@@ -658,6 +667,7 @@
 				521B2B441910242A00A8F04F /* TGRESTSqliteStore.m in Sources */,
 				52541FA6190B2FC5000A44FA /* TGResourceTests.m in Sources */,
 				52D0395B1909810400D3900F /* TGBasicServerTests.m in Sources */,
+				521B2B7319103A7200A8F04F /* TGStopwatch.m in Sources */,
 				52541F9C190B0CBD000A44FA /* TGRESTClient.m in Sources */,
 				52541FAC190B305B000A44FA /* TGServerAdvancedConfigurationTests.m in Sources */,
 				527CCB92190C72AD004DFD92 /* TGRoutingTests.m in Sources */,

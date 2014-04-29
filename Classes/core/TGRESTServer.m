@@ -18,6 +18,15 @@
 #import "TGRESTEasyLogging.h"
 #import "TGRESTDefaultController.h"
 #import "TGRESTDefaultSerializer.h"
+#import "TGStopwatch.h"
+
+typedef NS_ENUM(NSUInteger, TGControllerAction) {
+    TGControllerActionIndex,
+    TGControllerActionShow,
+    TGControllerActionCreate,
+    TGControllerActionUpdate,
+    TGControllerActionDestroy
+};
 
 NSString * const TGLatencyRangeMinimumOptionKey = @"TGLatencyRangeMinimumOptionKey";
 NSString * const TGLatencyRangeMaximumOptionKey = @"TGLatencyRangeMaximumOptionKey";
@@ -79,6 +88,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
         self.serverName = @"";
         self.resourceSerializers = [NSMutableDictionary new];
         self.defaultSerializer = [TGRESTDefaultSerializer class];
+        srand48(time(0));
     }
     
     return self;
@@ -140,8 +150,18 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     [self addResourcesWithArray:[self.resources allValues]];
     
     [options[TGWebServerPortNumberOptionKey] integerValue];
-    self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] floatValue];
-    self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] floatValue];
+    self.latencyMin = [options[TGLatencyRangeMinimumOptionKey] doubleValue];
+    self.latencyMax = [options[TGLatencyRangeMaximumOptionKey] doubleValue];
+    
+    if (self.latencyMax < self.latencyMin) {
+        self.latencyMax = self.latencyMin;
+    }
+    
+    if (self.latencyMin > 0.0f || self.latencyMax > 0.0f) {
+        NSArray *resources = [self.resources allValues];
+        [self removeAllResourcesWithData:NO];
+        [self addResourcesWithArray:resources];
+    }
     
     NSMutableDictionary *serverOptionsDict = [NSMutableDictionary new];
     
@@ -236,14 +256,14 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGIndexRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTDefaultController indexWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [weakSelf controllerAction:TGControllerActionIndex withRequest:request withResource:resource];
                                }];
         
         [self.webServer addHandlerForMethod:@"GET"
                                   pathRegex:TGShowRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTDefaultController showWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [weakSelf controllerAction:TGControllerActionShow withRequest:request withResource:resource];
                                }];
     }
     
@@ -254,7 +274,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGCreateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTDefaultController createWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [weakSelf controllerAction:TGControllerActionCreate withRequest:request withResource:resource];
                                }];
         
     }
@@ -266,7 +286,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGDestroyRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTDefaultController destroyWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [weakSelf controllerAction:TGControllerActionDestroy withRequest:request withResource:resource];
                                }];
     }
     
@@ -277,7 +297,7 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGUpdateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [TGRESTDefaultController updateWithRequest:request withResource:resource usingDatastore:weakSelf.datastore];
+                                   return [weakSelf controllerAction:TGControllerActionUpdate withRequest:request withResource:resource];
                                }];
     }
 }
@@ -387,6 +407,45 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
             TGLogWarn(@"No matching keys for object %@", objectDictionary);
         }
     }
+}
+
+#pragma mark - Private
+
+- (GCDWebServerResponse *)controllerAction:(TGControllerAction)action withRequest:(GCDWebServerRequest *)request withResource:(TGRESTResource *)resource
+{
+    TGStopwatch *stopwatch = [TGStopwatch new];
+    [stopwatch start];
+    CGFloat randomInLatencyRange = TGRandomInRange(self.latencyMin, self.latencyMax);
+    GCDWebServerResponse *response;
+    
+    switch (action) {
+        case TGControllerActionIndex:
+            response = [TGRESTDefaultController indexWithRequest:request withResource:resource usingDatastore:self.datastore];
+            break;
+        case TGControllerActionShow:
+            response = [TGRESTDefaultController showWithRequest:request withResource:resource usingDatastore:self.datastore];
+            break;
+        case TGControllerActionCreate:
+            response = [TGRESTDefaultController createWithRequest:request withResource:resource usingDatastore:self.datastore];
+
+            break;
+        case TGControllerActionUpdate:
+            response = [TGRESTDefaultController updateWithRequest:request withResource:resource usingDatastore:self.datastore];
+            break;
+        case TGControllerActionDestroy:
+            response = [TGRESTDefaultController destroyWithRequest:request withResource:resource usingDatastore:self.datastore];
+            break;
+        default:
+            break;
+    }
+    
+    while ([stopwatch recordedTime] < randomInLatencyRange) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    [stopwatch stop];
+    TGLogInfo(@"Returning response with latency %f", [stopwatch recordedTime]);
+    stopwatch = nil;
+    return response;
 }
 
 @end

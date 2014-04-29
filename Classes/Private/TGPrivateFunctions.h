@@ -21,3 +21,7 @@ extern NSString *TGShowRegex(TGRESTResource *resource);
 extern NSString *TGCreateRegex(TGRESTResource *resource);
 extern NSString *TGUpdateRegex(TGRESTResource *resource);
 extern NSString *TGDestroyRegex(TGRESTResource *resource);
+
+extern uint8_t TGCountOfCores(void);
+extern CGFloat TGTimedBlock (void (^block)(void));
+extern CGFloat TGRandomInRange(CGFloat lowerRange, CGFloat upperRange);

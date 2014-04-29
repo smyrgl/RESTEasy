@@ -20,6 +20,7 @@
 		521B2B671910243800A8F04F /* TGRESTStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B581910243800A8F04F /* TGRESTStore.m */; };
 		521B2B681910243800A8F04F /* TGRESTSqliteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B5C1910243800A8F04F /* TGRESTSqliteStore.m */; };
 		521B2B691910243800A8F04F /* TGPrivateFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B5F1910243800A8F04F /* TGPrivateFunctions.m */; };
+		521B2B7719103A7C00A8F04F /* TGStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 521B2B7619103A7C00A8F04F /* TGStopwatch.m */; };
 		527CCBA7190DD1CF004DFD92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBA6190DD1CF004DFD92 /* Foundation.framework */; };
 		527CCBA9190DD1CF004DFD92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */; };
 		527CCBAB190DD1CF004DFD92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527CCBAA190DD1CF004DFD92 /* UIKit.framework */; };
@@ -66,6 +67,8 @@
 		521B2B5E1910243800A8F04F /* TGPrivateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPrivateFunctions.h; sourceTree = "<group>"; };
 		521B2B5F1910243800A8F04F /* TGPrivateFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPrivateFunctions.m; sourceTree = "<group>"; };
 		521B2B601910243800A8F04F /* TGRESTEasyLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRESTEasyLogging.h; sourceTree = "<group>"; };
+		521B2B7519103A7C00A8F04F /* TGStopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStopwatch.h; sourceTree = "<group>"; };
+		521B2B7619103A7C00A8F04F /* TGStopwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStopwatch.m; sourceTree = "<group>"; };
 		527CCBA3190DD1CF004DFD92 /* RESTEasyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RESTEasyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		527CCBA6190DD1CF004DFD92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		527CCBA8190DD1CF004DFD92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -153,6 +156,8 @@
 		521B2B611910243800A8F04F /* private */ = {
 			isa = PBXGroup;
 			children = (
+				521B2B7519103A7C00A8F04F /* TGStopwatch.h */,
+				521B2B7619103A7C00A8F04F /* TGStopwatch.m */,
 				521B2B5E1910243800A8F04F /* TGPrivateFunctions.h */,
 				521B2B5F1910243800A8F04F /* TGPrivateFunctions.m */,
 				521B2B601910243800A8F04F /* TGRESTEasyLogging.h */,
@@ -349,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				521B2B7719103A7C00A8F04F /* TGStopwatch.m in Sources */,
 				521B2B681910243800A8F04F /* TGRESTSqliteStore.m in Sources */,
 				521B2B631910243800A8F04F /* TGRESTDefaultSerializer.m in Sources */,
 				527CCBB3190DD1CF004DFD92 /* main.m in Sources */,

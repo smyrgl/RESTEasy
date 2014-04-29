@@ -10,6 +10,8 @@
 
 @class TGRESTResource;
 
+extern CGFloat TGTimedTestBlock (void (^block)(void));
+
 @interface TGTestFactory : NSObject
 
 + (TGRESTResource *)testResource;
@@ -24,3 +26,4 @@
 + (void)createTestDataForResource:(TGRESTResource *)resource count:(NSUInteger)count;
 
 @end
+

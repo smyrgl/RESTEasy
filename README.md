@@ -283,11 +283,19 @@ Then to remove it:
 
 ### Setting latency minimum and maximums
 
-**Coming Soon**
+In order to perform proper simulations of network tests it is often necessary to use things like link conditioner.  This works adaquately but since that throttles on the client it requires network connections to remote services.  Sure you could just use link conditioner with RESTEasy but there is a more straightforward solution.
 
-### Setting timeout frequencies
+The server configuration includes the ability to set latency minium and maximums like so:
 
-**Coming Soon**
+```objective-c
+NSDictionary *serverOptions = @{
+                               TGLatencyRangeMinimumOptionKey: @1.0, 
+                               TGLatencyRangeMaximumOptionKey: @2.0
+                              };
+    [[TGRESTServer sharedServer] startServerWithOptions:serverOptions];
+```
+
+This will make it so that responses are artificially throtled so that they return with a random response time within AT LEAST the range specified (however obviously it could go higher if the range is low and the request takes a long time for whatever reason).  It's good to set this to simulate real network requests as local calls tend to return in the 10ms timeframe if you don't simulate a delay.
 
 ## Advanced stuff
 
