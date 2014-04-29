@@ -280,7 +280,7 @@
         objectCount = objectCount + resourceArray.count;
     }
     
-    return [NSString stringWithFormat:@"%@ with %lu resources and %lu objects", [[self class] description], (unsigned long)self.inMemoryDatastore.allKeys.count, objectCount];
+    return [NSString stringWithFormat:@"%@ with %lu resources and %lu objects", [[self class] description], (unsigned long)self.inMemoryDatastore.allKeys.count, (unsigned long)objectCount];
 }
 
 @end
