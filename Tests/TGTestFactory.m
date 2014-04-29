@@ -86,6 +86,17 @@
     return [NSDictionary dictionaryWithDictionary:objectDictionary];
 }
 
++ (NSArray *)buildTestDataForResource:(TGRESTResource *)resource count:(NSUInteger)count
+{
+    NSMutableArray *returnArray = [NSMutableArray new];
+    
+    for (int x = 0; x < count; x++) {
+        [returnArray addObject:[self buildTestDataForResource:resource]];
+    }
+    
+    return [NSArray arrayWithArray:returnArray];
+}
+
 + (void)createTestDataForResource:(TGRESTResource *)resource count:(NSUInteger)count
 {
     NSParameterAssert(resource);

@@ -201,8 +201,28 @@
 
 + (NSString *)description
 {
-    return @"InMemoryStore";
+    return @"Sqlite";
 }
+
+- (NSString *)description
+{
+    NSMutableDictionary *database = [NSMutableDictionary new];
+    
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *results = [db executeQuery:@"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"];
+        
+        while ([results next]) {
+            NSString *tableName = [results objectForColumnIndex:0];
+            NSUInteger count = [db intForQuery:[NSString stringWithFormat:@"SELECT COUNT (*) FROM %@", tableName]];
+            [database setObject:[NSNumber numberWithInteger:count] forKey:tableName];
+        }
+        
+        [results close];
+    }];
+    
+    return database.description;
+}
+
 
 
 @end

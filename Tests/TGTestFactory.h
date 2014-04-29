@@ -20,6 +20,7 @@
 + (TGRESTResource *)testResourceWithCountOfParents:(NSUInteger)parentCount;
 
 + (NSDictionary *)buildTestDataForResource:(TGRESTResource *)resource;
++ (NSArray *)buildTestDataForResource:(TGRESTResource *)resource count:(NSUInteger)count;
 + (void)createTestDataForResource:(TGRESTResource *)resource count:(NSUInteger)count;
 
 @end

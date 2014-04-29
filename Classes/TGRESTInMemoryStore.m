@@ -269,7 +269,7 @@
 
 + (NSString *)description
 {
-    return @"InMemoryStore";
+    return @"InMemory";
 }
 
 - (NSString *)description
