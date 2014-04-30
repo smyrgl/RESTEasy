@@ -25,7 +25,7 @@ static dispatch_queue_t in_memory_store_test_queue() {
     static dispatch_queue_t in_memory_store_test_queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        in_memory_store_test_queue = dispatch_queue_create("com.tinylittlegears.resteasy.test", DISPATCH_QUEUE_CONCURRENT);
+        in_memory_store_test_queue = dispatch_queue_create("com.tinylittlegears.resteasy.inmemory.test", DISPATCH_QUEUE_CONCURRENT);
     });
     
     return in_memory_store_test_queue;

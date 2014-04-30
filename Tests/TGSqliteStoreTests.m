@@ -10,6 +10,27 @@
 #import "TGRESTSqliteStore.h"
 #import "TGTestFactory.h"
 
+static dispatch_group_t sqlite_store_test_group() {
+    static dispatch_group_t sqlite_store_test_group;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sqlite_store_test_group = dispatch_group_create();
+    });
+    
+    return sqlite_store_test_group;
+}
+
+static dispatch_queue_t sqlite_store_test_queue() {
+    static dispatch_queue_t sqlite_store_test_queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sqlite_store_test_queue = dispatch_queue_create("com.tinylittlegears.resteasy.sqlite.test", DISPATCH_QUEUE_CONCURRENT);
+    });
+    
+    return sqlite_store_test_queue;
+}
+
+
 @interface TGSqliteStoreTests : XCTestCase
 
 @property (nonatomic, strong) TGRESTResource *testNormalResource;
@@ -262,6 +283,30 @@
     
     XCTAssert(error, @"An error must be thrown when trying to access a non-existant object");
     XCTAssertNil(droppedObject, @"There must be no object returned");
+}
+
+- (void)testThreadSafety
+{
+    TGRESTResource *newResource = [TGTestFactory testResource];
+    TGRESTStore *store = self.store;
+    
+    NSArray *newResourceProperties = [TGTestFactory buildTestDataForResource:newResource count:1000];
+    for (int x = 0; x < newResourceProperties.count; x++) {
+        dispatch_group_async(sqlite_store_test_group(), sqlite_store_test_queue(), ^{
+            NSDictionary *objectPropertyDict = newResourceProperties[x];
+            NSError *error;
+            [store createNewObjectForResource:newResource withProperties:objectPropertyDict error:&error];
+            XCTAssertNil(error, @"There must not be an error");
+        });
+    }
+    
+    dispatch_group_wait(sqlite_store_test_group(), DISPATCH_TIME_FOREVER);
+    
+    NSError *fetchError;
+    NSArray *currentResources = [store getAllObjectsForResource:newResource error:&fetchError];
+    
+    XCTAssertNil(fetchError, @"There must not be a fetch error %@", fetchError);
+    XCTAssert(currentResources.count == newResourceProperties.count, @"The number of objects in the datastore must match the number of objects created");
 }
 
 @end
