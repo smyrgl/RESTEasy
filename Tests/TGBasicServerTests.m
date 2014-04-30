@@ -71,8 +71,9 @@
     [[TGRESTClient sharedClient] GET:resource.name
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
                                  XCTFail(@"The request must not have failed, %@", error);

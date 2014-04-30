@@ -103,12 +103,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@", self.parentResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The parent base index request must not be a failure %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -125,12 +127,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@", self.childResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The child base index request must not be a failure %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -147,12 +151,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The child nested index request must not be a failure %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -169,12 +175,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, self.testSecondaryParentObjectDict[self.parentResource.primaryKey], self.childResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The child nested index request must not be a failure %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -193,12 +201,14 @@
     [[TGRESTClient sharedClient] POST:[NSString stringWithFormat:@"/%@", self.parentResource.name]
                            parameters:params
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"The request to the base create route must not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -217,12 +227,14 @@
     [[TGRESTClient sharedClient] POST:[NSString stringWithFormat:@"/%@", self.childResource.name]
                            parameters:params
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"The request to the child base create route must not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -243,12 +255,14 @@
     [[TGRESTClient sharedClient] POST:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name]
                            parameters:params
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"The request to create a child object using a nested route must not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -264,12 +278,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request to show a parent object using a base route must not fail %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -285,12 +301,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@", self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request to show a child object using a base route must not fail %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -311,12 +329,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
                           parameters:params
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The update request for the base parent route should not fail %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -338,12 +358,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"/%@/%@", self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
                           parameters:params
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The update request for the base child route should not fail %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -362,13 +384,15 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey]]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     response = responseObject;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The parent base delete route must not fail %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -386,13 +410,15 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     response = responseObject;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The child base delete route must not fail %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -413,12 +439,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request to show a child object using a nested route must not succeed");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -436,12 +464,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"/%@/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
                           parameters:params
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The update request for the nested child route must not succeed");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -457,12 +487,14 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], self.childResource.name, self.testChildObjectDict[self.childResource.primaryKey]]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request for the nested child route must not succeed");
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }];
     
     [self waitForTimeout:1];
@@ -478,12 +510,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, @50, self.childResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The nested index route for a non-existant object must not succeed");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -502,11 +536,13 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"/%@/%@", self.parentResource.name, parentPrimaryKey]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The parent base delete route must not fail %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -518,12 +554,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, parentPrimaryKey, self.childResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The child object must not be reachable by the nested parent path");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -542,12 +580,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"/%@/%@/%@", self.parentResource.name, self.testParentObjectDict[self.parentResource.primaryKey], noParentResource.name]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request for the index of a non-child object must not succeed");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];

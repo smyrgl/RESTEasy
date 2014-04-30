@@ -139,7 +139,7 @@
         if (resource.primaryKeyType == TGPropertyTypeString) {
             [dict setObject:[NSString stringWithFormat:@"%llu", lastInsertRowID] forKey:resource.primaryKey];
         } else {
-            [dict setObject:[NSNumber numberWithInteger:lastInsertRowID] forKey:resource.primaryKey];
+            [dict setObject:[NSNumber numberWithInteger:(unsigned long)lastInsertRowID] forKey:resource.primaryKey];
         }
         return [NSDictionary dictionaryWithDictionary:dict];
     } else {

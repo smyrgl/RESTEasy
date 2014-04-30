@@ -1,5 +1,15 @@
 # RESTEasy CHANGELOG
 
+## 0.2.1
+
+In-memory datastore
+
+- Added proper thread safety to in-memory datastore.
+- Added tests for threading.
+- Fixed weak reference warnings related to the store->server chain by changing the controller API.
+- Fixed static analyzer warnings around weak references.
+- A few other minor cleanup activities.
+
 ## 0.2.0
 
 First Release to Cocoapods

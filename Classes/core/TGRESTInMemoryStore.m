@@ -13,6 +13,7 @@
 @interface TGRESTInMemoryStore ()
 
 @property (atomic, strong) NSMutableDictionary *inMemoryDatastore;
+@property (nonatomic, strong) NSOperationQueue *dbQueue;
 
 @end
 
@@ -23,6 +24,8 @@
     self = [super init];
     if (self) {
         self.inMemoryDatastore = [NSMutableDictionary new];
+        self.dbQueue = [NSOperationQueue new];
+        self.dbQueue.maxConcurrentOperationCount = 1;
     }
     
     return self;
@@ -137,30 +140,39 @@
     NSParameterAssert(properties);
     NSParameterAssert(resource);
     
-    NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
-    if (!resourceDictionary) {
-        if (error) {
-            *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreUnknownErrorCode userInfo:nil];
-        }
-        return nil;
-    }
-    NSUInteger newPrimaryKey = [resourceDictionary allKeys].count + 1;
-    id newPrimaryKeyObject;
-    if (resource.primaryKeyType == TGPropertyTypeInteger) {
-        newPrimaryKeyObject = [NSNumber numberWithInteger:newPrimaryKey];
-    } else {
-        newPrimaryKeyObject = [NSString stringWithFormat:@"%lu", (unsigned long)newPrimaryKey];
-    }
+    __block NSDictionary *newObjectDictionary;
     
-    NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithDictionary:properties];
-    [propertyDictionary setObject:newPrimaryKeyObject forKey:resource.primaryKey];
-    for (NSString *key in resource.model.allKeys) {
-        if (!propertyDictionary[key]) {
-            [propertyDictionary setObject:[NSNull null] forKey:key];
+    NSBlockOperation *write = [NSBlockOperation blockOperationWithBlock:^{
+        NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
+        if (!resourceDictionary) {
+            if (error) {
+                *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreUnknownErrorCode userInfo:nil];
+            }
+            newObjectDictionary = nil;
         }
-    }
-    NSDictionary *newObjectDictionary = [NSDictionary dictionaryWithDictionary:propertyDictionary];
-    [resourceDictionary setObject:newObjectDictionary forKey:newPrimaryKeyObject];
+        NSUInteger newPrimaryKey = [resourceDictionary allKeys].count + 1;
+        id newPrimaryKeyObject;
+        if (resource.primaryKeyType == TGPropertyTypeInteger) {
+            newPrimaryKeyObject = [NSNumber numberWithInteger:newPrimaryKey];
+        } else {
+            newPrimaryKeyObject = [NSString stringWithFormat:@"%lu", (unsigned long)newPrimaryKey];
+        }
+        
+        NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithDictionary:properties];
+        [propertyDictionary setObject:newPrimaryKeyObject forKey:resource.primaryKey];
+        for (NSString *key in resource.model.allKeys) {
+            if (!propertyDictionary[key]) {
+                [propertyDictionary setObject:[NSNull null] forKey:key];
+            }
+        }
+        newObjectDictionary = [NSDictionary dictionaryWithDictionary:propertyDictionary];
+        [resourceDictionary setObject:newObjectDictionary forKey:newPrimaryKeyObject];
+    }];
+    
+    [self.dbQueue addOperation:write];
+    
+    [write waitUntilFinished];
+    
     return newObjectDictionary;
 }
 
@@ -173,24 +185,38 @@
     NSParameterAssert(resource);
     NSParameterAssert(properties);
     
-    NSError *getError;
-    NSDictionary *object = [self getDataForObjectOfResource:resource withPrimaryKey:primaryKey error:&getError];
-    if (getError) {
-        if (error) {
-            *error = getError;
+    __block NSDictionary *updatedObject;
+    __block NSError *blockError;
+    __weak typeof(self) weakSelf = self;
+    
+    NSBlockOperation *write = [NSBlockOperation blockOperationWithBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+
+        NSError *getError;
+        NSDictionary *object = [self getDataForObjectOfResource:resource withPrimaryKey:primaryKey error:&getError];
+        if (getError) {
+            blockError = getError;
+            updatedObject = nil;
+        } else {
+            NSMutableDictionary *mergeDict = [NSMutableDictionary dictionaryWithDictionary:object];
+            [mergeDict addEntriesFromDictionary:properties];
+            updatedObject = [NSDictionary dictionaryWithDictionary:mergeDict];
+            
+            NSMutableDictionary *resourceDictionary = [strongSelf.inMemoryDatastore objectForKey:resource.name];
+            if (resource.primaryKeyType == TGPropertyTypeInteger) {
+                [resourceDictionary setObject:updatedObject forKey:[NSNumber numberWithInteger:[primaryKey integerValue]]];
+            } else {
+                [resourceDictionary setObject:updatedObject forKey:primaryKey];
+            }
         }
-        return nil;
-    }
+    }];
     
-    NSMutableDictionary *mergeDict = [NSMutableDictionary dictionaryWithDictionary:object];
-    [mergeDict addEntriesFromDictionary:properties];
-    NSDictionary *updatedObject = [NSDictionary dictionaryWithDictionary:mergeDict];
+    [self.dbQueue addOperation:write];
     
-    NSMutableDictionary *resourceDictionary = [self.inMemoryDatastore objectForKey:resource.name];
-    if (resource.primaryKeyType == TGPropertyTypeInteger) {
-        [resourceDictionary setObject:updatedObject forKey:[NSNumber numberWithInteger:[primaryKey integerValue]]];
-    } else {
-        [resourceDictionary setObject:updatedObject forKey:primaryKey];
+    [write waitUntilFinished];
+    
+    if (error) {
+        *error = blockError;
     }
     
     return updatedObject;
@@ -202,69 +228,99 @@
 {
     NSParameterAssert(resource);
     NSParameterAssert(primaryKey);
-
-    NSMutableDictionary *objects = self.inMemoryDatastore[resource.name];
-    id objectKey;
-    if (resource.primaryKeyType == TGPropertyTypeInteger) {
-        objectKey = [NSNumber numberWithInteger:[primaryKey integerValue]];
-    } else {
-        objectKey = primaryKey;
-    }
     
-    if (objects[objectKey] == [NSNull null]) {
-        if (error) {
-            *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectAlreadyDeletedErrorCode userInfo:nil];
-        }
-        return NO;
-    } else {
-        NSDictionary *object = objects[objectKey];
-        
-        if (!object) {
-            if (error) {
-                *error = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:nil];
-            }
-            return NO;
+    __block BOOL success;
+    __weak typeof(self) weakSelf = self;
+    __block NSError *blockError;
+    
+    NSBlockOperation *write = [NSBlockOperation blockOperationWithBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSMutableDictionary *objects = strongSelf.inMemoryDatastore[resource.name];
+        id objectKey;
+        if (resource.primaryKeyType == TGPropertyTypeInteger) {
+            objectKey = [NSNumber numberWithInteger:[primaryKey integerValue]];
         } else {
-            [objects setObject:[NSNull null] forKey:objectKey];
+            objectKey = primaryKey;
+        }
+        
+        if (objects[objectKey] == [NSNull null]) {
+            blockError = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectAlreadyDeletedErrorCode userInfo:nil];
+            success = NO;
+        } else {
+            NSDictionary *object = objects[objectKey];
             
-            for (TGRESTResource *child in resource.childResources) {
-                id normalizedKey;
-                if (resource.primaryKeyType == TGPropertyTypeInteger) {
-                    normalizedKey = [NSNumber numberWithInteger:[primaryKey integerValue]];
-                } else {
-                    normalizedKey = primaryKey;
-                }
-                NSString *fKeyName = child.foreignKeys[resource.name];
-                NSPredicate *matchPredicate = [NSPredicate predicateWithFormat:@"self.%@ == %@", child.foreignKeys[resource.name], normalizedKey];
-                NSMutableDictionary *childObjects = self.inMemoryDatastore[child.name];
-
-                for (NSString *childKey in childObjects.allKeys) {
-                    NSDictionary *existingChildDict = childObjects[childKey];
-                    if ([matchPredicate evaluateWithObject:existingChildDict]) {
-                        NSMutableDictionary *updateObject = [NSMutableDictionary dictionaryWithDictionary:existingChildDict];
-                        [updateObject setObject:[NSNull null] forKey:fKeyName];
-                        [childObjects setObject:[NSDictionary dictionaryWithDictionary:updateObject] forKey:childKey];
+            if (!object) {
+                blockError = [NSError errorWithDomain:TGRESTStoreErrorDomain code:TGRESTStoreObjectNotFoundErrorCode userInfo:nil];
+                success = NO;
+            } else {
+                [objects setObject:[NSNull null] forKey:objectKey];
+                
+                for (TGRESTResource *child in resource.childResources) {
+                    id normalizedKey;
+                    if (resource.primaryKeyType == TGPropertyTypeInteger) {
+                        normalizedKey = [NSNumber numberWithInteger:[primaryKey integerValue]];
+                    } else {
+                        normalizedKey = primaryKey;
+                    }
+                    NSString *fKeyName = child.foreignKeys[resource.name];
+                    NSPredicate *matchPredicate = [NSPredicate predicateWithFormat:@"self.%@ == %@", child.foreignKeys[resource.name], normalizedKey];
+                    NSMutableDictionary *childObjects = strongSelf.inMemoryDatastore[child.name];
+                    
+                    for (NSString *childKey in childObjects.allKeys) {
+                        NSDictionary *existingChildDict = childObjects[childKey];
+                        if ([matchPredicate evaluateWithObject:existingChildDict]) {
+                            NSMutableDictionary *updateObject = [NSMutableDictionary dictionaryWithDictionary:existingChildDict];
+                            [updateObject setObject:[NSNull null] forKey:fKeyName];
+                            [childObjects setObject:[NSDictionary dictionaryWithDictionary:updateObject] forKey:childKey];
+                        }
                     }
                 }
+                
+                success = YES;
             }
-            
-            return YES;
         }
+    }];
+    
+    [self.dbQueue addOperation:write];
+    
+    [write waitUntilFinished];
+    
+    if (error) {
+        *error = blockError;
     }
+    
+    return success;
 }
 
 - (void)addResource:(TGRESTResource *)resource
 {
     NSParameterAssert(resource);
-
-    [self.inMemoryDatastore setObject:[NSMutableDictionary new] forKey:resource.name];
+    
+    __weak typeof(self) weakSelf = self;
+    NSBlockOperation *write = [NSBlockOperation blockOperationWithBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.inMemoryDatastore setObject:[NSMutableDictionary new] forKey:resource.name];
+    }];
+    
+    [self.dbQueue addOperation:write];
+    
+    [write waitUntilFinished];
 }
 
 - (void)dropResource:(TGRESTResource *)resource
 {
     NSParameterAssert(resource);
     
-    [self.inMemoryDatastore removeObjectForKey:resource.name];
+    __weak typeof(self) weakSelf = self;
+    NSBlockOperation *write = [NSBlockOperation blockOperationWithBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.inMemoryDatastore removeObjectForKey:resource.name];
+    }];
+    
+    [self.dbQueue addOperation:write];
+    
+    [write waitUntilFinished];
+    
 }
 
 + (NSString *)description

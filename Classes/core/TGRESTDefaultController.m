@@ -23,11 +23,11 @@
 
 + (GCDWebServerResponse *)indexWithRequest:(GCDWebServerRequest *)request
                               withResource:(TGRESTResource *)resource
-                            usingDatastore:(TGRESTStore *)store
+                               usingServer:(TGRESTServer *)server
 {
     NSParameterAssert(request);
     NSParameterAssert(resource);
-    NSParameterAssert(store);
+    NSParameterAssert(server);
     
     @autoreleasepool {
         if (request.URL.pathComponents.count > 2) {
@@ -36,7 +36,7 @@
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name == %@", parentName];
             TGRESTResource *parent = [[resource.parentResources filteredArrayUsingPredicate:predicate] firstObject];
             NSError *error;
-            NSArray *dataWithParent = [store getDataForObjectsOfResource:resource
+            NSArray *dataWithParent = [server.datastore getDataForObjectsOfResource:resource
                                                               withParent:parent
                                                         parentPrimaryKey:parentID
                                                                    error:&error];
@@ -47,15 +47,15 @@
             return [GCDWebServerDataResponse responseWithJSONObject:dataWithParent];
         }
         NSError *error;
-        NSArray *allData = [store getAllObjectsForResource:resource error:&error];
+        NSArray *allData = [server.datastore getAllObjectsForResource:resource error:&error];
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
         Class <TGRESTSerializer> serializer;
-        if (store.server.serializers[resource.name]) {
-            serializer = store.server.serializers[resource.name];
+        if (server.serializers[resource.name]) {
+            serializer = server.serializers[resource.name];
         } else {
-            serializer = store.server.defaultSerializer;
+            serializer = server.defaultSerializer;
         }
         
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithCollection:allData resource:resource]];
@@ -64,24 +64,24 @@
 
 + (GCDWebServerResponse *)showWithRequest:(GCDWebServerRequest *)request
                              withResource:(TGRESTResource *)resource
-                           usingDatastore:(TGRESTStore *)store
+                              usingServer:(TGRESTServer *)server
 {
     NSParameterAssert(request);
     NSParameterAssert(resource);
-    NSParameterAssert(store);
+    NSParameterAssert(server);
     
     @autoreleasepool {
         NSString *lastPathComponent = request.URL.lastPathComponent;
         NSError *error;
-        NSDictionary *resourceResponse = [store getDataForObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
+        NSDictionary *resourceResponse = [server.datastore getDataForObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
         if (error) {
             return [self errorResponseBuilderWithError:error];
         }
         Class <TGRESTSerializer> serializer;
-        if (store.server.serializers[resource.name]) {
-            serializer = store.server.serializers[resource.name];
+        if (server.serializers[resource.name]) {
+            serializer = server.serializers[resource.name];
         } else {
-            serializer = store.server.defaultSerializer;
+            serializer = server.defaultSerializer;
         }
         
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:resourceResponse resource:resource]];
@@ -90,11 +90,11 @@
 
 + (GCDWebServerResponse *)createWithRequest:(GCDWebServerRequest *)request
                                withResource:(TGRESTResource *)resource
-                             usingDatastore:(TGRESTStore *)store
+                                usingServer:(TGRESTServer *)server
 {
     NSParameterAssert(request);
     NSParameterAssert(resource);
-    NSParameterAssert(store);
+    NSParameterAssert(server);
     
     @autoreleasepool {
         GCDWebServerDataRequest *dataRequest = (GCDWebServerDataRequest *)request;
@@ -112,10 +112,10 @@
         }
         
         Class <TGRESTSerializer> serializer;
-        if (store.server.serializers[resource.name]) {
-            serializer = store.server.serializers[resource.name];
+        if (server.serializers[resource.name]) {
+            serializer = server.serializers[resource.name];
         } else {
-            serializer = store.server.defaultSerializer;
+            serializer = server.defaultSerializer;
         }
         
         body = [serializer requestParametersWithBody:body resource:resource];
@@ -125,7 +125,7 @@
             return [GCDWebServerResponse responseWithStatusCode:400];
         }
         
-        NSDictionary *newObject = [store createNewObjectForResource:resource withProperties:sanitizedBody error:&error];
+        NSDictionary *newObject = [server.datastore createNewObjectForResource:resource withProperties:sanitizedBody error:&error];
         
         body = nil;
         dataRequest = nil;
@@ -140,11 +140,11 @@
 
 + (GCDWebServerResponse *)updateWithRequest:(GCDWebServerRequest *)request
                                withResource:(TGRESTResource *)resource
-                             usingDatastore:(TGRESTStore *)store
+                                usingServer:(TGRESTServer *)server
 {
     NSParameterAssert(request);
     NSParameterAssert(resource);
-    NSParameterAssert(store);
+    NSParameterAssert(server);
     
     @autoreleasepool {
         NSString *lastPathComponent = request.URL.lastPathComponent;
@@ -167,10 +167,10 @@
         }
         
         Class <TGRESTSerializer> serializer;
-        if (store.server.serializers[resource.name]) {
-            serializer = store.server.serializers[resource.name];
+        if (server.serializers[resource.name]) {
+            serializer = server.serializers[resource.name];
         } else {
-            serializer = store.server.defaultSerializer;
+            serializer = server.defaultSerializer;
         }
         
         body = [serializer requestParametersWithBody:body resource:resource];
@@ -182,7 +182,7 @@
         }
         
         NSError *error;
-        NSDictionary *resourceResponse = [store modifyObjectOfResource:resource withPrimaryKey:lastPathComponent withProperties:sanitizedBody error:&error];
+        NSDictionary *resourceResponse = [server.datastore modifyObjectOfResource:resource withPrimaryKey:lastPathComponent withProperties:sanitizedBody error:&error];
         
         body = nil;
         dataRequest = nil;
@@ -191,7 +191,7 @@
         if (error) {
             TGLogError(@"Error modifying object of resource %@ with primary key %@", resource.name, lastPathComponent);
             return [self errorResponseBuilderWithError:error];
-        }
+        } 
         
         return [GCDWebServerDataResponse responseWithJSONObject:[serializer dataWithSingularObject:resourceResponse resource:resource]];
     }
@@ -199,11 +199,11 @@
 
 + (GCDWebServerResponse *)destroyWithRequest:(GCDWebServerRequest *)request
                                 withResource:(TGRESTResource *)resource
-                              usingDatastore:(TGRESTStore *)store
+                                 usingServer:(TGRESTServer *)server
 {
     NSParameterAssert(request);
     NSParameterAssert(resource);
-    NSParameterAssert(store);
+    NSParameterAssert(server);
     
     @autoreleasepool {
         NSString *lastPathComponent = request.URL.lastPathComponent;
@@ -211,11 +211,12 @@
             return [GCDWebServerResponse responseWithStatusCode:403];
         }
         NSError *error;
-        BOOL success = [store deleteObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
+        BOOL success = [server.datastore deleteObjectOfResource:resource withPrimaryKey:lastPathComponent error:&error];
         
         if (!success) {
             return [self errorResponseBuilderWithError:error];
         }
+        
         return [GCDWebServerResponse responseWithStatusCode:204];
     }
 }

@@ -42,12 +42,14 @@
     [[TGRESTClient sharedClient] GET:self.testResource.name
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request must not have failed %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -64,12 +66,14 @@
     [[TGRESTClient sharedClient] GET:self.testResource.name
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request should not have failed %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -87,12 +91,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @1]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  response = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request must not have failed %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -111,12 +117,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @15]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The response must not have been successful");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -136,13 +144,15 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                     response = responseObject;
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request must not have failed %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -155,12 +165,14 @@
     [[TGRESTClient sharedClient] GET:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"Getting the already deleted object should not be successful");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  getDeletedStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -177,12 +189,14 @@
     [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"Request to create new object should not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -206,12 +220,14 @@
     [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:nil
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"Request to create new object with no parameters should not succeed");
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }];
     
     [self waitForTimeout:1];
@@ -227,12 +243,14 @@
     [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:@{@"foo": @"bar"}
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"Request to create new object with no valid parameters should not succeed");
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }];
     
     [self waitForTimeout:1];
@@ -252,12 +270,14 @@
     [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"Request to create new object should not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -271,12 +291,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, response[self.testResource.primaryKey]]
                           parameters:@{newObjectKey: changedValue}
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  changedResponse = responseObject;
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"The request to change the object should not fail %@", error);
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }];
     
     [self waitForTimeout:1];
@@ -297,13 +319,15 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                     response = responseObject;
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request must not have failed %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -316,12 +340,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                           parameters:@{@"name": [GZNames name]}
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"Updating the already deleted object should not be successful");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  updateDeletedStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -338,12 +364,14 @@
     [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"Request to create new object should not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -355,12 +383,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, response[self.testResource.primaryKey]]
                           parameters:nil
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"Should not receive a successful response when updating an object with a key that does not exist");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  changeStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -378,12 +408,14 @@
     [[TGRESTClient sharedClient] POST:self.testResource.name
                            parameters:newObject
                               success:^(NSURLSessionDataTask *task, id responseObject) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   response = responseObject;
-                                  [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                               }
                               failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
                                   XCTFail(@"Request to create new object should not fail %@", error);
-                                  [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                  [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                               }];
     
     [self waitForTimeout:1];
@@ -395,12 +427,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, response[self.testResource.primaryKey]]
                           parameters:@{@"foo": @"bar"}
                              success:^(NSURLSessionDataTask *task, id responseObject) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  XCTFail(@"Should not receive a successful response when updating an object with a key that does not exist");
-                                 [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                              }
                              failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
                                  changeStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                 [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                 [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                              }];
     
     [self waitForTimeout:1];
@@ -419,12 +453,14 @@
     [[TGRESTClient sharedClient] PUT:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @15]
                           parameters:@{@"name": [GZNames name]}
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The update request must fail for a non-existant object");
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }];
     
     [self waitForTimeout:1];
@@ -444,13 +480,15 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                     response = responseObject;
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request must not have failed %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -471,13 +509,15 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
                                     response = responseObject;
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request must not have failed %@", error);
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }];
     
     [self waitForTimeout:1];
@@ -490,12 +530,14 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @5]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request must not be a success");
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     secondDeleteStatusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }];
     
     [self waitForTimeout:1];
@@ -515,12 +557,14 @@
     [[TGRESTClient sharedClient] DELETE:[NSString stringWithFormat:@"%@/%@", self.testResource.name, @15]
                              parameters:nil
                                 success:^(NSURLSessionDataTask *task, id responseObject) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     XCTFail(@"The delete request must fail for a non-existant object");
-                                    [weakSelf notify:XCTAsyncTestCaseStatusFailed];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusFailed];
                                 }
                                 failure:^(NSURLSessionDataTask *task, NSError *error) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
                                     statusCode = [[task.response valueForKey:@"statusCode"] integerValue];
-                                    [weakSelf notify:XCTAsyncTestCaseStatusSucceeded];
+                                    [strongSelf notify:XCTAsyncTestCaseStatusSucceeded];
                                 }];
     
     [self waitForTimeout:1];

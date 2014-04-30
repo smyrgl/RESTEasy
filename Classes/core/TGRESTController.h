@@ -12,7 +12,7 @@
 @class GCDWebServerRequest;
 @class GCDWebServerResponse;
 @class TGRESTResource;
-@class TGRESTStore;
+@class TGRESTServer;
 
 /**
  If you want to go beyond simple CRUD then you need to customize the controller which means adopting this protocol.  Most common things that you need to do with `RESTEasy` should be adaquately met by either the default controller/serializer or by creating custom `TGSerializer` objects for your resources.  If it is just a question of changing the way data is represented to/from the API interface then the serializers are a much better option.
@@ -45,68 +45,68 @@
  *
  *  @param request  Request that was received.
  *  @param resource Resource that has matched the path regex.
- *  @param store    Datastore for the request.  You can access the server object if you need to through this using the `server` property on `TGRESTStore`.
+ *  @param server    Server for the request.
  *
  *  @return Response for the action.
  */
 
 + (GCDWebServerResponse *)indexWithRequest:(GCDWebServerRequest *)request
                               withResource:(TGRESTResource *)resource
-                            usingDatastore:(TGRESTStore *)store;
+                            usingServer:(TGRESTServer *)server;
 
 /**
  *  Called when the server receives a route matching a valid SHOW action for the given resource.
  *
  *  @param request  Request that was received.
  *  @param resource Resource that has matched the path regex.
- *  @param store    Datastore for the request.  You can access the server object if you need to through this using the `server` property on `TGRESTStore`.
+ *  @param server    Server for the request.
  *
  *  @return Response for the action.
  */
 
 + (GCDWebServerResponse *)showWithRequest:(GCDWebServerRequest *)request
                              withResource:(TGRESTResource *)resource
-                           usingDatastore:(TGRESTStore *)store;
+                              usingServer:(TGRESTServer *)server;
 
 /**
  *  Called when the server receives a route matching a valid CREATE action for the given resource.
  *
  *  @param request  Request that was received.
  *  @param resource Resource that has matched the path regex.
- *  @param store    Datastore for the request.  You can access the server object if you need to through this using the `server` property on `TGRESTStore`.
+ *  @param server    Server for the request.
  *
  *  @return Response for the action.
  */
 
 + (GCDWebServerResponse *)createWithRequest:(GCDWebServerRequest *)request
                                withResource:(TGRESTResource *)resource
-                             usingDatastore:(TGRESTStore *)store;
+                                usingServer:(TGRESTServer *)server;
 
 /**
  *  Called when the server receives a route matching a valid UPDATE action for the given resource.
  *
  *  @param request  Request that was received.
  *  @param resource Resource that has matched the path regex.
- *  @param store    Datastore for the request.  You can access the server object if you need to through this using the `server` property on `TGRESTStore`.
+ *  @param server    Server for the request.
  *
  *  @return Response for the action.
  */
 
 + (GCDWebServerResponse *)updateWithRequest:(GCDWebServerRequest *)request
                                withResource:(TGRESTResource *)resource
-                             usingDatastore:(TGRESTStore *)store;
+                                usingServer:(TGRESTServer *)server;
 
 /**
  *  Called when the server receives a route matching a valid DESTROY action for the given resource.
  *
  *  @param request  Request that was received.
  *  @param resource Resource that has matched the path regex.
- *  @param store    Datastore for the request.  You can access the server object if you need to through this using the `server` property on `TGRESTStore`.
+ *  @param server    Server for the request.
  *
  *  @return Response for the action.
  */
 
 + (GCDWebServerResponse *)destroyWithRequest:(GCDWebServerRequest *)request
                                 withResource:(TGRESTResource *)resource
-                              usingDatastore:(TGRESTStore *)store;
+                                 usingServer:(TGRESTServer *)server;
 @end

@@ -144,7 +144,7 @@ See TGRESTInMemoryStore for the default concrete implementation and TGRESTSqlite
 ///----------------
 
 /**
- *  When creating your own subclass of `TGRESTStore` you will want to use the predefined `TGRESTStoreErrorDomain` and error codes as they will influence the controller behavior and HTTP response status codes.  The user info dictionary for the NSError can be nil.
+ *  Default error domain for the Store.
  */
 
 extern NSString * const TGRESTStoreErrorDomain;

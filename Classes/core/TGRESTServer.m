@@ -256,14 +256,16 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGIndexRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [weakSelf controllerAction:TGControllerActionIndex withRequest:request withResource:resource];
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   return [strongSelf controllerAction:TGControllerActionIndex withRequest:request withResource:resource];
                                }];
         
         [self.webServer addHandlerForMethod:@"GET"
                                   pathRegex:TGShowRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [weakSelf controllerAction:TGControllerActionShow withRequest:request withResource:resource];
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   return [strongSelf controllerAction:TGControllerActionShow withRequest:request withResource:resource];
                                }];
     }
     
@@ -274,7 +276,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGCreateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [weakSelf controllerAction:TGControllerActionCreate withRequest:request withResource:resource];
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   return [strongSelf controllerAction:TGControllerActionCreate withRequest:request withResource:resource];
                                }];
         
     }
@@ -286,7 +289,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGDestroyRegex(resource)
                                requestClass:[GCDWebServerRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [weakSelf controllerAction:TGControllerActionDestroy withRequest:request withResource:resource];
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   return [strongSelf controllerAction:TGControllerActionDestroy withRequest:request withResource:resource];
                                }];
     }
     
@@ -297,7 +301,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
                                   pathRegex:TGUpdateRegex(resource)
                                requestClass:[GCDWebServerDataRequest class]
                                processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                                   return [weakSelf controllerAction:TGControllerActionUpdate withRequest:request withResource:resource];
+                                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                                   return [strongSelf controllerAction:TGControllerActionUpdate withRequest:request withResource:resource];
                                }];
     }
 }
@@ -328,7 +333,8 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
 
     for (TGRESTResource *resource in self.resources.allValues) {
         NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-            [weakSelf removeResource:resource withData:removeData];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf removeResource:resource withData:removeData];
         }];
         [operations addObject:operation];
     }
@@ -420,20 +426,20 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
     
     switch (action) {
         case TGControllerActionIndex:
-            response = [TGRESTDefaultController indexWithRequest:request withResource:resource usingDatastore:self.datastore];
+            response = [TGRESTDefaultController indexWithRequest:request withResource:resource usingServer:self];
             break;
         case TGControllerActionShow:
-            response = [TGRESTDefaultController showWithRequest:request withResource:resource usingDatastore:self.datastore];
+            response = [TGRESTDefaultController showWithRequest:request withResource:resource usingServer:self];
             break;
         case TGControllerActionCreate:
-            response = [TGRESTDefaultController createWithRequest:request withResource:resource usingDatastore:self.datastore];
+            response = [TGRESTDefaultController createWithRequest:request withResource:resource usingServer:self];
 
             break;
         case TGControllerActionUpdate:
-            response = [TGRESTDefaultController updateWithRequest:request withResource:resource usingDatastore:self.datastore];
+            response = [TGRESTDefaultController updateWithRequest:request withResource:resource usingServer:self];
             break;
         case TGControllerActionDestroy:
-            response = [TGRESTDefaultController destroyWithRequest:request withResource:resource usingDatastore:self.datastore];
+            response = [TGRESTDefaultController destroyWithRequest:request withResource:resource usingServer:self];
             break;
         default:
             break;
