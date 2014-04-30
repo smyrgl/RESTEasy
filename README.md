@@ -52,10 +52,10 @@ Before I dive into everything that RESTEasy can do, let's start with a few basic
 
 ```objective-c
 TGRESTResource *people = [TGRESTResource newResourceWithName:@"people" model:@{
-														@"name": [NSNumber numberWithInteger:TGPropertyTypeString],
-														@"numberOfKids": [NSNumber numberWithInteger:TGPropertyTypeInteger],
-														@"kilometersWalked": [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
-														@"avatar": [NSNumber numberWithInteger:TGPropertyTypeBlob]
+														@"name": @(TGPropertyTypeString),
+														@"numberOfKids": @(TGPropertyTypeInteger),
+														@"kilometersWalked": @(TGPropertyTypeFloatingPoint),
+														@"avatar": @(TGPropertyTypeBlob)
 													}];
 
 [[TGRESTServer sharedServer] addResource:people];
