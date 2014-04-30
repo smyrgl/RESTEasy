@@ -433,7 +433,6 @@ static TGRESTServerLogLevel kRESTServerLogLevel = TGRESTServerLogLevelInfo;
             break;
         case TGControllerActionCreate:
             response = [TGRESTDefaultController createWithRequest:request withResource:resource usingServer:self];
-
             break;
         case TGControllerActionUpdate:
             response = [TGRESTDefaultController updateWithRequest:request withResource:resource usingServer:self];

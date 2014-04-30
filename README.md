@@ -144,25 +144,28 @@ The objects that you pass will first be sanitized and harvested of any matching 
 You can set one-to-many relations between your resources really easily.  All you have to do is something like this:
 
 ```objective-c
+NSDictionary *peopleModel = @{
+                            @"name": @(TGPropertyTypeString),
+                            @"numberOfKids": @(TGPropertyTypeInteger),
+                            @"kilometersWalked": @(TGPropertyTypeFloatingPoint),
+                            @"avatar": @(TGPropertyTypeBlob)
+                            };
+
+NSDictionary *carsModel = @{
+                            @"name": @(TGPropertyTypeString),
+                            @"color": @(TGPropertyTypeString)
+                          };
 TGRESTResource *people = [TGRESTResource newResourceWithName:@"people" 
-																					model:@{
-               															@"name": [NSNumber numberWithInteger:TGPropertyTypeString],
-                                           	@"numberOfKids": [NSNumber numberWithInteger:TGPropertyTypeInteger],
-                                           	@"kilometersWalked": [NSNumber numberWithInteger:TGPropertyTypeFloatingPoint],
-                                           	@"avatar": [NSNumber numberWithInteger:TGPropertyTypeBlob]
-                                           }];
+										                  model:peopleModel];
         
 TGRESTResource *cars = [TGRESTResource newResourceWithName:@"cars"
-                                        model:@{
-                                  							@"name": [NSNumber numberWithInteger:TGPropertyTypeString],
-                                  							@"color": [NSNumber numberWithInteger:TGPropertyTypeString]
-                                  			}
+                                        model:carsModel
                         								actions:TGResourceRESTActionsDELETE | TGResourceRESTActionsGET | TGResourceRESTActionsPOST | TGResourceRESTActionsPUT
                      										primaryKey:nil
                 												parentResources:@[people]];
         
-        [[TGRESTServer sharedServer] addResource:people];
-        [[TGRESTServer sharedServer] addResource:cars];
+[[TGRESTServer sharedServer] addResource:people];
+[[TGRESTServer sharedServer] addResource:cars];
 ```
 
 And by doing that we get the following default routes created:
